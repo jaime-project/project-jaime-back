@@ -15,6 +15,9 @@ class Server():
         self.token = token
         self.version = version
 
+    def __eq__(self, o: object) -> bool:
+        return self.name == o.name
+
     def login(self) -> str:
         short_version = self.version.split(".")[0]
 

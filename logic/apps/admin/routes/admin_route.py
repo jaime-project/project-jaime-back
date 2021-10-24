@@ -34,4 +34,4 @@ def get_postman():
     return send_file(BytesIO(open(collection_dir, 'rb').read()),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=ntpath.project-jaimename(collection_dir))
+                     attachment_filename=ntpath.basename(collection_dir))

@@ -12,7 +12,7 @@ from logic.libs.exception.exception import AppException
 from .garbage_collector import add_pipeline_runned
 
 
-def exec(params: Dict[str, any]) -> UUID:
+def exec(params: Dict[str, object]) -> UUID:
 
     id = workingdir_service.create()
 
