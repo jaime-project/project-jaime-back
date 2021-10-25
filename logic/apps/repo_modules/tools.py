@@ -2,6 +2,7 @@ import subprocess
 from dataclasses import dataclass
 
 from logic.apps.servers.models.server_model import Server
+from logic.apps.servers.services import server_service
 
 
 @dataclass
@@ -31,5 +32,4 @@ def sh(cmd: str, echo: bool = True) -> str:
 
 
 def get_oc(server_name: str) -> "Oc":
-    # TODO: hacer un servicio que busque el server y lo devuelva
-    return Oc(Server(server_name))
+    return Oc(server_service.get(server_name))
