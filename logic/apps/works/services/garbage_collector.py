@@ -1,33 +1,35 @@
 import threading
 import time
-from uuid import UUID
+from datetime import datetime, timedelta
 
 from logic.apps.filesystem.services import workingdir_service
+from logic.apps.processes.models.process_model import Status
+from logic.apps.processes.services import process_service
 from logic.libs.logger.logger import logger
 
-_pipelines_runned = []
-_thread_garbage_active = True
+_THREAD_GARBAGE_ACTIVE = True
 
 
 def garbabge_collector():
 
-    global _pipelines_runned
+    for id in process_service.list_all_running():
 
-    for id in _pipelines_runned:
-        workingdir_service.delete(id)
-        logger().info(f'Deleted workingdir -> {id}')
+        process = process_service.get(id)
 
-    _pipelines_runned = []
+        if process.status != Status.RUNNING and (datetime.now() + timedelta(minutes=30) < process.end_date or process.status == Status.SUCCESS):
+            process_service.delete_from_list(id)
+            workingdir_service.delete(id)
+            logger().info(f'Deleted workingdir -> {id}')
 
 
 def start_garbage_thread():
 
-    global _thread_garbage_active
-    _thread_garbage_active = True
+    global _THREAD_GARBAGE_ACTIVE
+    _THREAD_GARBAGE_ACTIVE = True
 
     def thread_method():
-        global _thread_garbage_active
-        while _thread_garbage_active:
+        global _THREAD_GARBAGE_ACTIVE
+        while _THREAD_GARBAGE_ACTIVE:
             garbabge_collector()
             time.sleep(30)
 
@@ -36,10 +38,5 @@ def start_garbage_thread():
 
 
 def stop_garbage_thread():
-    global _thread_garbage_active
-    _thread_garbage_active = False
-
-
-def add_work_runned(id: UUID):
-    global _pipelines_runned
-    _pipelines_runned.append(id)
+    global _THREAD_GARBAGE_ACTIVE
+    _THREAD_GARBAGE_ACTIVE = False
