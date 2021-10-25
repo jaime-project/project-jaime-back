@@ -12,7 +12,7 @@ def exec():
     params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
         request.data) else request.json
 
-    id = work_service.exec(params_dict)
+    id = process_service.run(params_dict)
 
     return jsonify(id=id), 201
 
@@ -35,7 +35,7 @@ def delete(id: str):
 @blue_print.route('/', methods=['GET'])
 def get():
 
-    result = process_service.all_running()
+    result = process_service.list_all_running()
     return jsonify(result), 200
 
 
