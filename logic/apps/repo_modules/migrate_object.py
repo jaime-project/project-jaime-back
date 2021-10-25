@@ -84,8 +84,8 @@ def exec(params: Dict[str, any]):
             yamls_errors.append(yaml_to_migrate)
             print(e.args)
 
-        if yamls_errors:
-            logging.error(f'{server_to} -> Yamls con errores al migrar:')
-            for y_error in yamls_errors:
-                logging.error(
-                    f'{server_to} -> {y_error}')
+    if yamls_errors:
+        logging.error(f'{server_to} -> Yamls con errores al migrar:')
+        for y_error in yamls_errors:
+            logging.error(
+                f'{server_to} -> {y_error}')

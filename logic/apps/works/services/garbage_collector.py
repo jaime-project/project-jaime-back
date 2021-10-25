@@ -40,6 +40,6 @@ def stop_garbage_thread():
     _thread_garbage_active = False
 
 
-def add_pipeline_runned(id: UUID):
+def add_work_runned(id: UUID):
     global _pipelines_runned
     _pipelines_runned.append(id)

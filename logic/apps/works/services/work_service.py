@@ -6,10 +6,10 @@ from uuid import UUID
 
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.services import module_service
-from logic.apps.works.errors.pipeline_error import WorkError
+from logic.apps.works.errors.work_error import WorkError
 from logic.libs.exception.exception import AppException
 
-from .garbage_collector import add_pipeline_runned
+from .garbage_collector import add_work_runned
 
 
 def exec(params: Dict[str, object]) -> UUID:
@@ -49,6 +49,6 @@ def exec(params: Dict[str, object]) -> UUID:
         msj = str(e)
         raise AppException(WorkError.EXECUTE_WORK_ERROR, msj, e)
 
-    add_pipeline_runned(id)
+    add_work_runned(id)
 
     return id
