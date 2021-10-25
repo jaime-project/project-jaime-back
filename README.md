@@ -4,7 +4,7 @@
 
 Herramienta para migrar jenkins de un cluster de openshift a otro
 
-![alt](img/project-jaime.png)
+![alt](img/jaime.png)
 
 ## :gear: Requisitos
 

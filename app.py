@@ -18,8 +18,12 @@ start_garbage_thread()
 setup_modules()
 setup_servers_json()
 
+print("\n\n")
+print("> Jaimeeehhhh...!!!")
+print("> ¿Si, señora?")
+print("> El OCS necesita CI/CD y no hay Jenkins")
+print("> Por eso siempre traigo scripts")
 print("""
-                                                                                
                                    (@@@@@@@@.                                   
                             .(####%@@@@@@@@@@*######.                           
                        ,##########&@@@@@@@@@@############(                      
