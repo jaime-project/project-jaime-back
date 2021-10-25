@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-# from multiprocessing import Process
 from threading import Thread
 
 
@@ -12,14 +11,14 @@ class Status(Enum):
 
 
 @dataclass
-class ProcessStatus():
+class WorkStatus():
 
     thread: Thread
     status: Status
     init_date: datetime
     end_date: datetime
 
-    def __init__(self, thread: Thread, status: Status = Status.RUNNING, init_date: datetime = datetime.now, end_date: datetime = None) -> "ProcessStatus":
+    def __init__(self, thread: Thread, status: Status = Status.RUNNING, init_date: datetime = datetime.now, end_date: datetime = None) -> "WorkStatus":
         self.thread = thread
         self.status = status
         self.init_date = init_date

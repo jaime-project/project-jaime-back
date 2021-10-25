@@ -1,19 +1,84 @@
 import os
 import sys
+from datetime import datetime
 from importlib.util import module_from_spec, spec_from_file_location
-from typing import Dict
-from uuid import UUID, uuid4
+from threading import Thread
+from typing import Dict, List
+from uuid import uuid4
 
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.services import module_service
-from logic.apps.processes.services import process_service
 from logic.apps.works.errors.work_error import WorkError
+from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.libs.exception.exception import AppException
 
 _LOGS_FILE_NAME = 'logs.log'
+_WORKS_RUNNING: Dict[str, WorkStatus] = {}
 
 
-def exec(params: Dict[str, object], id: str = str(uuid4())):
+def start(params: Dict[str, object]) -> str:
+
+    id = _generate_id()
+    work = Thread(target=_exec, args=(params, id))
+
+    global _WORKS_RUNNING
+    _WORKS_RUNNING[id] = WorkStatus(work)
+
+    work.start()
+
+    return id
+
+
+def get(id: str) -> WorkStatus:
+    global _WORKS_RUNNING
+    return _WORKS_RUNNING.get(id, None)
+
+
+def delete(id: str):
+    global _WORKS_RUNNING
+
+    worker = get(id)
+    if not worker:
+        msj = f"No existe worker con id {id}"
+        raise AppException(WorkError.WORK_NOT_EXIST_ERROR, msj)
+
+    if worker.thread.is_alive():
+        worker.thread.setDaemon(False)
+
+    _WORKS_RUNNING = {
+        k: v
+        for k, v in _WORKS_RUNNING.items()
+        if k != id
+    }
+
+    workingdir_service.delete(id)
+
+
+def list_all_running() -> List[str]:
+    global _WORKS_RUNNING
+    return _WORKS_RUNNING.keys()
+
+
+def finish_work_success(id: str):
+    _finish_work(id, Status.SUCCESS)
+
+
+def finish_work_error(id: str):
+    _finish_work(id, Status.ERROR)
+
+
+def _finish_work(id: str, status: Status):
+    global _WORKS_RUNNING
+    work = _WORKS_RUNNING[id]
+    work.end_date = datetime.now()
+    work.status = status
+
+
+def _generate_id() -> str:
+    return str(uuid4()).split('-')[4]
+
+
+def _exec(params: Dict[str, object], id: str = str(uuid4())):
 
     workingdir_service.create_by_id(id)
 
@@ -55,10 +120,10 @@ def exec(params: Dict[str, object], id: str = str(uuid4())):
         sys.stdout = original_stdout
 
     if error:
-        process_service.finish_process_error(id)
+        finish_work_error(id)
         raise error
 
-    process_service.finish_process_success(id)
+    finish_work_success(id)
 
 
 def get_logs(id: str) -> str:
