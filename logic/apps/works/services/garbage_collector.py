@@ -16,7 +16,10 @@ def garbabge_collector():
 
         process = process_service.get(id)
 
-        if process.status != Status.RUNNING and (datetime.now() + timedelta(minutes=30) < process.end_date or process.status == Status.SUCCESS):
+        delete = (process.status == Status.ERROR and datetime.now() + timedelta(minutes=30) < process.end_date) or (
+            process.status == Status.SUCCESS and datetime.now() + timedelta(minutes=5) < process.end_date)
+
+        if delete:
             process_service.delete_from_list(id)
             workingdir_service.delete(id)
             logger().info(f'Deleted workingdir -> {id}')
