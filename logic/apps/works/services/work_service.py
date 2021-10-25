@@ -25,6 +25,7 @@ def exec(params: Dict[str, object], id: str = str(uuid4())) -> Any:
 
     original_stdout = sys.stdout
     logs_path = os.path.join(workindir_path, _LOGS_FILE_NAME)
+    logs_file = open(logs_path, 'w')
 
     try:
         module_name = params['module']
@@ -36,13 +37,21 @@ def exec(params: Dict[str, object], id: str = str(uuid4())) -> Any:
         spec.loader.exec_module(module)
 
         os.chdir(workindir_path)
-        with open(logs_path, 'w') as f:
-            sys.stdout = f
+        sys.stdout = logs_file
 
         module.exec(params)
 
         os.chdir(original_workindir)
         sys.stdout = original_stdout
+        logs_file.close()
+
+    except AppException as ae:
+
+        os.chdir(original_workindir)
+        sys.stdout = original_stdout
+        workingdir_service.delete(id)
+
+        raise ae
 
     except Exception as e:
 

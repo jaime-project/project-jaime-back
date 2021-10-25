@@ -1,7 +1,6 @@
-import re
 from typing import Dict
 
-import tools
+from logic.apps.repo_modules import tools
 
 
 def exec(params: Dict[str, any]):
@@ -9,13 +8,11 @@ def exec(params: Dict[str, any]):
     server_from = params['servers']['from']['name']
     namespace_from = params['servers']['from']['namespace']
     object_from = params['servers']['from']['object']
-    only_from = params['servers']['from'].get('only', [])
-    ignore_from = params['servers']['from'].get('ignore', [])
 
     oc_from = tools.get_oc(server_from)
     oc_from.login()
 
-    print("Obtieniendo todos los objetos")
+    print(f"{server_from} -> Obtieniendo todos los objetos")
     objects_to_migrate = [
         ob
         for ob
@@ -26,4 +23,4 @@ def exec(params: Dict[str, any]):
     for ob in objects_to_migrate:
         print(ob)
 
-    print("Proceso terminado OK")
+    print(f"{server_from} -> Proceso terminado OK")
