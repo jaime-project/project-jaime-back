@@ -21,7 +21,7 @@ class AppException(Exception):
     o un codigo numerico, la idea es que alguien pueda hacer un if con este codigo pudiendo hacer algo al respecto
 
     mensaje: contiene informacion extra en formato texto para una mayor informacion, esto es para quien use la api,
-    un ejemplo puede ser: 'el usuario ya existe en la project-jaime de datos'
+    un ejemplo puede ser: 'el usuario ya existe en la base de datos'
     """
     code: Enum
     msj: str = None

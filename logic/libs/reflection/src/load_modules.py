@@ -11,17 +11,17 @@ def file_name(path: str) -> str:
     """
     Devuelve el nombre del archivo al final de la ruta sin la extension
     """
-    return os.path.project-jaimename(path).split('.')[0]
+    return os.path.basename(path).split('.')[0]
 
 
-def get_modules_paths(project-jaime_path: str) -> List[str]:
+def get_modules_paths(base_path: str) -> List[str]:
     """
     Obtiene las rutas de todos los archivos .py dentro del directorio parametro, 
     es recursivo por lo que si hay carpetas dentro tambien busca ahi
     """
     blueprints_routes = []
 
-    for root, _, files in os.walk(project-jaime_path):
+    for root, _, files in os.walk(base_path):
 
         if '__pycache__' in root or not files:
             continue
@@ -41,7 +41,7 @@ def get_modules_paths_by_regex(regex_path: str) -> List[str]:
     """
     paths = []
 
-    for project-jaime_path in glob.glob(regex_path):
-        paths.extend(get_modules_paths(project-jaime_path))
+    for base_path in glob.glob(regex_path):
+        paths.extend(get_modules_paths(base_path))
 
     return paths

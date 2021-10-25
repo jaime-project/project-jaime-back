@@ -10,7 +10,7 @@ def setup_loggers():
     setup([
         Config(
             name='app',
-            path=f'{Path.home()}/.project-jaime/logs',
+            path=f'{Path.home()}/.jaime/logs',
             level=get_var(Vars.LOGS_LEVEL),
             file_backup_count=int(get_var(Vars.LOGS_BACKUPS))
         )

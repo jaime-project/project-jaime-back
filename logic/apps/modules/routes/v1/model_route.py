@@ -1,5 +1,4 @@
 from flask import Blueprint, Response, jsonify, request
-from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.modules.services import module_service
 
 blue_print = Blueprint('modules', __name__, url_prefix='/api/v1/modules')
