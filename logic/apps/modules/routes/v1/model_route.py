@@ -14,7 +14,7 @@ def post(name: str):
 @blue_print.route('/<name>', methods=['GET'])
 def get(name: str):
     content = module_service.get(name)
-    return Response(content, mimetype='text/plain', status=201)
+    return Response(content, mimetype='text/plain', status=200)
 
 
 @blue_print.route('/', methods=['GET'])

@@ -42,6 +42,15 @@ def list_all() -> List[str]:
 
 def delete(name: str):
 
+    try:
+        get(name)
+
+    except Exception:
+        raise AppException(
+            code=ModulesError.MODULE_NO_EXIST_ERROR,
+            msj=f'El modulo {name} no existe o tiene un formato invalido'
+        )
+
     path = f'{get_path()}/{name}.py'
     filesystem_service.delete_file(path)
 
