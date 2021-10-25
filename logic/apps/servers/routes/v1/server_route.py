@@ -20,18 +20,13 @@ def post():
 @blue_print.route('/<name>', methods=['GET'])
 def get(name: str):
     s = server_service.get(name)
-    return jsonify(s.__dict__()), 200
+    return jsonify(s.__dict__), 200
 
 
 @blue_print.route('/', methods=['GET'])
 def list_all():
 
-    result = [
-        s.__dict__()
-        for s in server_service.list_all()
-    ]
-
-    return jsonify(result), 200
+    return jsonify(server_service.list_all()), 200
 
 
 @blue_print.route('/<name>', methods=['DELETE'])

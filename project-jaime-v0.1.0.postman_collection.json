@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "60ac5f70-ee6c-4ea5-ae1d-810f9b584420",
+		"_postman_id": "16362a51-e513-4fbc-b8c1-dab521d64e7b",
 		"name": "project-jaime-v0.1.0",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -12,29 +12,99 @@
 					"name": "v1",
 					"item": [
 						{
-							"name": "examples",
+							"name": "works",
 							"item": [
 								{
-									"name": "post_examples",
-									"event": [
-										{
-											"listen": "test",
-											"script": {
-												"id": "e67203de-a8c2-47e7-b088-b0d8dc2572c1",
-												"exec": [
-													"var jsonData = JSON.parse(responseBody);",
-													"pm.collectionVariables.set(\"token\", jsonData.token);"
-												],
-												"type": "text/javascript"
-											}
+									"name": "list",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/works",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"works"
+											]
 										}
-									],
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "servers",
+							"item": [
+								{
+									"name": "list",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/servers",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"servers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/servers/lasegunda4",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"servers",
+												"lasegunda4"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/servers/lasegunda4",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"servers",
+												"lasegunda4"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "post",
 									"request": {
 										"method": "POST",
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"date_time\": \"2021-01-01T23:19:39.252103\",\n    \"double\": 123.123123,\n    \"integer\": 123,\n    \"string\": \"asdasd123\",\n    \"uuid\": \"f90ee43c-f762-4b08-87e5-9660d0ff43b6\"\n}",
+											"raw": "{\n    \"name\": \"lasegunda4\",\n    \"url\": \"https://api.ocp01-noprod.ocplasegunda.com.ar:6443\",\n    \"token\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6InpJZDZMSzRxVXJvRkJLMVdCb2FEclFJTWZubXdIaXVqbGIzVl9xbkdWbDAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJmcm9udC1kZXNhIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImplbmtpbnMtZnJvbnQtYnVpbGRlci10b2tlbi0ycGRnaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJqZW5raW5zLWZyb250LWJ1aWxkZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIxNWYzN2U2Ny03NGViLTRlYzgtOTliNi05Y2U5M2YxNzFjNjYiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZnJvbnQtZGVzYTpqZW5raW5zLWZyb250LWJ1aWxkZXIifQ.GTCm9Vyabx2MNLpibzAxRRch-Cj7eJzbdG-b4knbjD2zKkDyLtRMcM92oOIa7XVA-vEIjAANsMOmiJ4nM7VwBxvqCmOY9B1Kg9ZKYc46OY6RLmMupr3dg8LRelb0UgKDX_Ln5o6XVyAzn8wtTwSUBWfwGzQzLX3G2EHWSwdvEAkI1bgEzulzVS-1t8Y1XmV3OBiDQN8u7iRml-NgSjpDvxfaK6Kin1Rvz5z8naC_cO6IE1SNQR-e7cp4cwhGB_J6rzOpGQoQNSPRpALPwipWEnzds3kr-WjqIXGE1J2QVGBWw89gODeCY6U0F9E9MuhN6O9gcsyu8R2AiAteFgk6LQ\",\n    \"version\": \"4.6\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
@@ -42,94 +112,29 @@
 											}
 										},
 										"url": {
-											"raw": "{{url}}/api/v1/examples",
+											"raw": "{{project-jaime}}/api/v1/servers/",
 											"host": [
-												"{{url}}"
+												"{{project-jaime}}"
 											],
 											"path": [
 												"api",
 												"v1",
-												"examples"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "get_examples",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{url}}/api/v1/examples",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"examples"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "get_error_business",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{url}}/api/v1/examples/errors/business",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"examples",
-												"errors",
-												"business"
-											]
-										}
-									},
-									"response": []
-								},
-								{
-									"name": "get_error_unknow",
-									"request": {
-										"method": "GET",
-										"header": [],
-										"url": {
-											"raw": "{{url}}/api/v1/examples/errors/unknow",
-											"host": [
-												"{{url}}"
-											],
-											"path": [
-												"api",
-												"v1",
-												"examples",
-												"errors",
-												"unknow"
+												"servers",
+												""
 											]
 										}
 									},
 									"response": []
 								}
-							],
-							"protocolProfileBehavior": {},
-							"_postman_isSubFolder": true
+							]
 						}
-					],
-					"protocolProfileBehavior": {},
-					"_postman_isSubFolder": true
+					]
 				}
 			],
 			"event": [
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "0a85c7bb-dad4-40c2-8143-4fa1d192aa92",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -139,15 +144,13 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "82e6f58a-c8ae-426a-9d78-1bbc8bcc396c",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		},
 		{
 			"name": "app",
@@ -158,12 +161,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/alive",
+							"raw": "{{project-jaime}}",
 							"host": [
-								"{{url}}"
-							],
-							"path": [
-								"alive"
+								"{{project-jaime}}"
 							]
 						}
 					},
@@ -175,9 +175,9 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{url}}/vars",
+							"raw": "{{project-jaime}}/vars",
 							"host": [
-								"{{url}}"
+								"{{project-jaime}}"
 							],
 							"path": [
 								"vars"
@@ -191,7 +191,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "b100c888-72ec-4a2a-8627-35faf4bb4eb8",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -201,22 +200,19 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "a1c41125-0267-467b-92c8-14e6e86ace5e",
 						"type": "text/javascript",
 						"exec": [
 							""
 						]
 					}
 				}
-			],
-			"protocolProfileBehavior": {}
+			]
 		}
 	],
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "f1f3c5d7-f59e-40dc-bdda-102780313b49",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -226,7 +222,6 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "e7c14948-6ed9-4afe-aadf-edac937bcdce",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -236,30 +231,8 @@
 	],
 	"variable": [
 		{
-			"id": "4a831255-0ce8-48eb-94ba-83b1f5f8d181",
-			"key": "url",
+			"key": "project-jaime",
 			"value": "http://localhost:5000"
-		},
-		{
-			"id": "c49e9758-7e22-4725-881a-e84b28ba91cb",
-			"key": "token",
-			"value": ""
-		},
-		{
-			"id": "dc9e7f98-49bb-4f12-b1da-8d4c3345cd43",
-			"key": "id_descuento_ejemplo",
-			"value": ""
-		},
-		{
-			"id": "ee548508-9f5b-4322-8912-4a9519ed3728",
-			"key": "id_descuento_100_pe",
-			"value": ""
-		},
-		{
-			"id": "9a5064f9-9adb-458f-896d-0c5ab8678562",
-			"key": "id_descuento_10_por",
-			"value": ""
 		}
-	],
-	"protocolProfileBehavior": {}
+	]
 }

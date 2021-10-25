@@ -1,5 +1,6 @@
 from multiprocessing import Process
 from typing import Dict, List
+from uuid import UUID, uuid4
 
 from logic.apps.works.services import work_service
 from logic.libs.logger.logger import logger
@@ -7,19 +8,20 @@ from logic.libs.logger.logger import logger
 _PROCESS_RUNING: Dict[str, Process] = {}
 
 
-def run(params: Dict[str, object]) -> int:
+def run(params: Dict[str, object]) -> str:
 
-    process = Process(target=work_service.exec, args=(params))
+    id = generate_id()
+    process = Process(target=work_service.exec, args=(params, id))
 
     global _PROCESS_RUNING
-    _PROCESS_RUNING[process.pid] = process
+    _PROCESS_RUNING[id] = process
 
     process.start()
 
-    return process.pid
+    return id
 
 
-def kill(id: int):
+def kill(id: str):
     global _PROCESS_RUNING
 
     process = _PROCESS_RUNING[id]
@@ -28,13 +30,17 @@ def kill(id: int):
         process.kill()
 
 
-def alive(id: int) -> bool:
+def alive(id: str) -> bool:
     global _PROCESS_RUNING
     process = _PROCESS_RUNING[id]
 
     return process.is_alive()
 
 
-def processes_running() -> List[int]:
+def all_running() -> List[str]:
     global _PROCESS_RUNING
     return _PROCESS_RUNING.keys()
+
+
+def generate_id() -> str:
+    return str(uuid4()).split('-')[4]
