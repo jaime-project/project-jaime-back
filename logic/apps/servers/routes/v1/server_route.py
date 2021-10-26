@@ -20,6 +20,9 @@ def post():
 @blue_print.route('/<name>', methods=['GET'])
 def get(name: str):
     s = server_service.get(name)
+    if not s:
+        return '', 404
+
     return jsonify(s.__dict__), 200
 
 

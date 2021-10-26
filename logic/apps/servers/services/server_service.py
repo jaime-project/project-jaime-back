@@ -1,5 +1,4 @@
 
-import json
 from pathlib import Path
 from typing import Dict, List
 
@@ -8,7 +7,7 @@ from logic.apps.servers.errors.server_error import ServerError
 from logic.apps.servers.models.server_model import Server
 from logic.libs.exception.exception import AppException
 
-_YAML_SERVER_FILE = f'{Path.home()}/.jaime/servers.json'
+_YAML_SERVER_FILE = f'{Path.home()}/.jaime/servers.yaml'
 
 
 def add(server: Server):
@@ -55,7 +54,7 @@ def delete(name: str):
         raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
 
     with open(_YAML_SERVER_FILE, 'w') as f:
-        f.write(json.dumps(servers_new))
+        f.write(yaml.dump(servers_new))
 
 
 def get_path() -> str:
@@ -68,6 +67,9 @@ def _get_servers_from_file() -> List[Server]:
 
     with open(_YAML_SERVER_FILE, 'r') as f:
         servers_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
+
+    if not servers_dict:
+        return []
 
     return [
         Server(
