@@ -1,7 +1,6 @@
 import yaml
 from flask import Blueprint, jsonify, request
 from logic.apps.works.services import work_service
-from logic.apps.processes.services import process_service
 
 blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
 
@@ -12,7 +11,7 @@ def exec():
     params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
         request.data) else request.json
 
-    id = process_service.run(params_dict)
+    id = work_service.start(params_dict)
 
     return jsonify(id=id), 201
 
@@ -28,14 +27,14 @@ def logs(id: str):
 @blue_print.route('/<id>', methods=['DELETE'])
 def delete(id: str):
 
-    work_service.stop_work(id)
+    work_service.delete(id)
     return '', 200
 
 
 @blue_print.route('/', methods=['GET'])
 def get():
 
-    result = process_service.list_all_running()
+    result = work_service.list_all_running()
     return jsonify(result), 200
 
 

@@ -2,9 +2,8 @@ import threading
 import time
 from datetime import datetime, timedelta
 
-from logic.apps.filesystem.services import workingdir_service
-from logic.apps.processes.models.process_model import Status
-from logic.apps.processes.services import process_service
+from logic.apps.works.models.work_model import Status
+from logic.apps.works.services import work_service
 from logic.libs.logger.logger import logger
 
 _THREAD_GARBAGE_ACTIVE = True
@@ -12,13 +11,15 @@ _THREAD_GARBAGE_ACTIVE = True
 
 def garbabge_collector():
 
-    for id in process_service.list_all_running():
+    for id in work_service.list_all_running():
 
-        process = process_service.get(id)
+        work = work_service.get(id)
 
-        if process.status != Status.RUNNING and (datetime.now() + timedelta(minutes=30) < process.end_date or process.status == Status.SUCCESS):
-            process_service.delete_from_list(id)
-            workingdir_service.delete(id)
+        delete = (work.status == Status.ERROR and datetime.now() + timedelta(minutes=30) < work.end_date) or (
+            work.status == Status.SUCCESS and datetime.now() + timedelta(minutes=5) < work.end_date)
+
+        if delete:
+            work_service.delete(id)
             logger().info(f'Deleted workingdir -> {id}')
 
 
