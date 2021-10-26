@@ -20,44 +20,41 @@ setup_servers_json()
 
 print("\n\n")
 print("> Jaimeeehhhh...!!!")
-print("> ¿Si, señora?")
-print("> El OCS necesita CI/CD y no hay Jenkins")
-print("> Por eso siempre traigo scripts")
 print("""
-                                   (@@@@@@@@.                                   
-                            .(####%@@@@@@@@@@*######.                           
-                       ,##########&@@@@@@@@@@############(                      
-                   .(#############&@@@@@@@@@@#################.                 
-                .(################(@@@@@@@@@@####################.              
-              .####################%@@@@@@@@//#####################,            
-            .#################*   (/@@@@@@@(@.     *##################%#%##.    
-           (##############/  ./@@@@,  .@,   @@@@&*     /####(*/############%#   
-          ##############,@@@@@@@@@@@& #@@ *@@@@@@@@@@@@         (###%##,        
-        .#############,@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@(       *(/             
-        #############  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%.(########(            
-       /############   &@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%###########*           
-      .############.   .@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%############           
-      ,############./###@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%(###########/    ,.    
-      ,########%#%%%####*@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%,###########%#####/    
-       .    %##########, @@@@@@@@@@(  #@/        @@@@@@@%.##*. ############,    
-            (##(*        #@@@@@@@@@(  #@/        @@@@@@/       ############     
-          ###(            @@@@@@@@@@@@@@/        @@%          ############/     
-  *###########*           ( .@@@@@@@@@@@/        @@/         (############      
-  *############*          %@@@@@@@@@@@@@/ .......@@#       ,#############.      
-   *#############.          @@@@@@@@@@@@*.      .@@&     ,##############        
-    ,##############*####%#%.  #@@@@@@@@@*,,...,, @@@  .###############(         
-      ######/##%##############*@@@@@@@@@/        @.(#################           
-               ################@@@@@@@@@@@@@@@@@/##################             
-                 /%############%@@@@@@@@@@@@@@@@(###############/               
-                    /##########*@@@@@@@@@@@@@@@%#############*                  
-                        (#######@@@@@@@@@@@@@@@%#########(                      
-                             ,*#(@@@@@@@@@@@@@@*###(*                           
-                                .@@@@@@@@@@@@@&                                 
-                                 @@@@@@@@@@@@@/                                 
-                                 (@@@@@@@@@@@@                                  
-                                 ,@@@@@@@@@@@@                                  
-                                  @@@@@@@@@@@/                                  
-                               %@@@@@@@@@@@@@@@@,                               
+
+                          `+yhyo-                           
+                     `.-:/NMMMMMMo/:--`                     
+                 `-/osyyyhMMMMMMMmyyyyss+:-`                
+              `:osyyyyyyydMMMMMMMmyyyyyyyysso:`             
+            .+syyyyyyyyyyyMMMMMMMdyyyyyyyyyyyys+.           
+          .+syyyyyyyyyyyysmMMMMMN+osyyyyyyyyyyyys+.   `     
+         :syyyyyyyyyys+/-:smMMMmy+``.:+syyyyyyyyyys/+oys.   
+       `/syyyyyyyyy+::/sdm:`+N/`:Nds+-``-+sso++yyyyyyyyyo`  
+      `+yyyyyyyyysyhmNMMMMN:sMo:NMMMMNmdo-```  -oyys+/-.`   
+      /yyyyyyyys+mMMMMMMMMMNNMmNMMMMMMMMMN.  `.-/o.`        
+     -syyyyyyyy:.NMMMMMMMMMMMMMMMMMMMMMMMM+/oossss/         
+     +yyyyyyyy+  hMMMMMMMMMMMMMMMMMMMMMMMMsssssssss.        
+    `syyyyyyys. `+MMMMMMMMMMMMMMMMMMMMMMMMsssssssss+        
+    .yyyyyyyys+os+NMMMMMMMMMMMMMMMMMMMMMMM+sssssssss.-:+-   
+    -so++yyyyyyyy+hMMMMMMMy+hMo+++++sMMMMM/sssosyyyysyyy:   
+    ``` .yyyso+/-./MMMMMMM+ oM.     :MMMMm-:-..syyyyyyyy.   
+       `.o:-.`    `NMMMMMMy/yM.     :Mmyo.    :yyyyyyyys    
+  `.:/+oss-        hdNMMMMMMMM.     :M/      .oyyyyyyyy/    
+ -sssssssso`       +:oMMMMMMMM.`````:M/     .oyyyyyyyyo`    
+ `osssssssso.      `oNMMMMMMMM..```.:Ms   `:syyyyyyyys.     
+  .ssssssssss/.-/+o:.-sMMMMMMM-.```.:Mh `:oyyyyyyyyys-      
+   .osssooyyyyyyyyyys++MMMMMMM:.---./hs/syyyyyyyyyyo.       
+    `:-.``/syyyyyyyyyysNMMMMMMNNNNNmsyyyyyyyyyyyys/`        
+           ./syyyyyyyysdMMMMMMMMMMMmyyyyyyyyyyyo/.          
+             `:osyyyyyyyMMMMMMMMMMMdyyyyyyyyso:`            
+                .:ossyysMMMMMMMMMMMyyyyysso:.               
+                   `.:/+mMMMMMMMMMMoso/:-`                  
+                        sMMMMMMMMMd`                        
+                        /MMMMMMMMMs                         
+                        .MMMMMMMMM:                         
+                         mMMMMMMMM`                         
+                        -dMMMMMMMN:`                        
+                     `/ydddddddddddh+.                      
                                                                                 
 """)
 

@@ -1,8 +1,11 @@
 # :card_index_dividers: project-jaime
 
-> Jaimeeehhh... el jenkins tiene sed
+> Herramienta para migrar jenkins de un cluster de openshift a otro
 
-Herramienta para migrar jenkins de un cluster de openshift a otro
+- Jaimeeehhhh...!!!
+- ¿Si, señora?
+- El OCS necesita CI/CD y no hay Jenkins
+- Por eso siempre traigo scripts
 
 ![alt](img/jaime.png)
 
