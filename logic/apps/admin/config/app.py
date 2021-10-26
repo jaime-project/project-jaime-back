@@ -23,7 +23,7 @@ def setup_modules():
 
 def setup_servers_json():
 
-    json_path = server_service.get_path()
+    yaml_path = server_service.get_path()
 
-    if not os.path.exists(json_path):
-        subprocess.getoutput(f"echo [] > {json_path}")
+    if not os.path.exists(yaml_path):
+        subprocess.getoutput(f"> {yaml_path}")
