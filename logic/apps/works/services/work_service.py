@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 from datetime import datetime
@@ -8,6 +9,7 @@ from uuid import uuid4
 
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.services import module_service
+from logic.apps.modules.errors.module_error import ModulesError
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.libs.exception.exception import AppException
@@ -40,7 +42,7 @@ def delete(id: str):
     worker = get(id)
     if not worker:
         msj = f"No existe worker con id {id}"
-        raise AppException(WorkError.WORK_NOT_EXIST_ERROR, msj)
+        raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
     if worker.thread.is_alive():
         worker.thread.setDaemon(False)
@@ -80,6 +82,10 @@ def _generate_id() -> str:
 
 def _exec(params: Dict[str, object], id: str = str(uuid4())):
 
+    if not params:
+        msj = "Error al parsear los parametros"
+        raise AppException(WorkError.EXECUTE_WORK_ERROR, msj)
+
     workingdir_service.create_by_id(id)
 
     original_workindir = os.getcwd()
@@ -110,10 +116,12 @@ def _exec(params: Dict[str, object], id: str = str(uuid4())):
 
     except AppException as ae:
         error = ae
+        logging.exception(ae)
 
     except Exception as e:
         msj = str(e)
         error = AppException(WorkError.EXECUTE_WORK_ERROR, msj, e)
+        logging.exception(error)
 
     finally:
         os.chdir(original_workindir)

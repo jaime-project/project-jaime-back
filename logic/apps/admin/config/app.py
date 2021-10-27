@@ -26,4 +26,4 @@ def setup_servers_json():
     yaml_path = server_service.get_path()
 
     if not os.path.exists(yaml_path):
-        subprocess.getoutput(f"> {yaml_path}")
+        subprocess.call(f"> {yaml_path}")

@@ -27,7 +27,7 @@ class Server():
         if short_version == "4":
             cmd = f"{self.binary_name()} login --server={self.url} --token={self.token}"
 
-        return subprocess.getoutput(cmd)
+        return subprocess.call(cmd, shell=True)
 
     def binary_name(self) -> str:
         short_version = self.version.split(".")[0]

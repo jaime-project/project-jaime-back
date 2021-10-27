@@ -1,5 +1,6 @@
 import subprocess
 from dataclasses import dataclass
+from subprocess import PIPE, Popen
 
 from logic.apps.filesystem.services.workingdir_service import get
 from logic.apps.servers.errors.server_error import ServerError
@@ -27,10 +28,10 @@ class Oc():
 
 
 def sh(cmd: str, echo: bool = True) -> str:
+
     if echo:
         print(cmd)
-
-    result = subprocess.getoutput(cmd)
+        result = subprocess.call(cmd, shell=True)
     if echo:
         print(result)
 

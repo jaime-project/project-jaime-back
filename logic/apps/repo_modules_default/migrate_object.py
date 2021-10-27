@@ -4,8 +4,7 @@ import re
 from typing import Dict
 
 import yaml
-
-import tools
+from logic.apps.repo_modules_default import tools
 
 
 def exec(params: Dict[str, any]):
