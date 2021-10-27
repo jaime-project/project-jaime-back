@@ -22,6 +22,9 @@ class Oc():
         final_cmd = f"{self.server.binary_name()} {cmd}"
         return sh(final_cmd, echo)
 
+    def binary_name(self) -> str:
+        return self.server.binary_name()
+
 
 def sh(cmd: str, echo: bool = True) -> str:
     if echo:
