@@ -31,7 +31,7 @@ def sh(cmd: str, echo: bool = True) -> str:
 
     if echo:
         print(cmd)
-        result = subprocess.run(cmd, shell=True, stdout=PIPE)
+        result = subprocess.run(cmd, shell=True, stdout=PIPE, close_fds=False)
     if echo and result.stdout:
         print(result.stdout.decode())
 
