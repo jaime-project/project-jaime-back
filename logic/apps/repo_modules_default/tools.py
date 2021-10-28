@@ -31,11 +31,11 @@ def sh(cmd: str, echo: bool = True) -> str:
 
     if echo:
         print(cmd)
-        result = subprocess.call(cmd, shell=True)
-    if echo:
-        print(result)
+        result = subprocess.run(cmd, shell=True, stdout=PIPE)
+    if echo and result.stdout:
+        print(result.stdout.decode())
 
-    return result
+    return result.stdout.decode() if result.stdout else ""
 
 
 def get_oc(server_name: str) -> "Oc":

@@ -3,7 +3,7 @@ import os
 import sys
 from datetime import datetime
 from importlib.util import module_from_spec, spec_from_file_location
-from threading import Thread
+from multiprocessing import Process
 from typing import Dict, List
 from uuid import uuid4
 
@@ -21,10 +21,10 @@ _WORKS_RUNNING: Dict[str, WorkStatus] = {}
 def start(params: Dict[str, object]) -> str:
 
     id = _generate_id()
-    work = Thread(target=_exec, args=(params, id))
+    work = Process(target=_exec, args=(params, id))
 
     global _WORKS_RUNNING
-    _WORKS_RUNNING[id] = WorkStatus(work)
+    _WORKS_RUNNING[id] = WorkStatus(work, id)
 
     work.start()
 
@@ -33,7 +33,13 @@ def start(params: Dict[str, object]) -> str:
 
 def get(id: str) -> WorkStatus:
     global _WORKS_RUNNING
-    return _WORKS_RUNNING.get(id, None)
+
+    work = _WORKS_RUNNING.get(id, None)
+
+    if not work.process.is_alive:
+        finish_work(work.id)
+
+    return work
 
 
 def delete(id: str):
@@ -44,8 +50,8 @@ def delete(id: str):
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
-    if worker.thread.is_alive():
-        worker.thread.setDaemon(False)
+    if worker.process.is_alive:
+        worker.process.kill()
 
     _WORKS_RUNNING = {
         k: v
@@ -61,19 +67,11 @@ def list_all_running() -> List[str]:
     return _WORKS_RUNNING.keys()
 
 
-def finish_work_success(id: str):
-    _finish_work(id, Status.SUCCESS)
-
-
-def finish_work_error(id: str):
-    _finish_work(id, Status.ERROR)
-
-
-def _finish_work(id: str, status: Status):
+def finish_work(id: str, status: Status):
     global _WORKS_RUNNING
     work = _WORKS_RUNNING[id]
     work.end_date = datetime.now()
-    work.status = status
+    work.status = Status.TERMINATED
 
 
 def _generate_id() -> str:
@@ -128,10 +126,7 @@ def _exec(params: Dict[str, object], id: str = str(uuid4())):
         sys.stdout = original_stdout
 
     if error:
-        finish_work_error(id)
         raise error
-
-    finish_work_success(id)
 
 
 def get_logs(id: str) -> str:

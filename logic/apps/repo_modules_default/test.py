@@ -23,4 +23,10 @@ def exec(params: Dict[str, any]):
     for ob in objects_to_migrate:
         print(ob)
 
+
     print(f"{server_from} -> Proceso terminado OK")
+
+    for ob in objects_to_migrate:
+        yaml_dict = oc_from.exec(
+            f'get {object_from} {ob} -n {namespace_from} -o yaml')
+        print(yaml_dict)

@@ -15,8 +15,8 @@ def garbabge_collector():
 
         work = work_service.get(id)
 
-        delete = (work.status == Status.ERROR and datetime.now() + timedelta(minutes=30) < work.end_date) or (
-            work.status == Status.SUCCESS and datetime.now() + timedelta(minutes=5) < work.end_date)
+        delete = work.status == Status.TERMINATED and \
+            datetime.now() + timedelta(minutes=10) < work.end_date
 
         if delete:
             work_service.delete(id)
