@@ -1,0 +1,6 @@
+from enum import Enum
+
+
+class AgentError(Enum):
+    AGENT_NOT_EXIST_ERROR = 'AGENT_NOT_EXIST_ERROR'
+    AGENT_ALREADY_EXIST_ERROR = 'AGENT_ALREADY_EXIST_ERROR'

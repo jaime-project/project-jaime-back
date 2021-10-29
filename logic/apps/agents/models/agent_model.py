@@ -3,7 +3,7 @@ from uuid import uuid4
 
 
 @dataclass
-class Node():
+class Agent():
     type: str
     host: str
     port: int

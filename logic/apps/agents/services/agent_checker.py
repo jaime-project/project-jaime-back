@@ -1,7 +1,7 @@
 import threading
 import time
 
-from logic.apps.nodes.services import node_service
+from logic.apps.agents.services import agent_service
 from logic.libs.logger.logger import logger
 
 _THREAD_NODE_ACTIVE = True
@@ -9,19 +9,19 @@ _THREAD_NODE_ACTIVE = True
 
 def check_node_alive():
 
-    for id in node_service.list_all().keys():
+    for n in agent_service.list_all():
 
         tries = 0
         while tries < 3:
-            if node_service.is_alive(id):
+            if agent_service.is_alive(n.id):
                 break
             else:
                 tries += 1
                 time.sleep(1)
 
             if tries == 3:
-                node_service.delete(id)
-                logger().info(f'Deleted node because its ofline -> {id}')
+                agent_service.delete(n.id)
+                logger().info(f'Deleted node by long time ofline -> {n.id}')
 
 
 def start_node_thread():

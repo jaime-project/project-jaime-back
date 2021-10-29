@@ -21,7 +21,7 @@ def post():
 def get(name: str):
     s = server_service.get(name)
     if not s:
-        return '', 404
+        return '', 204
 
     return jsonify(s.__dict__), 200
 

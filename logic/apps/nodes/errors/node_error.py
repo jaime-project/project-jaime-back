@@ -1,6 +1,0 @@
-from enum import Enum
-
-
-class NodeError(Enum):
-    NODE_NOT_EXIST_ERROR = 'NODE_NOT_EXIST_ERROR'
-    NODE_ALREADY_EXIST_ERROR = 'NODE_ALREADY_EXIST_ERROR'

@@ -1,21 +1,21 @@
 import urllib.request
 from typing import Dict, List
 
-from logic.apps.nodes.errors.node_error import NodeError
-from logic.apps.nodes.models.node_model import Node
+from logic.apps.agents.errors.agent_error import AgentError
+from logic.apps.agents.models.agent_model import Agent
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
-_NODES_ONLINE: Dict[str, Node] = {}
+_NODES_ONLINE: Dict[str, Agent] = {}
 
 
-def add(node: Node):
+def add(node: Agent):
 
     global _NODES_ONLINE
 
     if node in _NODES_ONLINE.values():
         msj = f'Ya existe un nodo con el id {node.id}'
-        raise AppException(NodeError.NODE_ALREADY_EXIST_ERROR, msj)
+        raise AppException(AgentError.NODE_ALREADY_EXIST_ERROR, msj)
 
     id = node.id
     _NODES_ONLINE[id] = node
@@ -31,12 +31,12 @@ def delete(id: str):
     }
 
 
-def get(id: str) -> Node:
+def get(id: str) -> Agent:
     global _NODES_ONLINE
 
     if id not in _NODES_ONLINE.keys():
         msj = f'No existe nodo con el id {id}'
-        raise AppException(NodeError.NODE_NOT_EXIST_ERROR)
+        raise AppException(AgentError.NODE_NOT_EXIST_ERROR)
 
     return _NODES_ONLINE[id]
 
@@ -54,7 +54,7 @@ def is_alive(id: str) -> bool:
         return False
 
 
-def get_by_type(type: str) -> List[Node]:
+def get_by_type(type: str) -> List[Agent]:
     global _NODES_ONLINE
 
     return [
@@ -64,5 +64,5 @@ def get_by_type(type: str) -> List[Node]:
     ]
 
 
-def list_all() -> Dict[str, Node]:
-    return _NODES_ONLINE
+def list_all() -> List[Agent]:
+    return _NODES_ONLINE.values()
