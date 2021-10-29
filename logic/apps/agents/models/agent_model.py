@@ -7,7 +7,13 @@ class Agent():
     type: str
     host: str
     port: int
-    id: str = field(default=uuid4())
+    id: str
+
+    def __init__(self, type: str, host: str, port: int) -> None:
+        self.type = type
+        self.host = host
+        self.port = port
+        self.id = str(uuid4()).split("-")[4]
 
     def __eq__(self, o: object) -> bool:
         return self.id == o.id

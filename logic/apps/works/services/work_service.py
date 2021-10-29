@@ -29,6 +29,37 @@ def start(params: Dict[str, object]) -> str:
     return id
 
 
+def exec_into_agent(work_status: WorkStatus):
+
+    yaml_path = server_service.get_path()
+    with open(yaml_path, 'r') as f:
+        servers_file_bytes = f.read().encode()
+
+    module_name = work_status.params['module']
+    module_path = os.path.join(module_service.get_path(), f'{module_name}.py')
+    with open(module_path, 'r') as f:
+        module_file_bytes = f.read().encode()
+
+    tools_path = os.path.join(module_service.get_path(), f'tools.py')
+    with open(tools_path, 'r') as f:
+        tools_file_bytes = f.read().encode()
+
+    params_file_bytes = str(yaml.dump(work_status.params)).encode()
+
+    url = work_status.agent.get_url() + f'/api/v1/works'
+    files = {
+        'servers': servers_file_bytes,
+        'module': module_file_bytes,
+        'params': params_file_bytes,
+        'tools': tools_file_bytes,
+    }
+    payload = {
+        'id': work_status.id
+    }
+
+    requests.post(url, files=files, data=payload, verify=False)
+
+
 def get(id: str) -> WorkStatus:
     global _WORKS_QUEUE
     return _WORKS_QUEUE.get(id, None)
@@ -96,29 +127,3 @@ def _valid_params(params: Dict[str, object]):
     if not module_name in module_service.list_all():
         msj = f'No existe modulo de nombre {module_name}'
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
-
-
-def exec_into_agent(work_status: WorkStatus):
-
-    yaml_path = server_service.get_path()
-    with open(yaml_path, 'r') as f:
-        servers_file_bytes = f.read().encode()
-
-    module_name = work_status.params['module']
-    module_path = os.path.join(module_service.get_path(), f'{module_name}.py')
-    with open(module_path, 'r') as f:
-        module_file_bytes = f.read().encode()
-
-    params_file_bytes = str(yaml.dump(work_status.params)).encode()
-
-    url = work_status.agent.get_url() + f'/api/v1/works'
-    files = {
-        'servers': servers_file_bytes,
-        'module': module_file_bytes,
-        'params': params_file_bytes
-    }
-    payload = {
-        'id': work_status.id
-    }
-
-    requests.post(url, files=files, data=payload, verify=False)

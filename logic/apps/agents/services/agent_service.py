@@ -11,26 +11,27 @@ from logic.libs.logger.logger import logger
 _AGENTS_ONLINE: Dict[str, Agent] = {}
 
 
-def add(node: Agent):
+def add(agent: Agent):
 
     global _AGENTS_ONLINE
 
-    if node in _AGENTS_ONLINE.values():
-        msj = f'Ya existe un agente con el id {node.id}'
+    if agent in list_all():
+        msj = f'Ya existe un agente con el id {agent.id}'
         raise AppException(AgentError.AGENT_ALREADY_EXIST_ERROR, msj)
 
-    id = node.id
-    _AGENTS_ONLINE[id] = node
+    id = agent.id
+    _AGENTS_ONLINE[id] = agent
 
 
 def delete(id: str):
     global _AGENTS_ONLINE
 
-    _AGENTS_ONLINE = {
-        (k, v)
-        for k, v in _AGENTS_ONLINE.items()
-        if k != id
-    }
+    new_dict = {}
+    for k, v in _AGENTS_ONLINE.items():
+        if k != id:
+            new_dict[k] = v
+
+    _AGENTS_ONLINE = new_dict
 
 
 def get(id: str) -> Agent:
@@ -45,14 +46,14 @@ def get(id: str) -> Agent:
 
 def is_alive(id: str) -> bool:
 
-    node = get(id)
+    agent = get(id)
 
     try:
-        url_alive = node.get_url()
-        return requests.get(url_alive).getcode() == 200
+        url_alive = f'http://{agent.get_url()}/'
+        return requests.get(url_alive).status_code == 200
 
     except Exception as e:
-        logger().exception(e)
+        logger().error(e)
         return False
 
 
@@ -61,12 +62,16 @@ def get_by_type(type: str) -> List[Agent]:
 
     return [
         n
-        for n in _AGENTS_ONLINE.values()
+        for _, n in _AGENTS_ONLINE.items()
         if n.type == type
     ]
 
 
 def list_all() -> List[Agent]:
+    global _AGENTS_ONLINE
+    if not _AGENTS_ONLINE:
+        return []
+
     return _AGENTS_ONLINE.values()
 
 

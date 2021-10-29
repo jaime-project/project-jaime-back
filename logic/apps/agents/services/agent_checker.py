@@ -4,7 +4,7 @@ import time
 from logic.apps.agents.services import agent_service
 from logic.libs.logger.logger import logger
 
-_THREAD_NODE_ACTIVE = True
+_THREAD_AGENT_ACTIVE = True
 
 
 def check_node_alive():
@@ -17,7 +17,7 @@ def check_node_alive():
                 break
             else:
                 tries += 1
-                time.sleep(1)
+                time.sleep(2)
 
             if tries == 3:
                 agent_service.delete(n.id)
@@ -26,12 +26,14 @@ def check_node_alive():
 
 def start_agent_thread():
 
-    global _THREAD_NODE_ACTIVE
-    _THREAD_NODE_ACTIVE = True
+    logger().info('Iniciando hilo -> Agent')
+
+    global _THREAD_AGENT_ACTIVE
+    _THREAD_AGENT_ACTIVE = True
 
     def thread_method():
-        global _THREAD_NODE_ACTIVE
-        while _THREAD_NODE_ACTIVE:
+        global _THREAD_AGENT_ACTIVE
+        while _THREAD_AGENT_ACTIVE:
             check_node_alive()
             time.sleep(10)
 
@@ -40,5 +42,5 @@ def start_agent_thread():
 
 
 def stop_node_thread():
-    global _THREAD_NODE_ACTIVE
-    _THREAD_NODE_ACTIVE = False
+    global _THREAD_AGENT_ACTIVE
+    _THREAD_AGENT_ACTIVE = False
