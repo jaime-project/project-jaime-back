@@ -1,6 +1,7 @@
 import urllib.request
 from typing import Dict, List
 
+import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent
 from logic.libs.exception.exception import AppException
@@ -66,3 +67,12 @@ def get_by_type(type: str) -> List[Agent]:
 
 def list_all() -> List[Agent]:
     return _AGENTS_ONLINE.values()
+
+
+def get_logs(id: str) -> str:
+
+    agent = get(id)
+    
+    url = agent.get_url() + f'/api/v1/works/{id}/logs'
+    result = requests.get(url).content
+    return result.decode() if result else ""

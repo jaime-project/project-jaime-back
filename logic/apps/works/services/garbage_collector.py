@@ -11,12 +11,12 @@ _THREAD_GARBAGE_ACTIVE = True
 
 def garbabge_collector():
 
-    for id in work_service.list_all_running():
+    for id in work_service.list_all():
 
         work = work_service.get(id)
 
         delete = work.status == Status.TERMINATED and \
-            datetime.now() + timedelta(minutes=10) < work.end_date
+            datetime.now() + timedelta(minutes=10) < work.terminated_date
 
         if delete:
             work_service.delete(id)

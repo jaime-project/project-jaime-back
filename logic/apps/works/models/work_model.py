@@ -17,15 +17,14 @@ class WorkStatus():
     id = str
     agent: Agent
     status: Status
-    init_date: datetime
-    end_date: datetime
+    start_date: datetime
+    running_date: datetime
+    terminated_date: datetime
 
-    def __init__(self, id: str, agent: Agent = None, status: Status = Status.READY, init_date: datetime = datetime.now, end_date: datetime = None) -> "WorkStatus":
+    def __init__(self, id: str) -> "WorkStatus":
         self.id = id
-        self.agent = agent
-        self.status = status
-        self.init_date = init_date
-        self.end_date = end_date
+        self.status = Status.READY
+        self.start_date = datetime.now()
 
     def finish(self):
-        self.end_date = datetime.now()
+        self.terminated_date = datetime.now()

@@ -1,6 +1,4 @@
-import os
 from datetime import datetime
-from importlib.util import module_from_spec, spec_from_file_location
 from typing import Dict, List
 from uuid import uuid4
 
@@ -13,7 +11,6 @@ from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.libs.exception.exception import AppException
 
-_LOGS_FILE_NAME = 'logs.log'
 _WORKS_QUEUE: Dict[str, WorkStatus] = {}
 
 
@@ -24,8 +21,7 @@ def start(params: Dict[str, object]) -> str:
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
     agent_type = params['agent']['type']
-    agents = agent_service.get_by_type(agent_type)
-    if not agents:
+    if not agent_service.get_by_type(agent_type):
         msj = f'No se encontro agentes de tipo {agent_type}'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
@@ -39,13 +35,7 @@ def start(params: Dict[str, object]) -> str:
 
 def get(id: str) -> WorkStatus:
     global _WORKS_QUEUE
-
-    work = _WORKS_QUEUE.get(id, None)
-
-    if not work.process.is_alive:
-        finish_work(work.id)
-
-    return work
+    return _WORKS_QUEUE.get(id, None)
 
 
 def delete(id: str):
@@ -56,56 +46,40 @@ def delete(id: str):
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
-    if worker.process.is_alive:
-        worker.process.kill()
-
     _WORKS_QUEUE = {
         k: v
         for k, v in _WORKS_QUEUE.items()
         if k != id
     }
 
-    workingdir_service.delete(id)
 
-
-def list_all_running() -> List[str]:
+def list_all() -> List[str]:
     global _WORKS_QUEUE
     return _WORKS_QUEUE.keys()
 
 
-def finish_work(id: str, status: Status):
+def change_status(id: str, status: Status):
     global _WORKS_QUEUE
     work = _WORKS_QUEUE[id]
-    work.end_date = datetime.now()
-    work.status = Status.TERMINATED
+
+    if status == Status.TERMINATED:
+        work.terminated_date = datetime.now()
+
+    if status == Status.RUNNING:
+        work.running_date = datetime.now()
+
+    work.status = status
 
 
 def _generate_id() -> str:
     return str(uuid4()).split('-')[4]
 
 
-def _put_work_on_queue(params: Dict[str, object]) -> Agent:
-
-    if not 'agent' in params or not 'type' in params['agent']:
-        msj = f'El tipo de agente es requerido'
-        raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
-
-    agent_type = params['agent']['type']
-    agents = agent_service.get_by_type(agent_type)
-    if not agents:
-        msj = f'No se encontro agentes de tipo {agent_type}'
-        raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
-
-
 def get_logs(id: str) -> str:
 
-    log_path = os.path.join(workingdir_service.fullpath(id), _LOGS_FILE_NAME)
+    global _WORKS_QUEUE
+    if not id in _WORKS_QUEUE:
+        msj = f'el Work con id {id} todabia no esta corriendo'
+        raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
 
-    if not os.path.exists(log_path):
-        msj = f"No existe el log para el id {id}"
-        raise AppException(WorkError.WORK_NOT_EXIST_ERROR, msj)
-
-    with open(log_path, 'r') as f:
-        content = f.read()
-
-    return content
+    return agent_service.get_logs(id)
