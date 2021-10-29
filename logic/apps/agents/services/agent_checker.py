@@ -24,7 +24,7 @@ def check_node_alive():
                 logger().info(f'Deleted node by long time ofline -> {n.id}')
 
 
-def start_node_thread():
+def start_agent_thread():
 
     global _THREAD_NODE_ACTIVE
     _THREAD_NODE_ACTIVE = True
@@ -33,7 +33,7 @@ def start_node_thread():
         global _THREAD_NODE_ACTIVE
         while _THREAD_NODE_ACTIVE:
             check_node_alive()
-            time.sleep(5)
+            time.sleep(10)
 
     thread = threading.Thread(target=thread_method)
     thread.start()

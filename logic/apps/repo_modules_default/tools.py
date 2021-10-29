@@ -1,7 +1,10 @@
 import subprocess
+import sys
 from dataclasses import dataclass
 from subprocess import PIPE, Popen
+from typing import Dict
 
+import yaml
 from logic.apps.filesystem.services.workingdir_service import get
 from logic.apps.servers.errors.server_error import ServerError
 from logic.apps.servers.models.server_model import Server
@@ -44,3 +47,8 @@ def get_oc(server_name: str) -> "Oc":
         msj = f'No existe el server de nombre {server_name}'
         raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
     return Oc(server_service.get(server_name))
+
+
+def get_params() -> Dict[str, object]:
+    with open(sys.argv[1], 'r') as f:
+        return yaml.load(f.read())

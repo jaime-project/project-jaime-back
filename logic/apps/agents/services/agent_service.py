@@ -6,39 +6,39 @@ from logic.apps.agents.models.agent_model import Agent
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
-_NODES_ONLINE: Dict[str, Agent] = {}
+_AGENTS_ONLINE: Dict[str, Agent] = {}
 
 
 def add(node: Agent):
 
-    global _NODES_ONLINE
+    global _AGENTS_ONLINE
 
-    if node in _NODES_ONLINE.values():
+    if node in _AGENTS_ONLINE.values():
         msj = f'Ya existe un nodo con el id {node.id}'
         raise AppException(AgentError.NODE_ALREADY_EXIST_ERROR, msj)
 
     id = node.id
-    _NODES_ONLINE[id] = node
+    _AGENTS_ONLINE[id] = node
 
 
 def delete(id: str):
-    global _NODES_ONLINE
+    global _AGENTS_ONLINE
 
-    _NODES_ONLINE = {
+    _AGENTS_ONLINE = {
         (k, v)
-        for k, v in _NODES_ONLINE.items()
+        for k, v in _AGENTS_ONLINE.items()
         if k != id
     }
 
 
 def get(id: str) -> Agent:
-    global _NODES_ONLINE
+    global _AGENTS_ONLINE
 
-    if id not in _NODES_ONLINE.keys():
+    if id not in _AGENTS_ONLINE.keys():
         msj = f'No existe nodo con el id {id}'
         raise AppException(AgentError.NODE_NOT_EXIST_ERROR)
 
-    return _NODES_ONLINE[id]
+    return _AGENTS_ONLINE[id]
 
 
 def is_alive(id: str) -> bool:
@@ -55,14 +55,14 @@ def is_alive(id: str) -> bool:
 
 
 def get_by_type(type: str) -> List[Agent]:
-    global _NODES_ONLINE
+    global _AGENTS_ONLINE
 
     return [
         n
-        for n in _NODES_ONLINE.values()
+        for n in _AGENTS_ONLINE.values()
         if n.type == type
     ]
 
 
 def list_all() -> List[Agent]:
-    return _NODES_ONLINE.values()
+    return _AGENTS_ONLINE.values()
