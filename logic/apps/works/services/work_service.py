@@ -48,10 +48,10 @@ def exec_into_agent(work_status: WorkStatus):
 
     url = work_status.agent.get_url() + f'/api/v1/works'
     files = {
-        'servers': servers_file_bytes,
-        'module': module_file_bytes,
-        'params': params_file_bytes,
-        'tools': tools_file_bytes,
+        'servers.yaml': servers_file_bytes,
+        'module.py': module_file_bytes,
+        'params.yaml': params_file_bytes,
+        'tools.py': tools_file_bytes,
     }
     payload = {
         'id': work_status.id

@@ -1,15 +1,48 @@
 import subprocess
 import sys
 from dataclasses import dataclass
-from subprocess import PIPE, Popen
+from subprocess import PIPE
 from typing import Dict
 
 import yaml
-from logic.apps.filesystem.services.workingdir_service import get
-from logic.apps.servers.errors.server_error import ServerError
-from logic.apps.servers.models.server_model import Server
-from logic.apps.servers.services import server_service
-from logic.libs.exception.exception import AppException
+
+_SERVER_FILE_NAME = 'servers.yaml'
+
+
+@dataclass
+class Server():
+    name: str
+    url: str
+    token: str
+    version: str
+
+    def __init__(self, name: str, url: str, token: str, version: str) -> "Server":
+        self.name = name
+        self.url = url
+        self.token = token
+        self.version = version
+
+    def __eq__(self, o: object) -> bool:
+        return self.name == o.name
+
+    def login(self) -> str:
+        short_version = self.version.split(".")[0]
+
+        if short_version == "3":
+            cmd = f"{self.binary_name()} login {self.url} --token={self.token}"
+
+        if short_version == "4":
+            cmd = f"{self.binary_name()} login --server={self.url} --token={self.token}"
+
+        subprocess.run(cmd, shell=True)
+
+    def binary_name(self) -> str:
+        short_version = self.version.split(".")[0]
+
+        if short_version == "3":
+            return "oc"
+
+        return "oc"
 
 
 @dataclass
@@ -34,7 +67,7 @@ def sh(cmd: str, echo: bool = True) -> str:
 
     if echo:
         print(cmd)
-        result = subprocess.run(cmd, shell=True, stdout=PIPE, close_fds=False)
+        result = subprocess.run(cmd, shell=True, stdout=PIPE)
     if echo and result.stdout:
         print(result.stdout.decode())
 
@@ -42,11 +75,23 @@ def sh(cmd: str, echo: bool = True) -> str:
 
 
 def get_oc(server_name: str) -> "Oc":
-    server = server_service.get(server_name)
-    if not server:
-        msj = f'No existe el server de nombre {server_name}'
-        raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
-    return Oc(server_service.get(server_name))
+
+    with open(_SERVER_FILE_NAME, 'r') as f:
+        servers_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
+
+    for s in servers_dict:
+
+        if s['name'] == server_name:
+            server = Server(
+                name=s['name'],
+                url=s['url'],
+                token=s['token'],
+                version=s['version']
+            )
+            return Oc(server)
+
+    if not server_name in servers_dict:
+        raise Exception(f'No existe el server de nombre {server_name}')
 
 
 def get_params() -> Dict[str, object]:
