@@ -34,7 +34,7 @@ class Server():
         if short_version == "4":
             cmd = f"{self.binary_name()} login --server={self.url} --token={self.token}"
 
-        subprocess.run(cmd, shell=True)
+        sh(cmd)
 
     def binary_name(self) -> str:
         short_version = self.version.split(".")[0]
@@ -67,11 +67,11 @@ def sh(cmd: str, echo: bool = True) -> str:
 
     if echo:
         print(cmd)
-        result = subprocess.run(cmd, shell=True, stdout=PIPE)
-    if echo and result.stdout:
-        print(result.stdout.decode())
+        result = subprocess.getoutput(cmd)
+    if echo and result:
+        print(result)
 
-    return result.stdout.decode() if result.stdout else ""
+    return result if result else ""
 
 
 def get_oc(server_name: str) -> "Oc":
