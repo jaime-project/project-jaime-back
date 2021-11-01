@@ -1,10 +1,9 @@
-import urllib.request
 from typing import Dict, List
 
 import requests
-from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent
+from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
@@ -80,6 +79,9 @@ def list_all() -> List[Agent]:
 def get_logs(id: str) -> str:
 
     agent = work_service.get(id).agent
+    if not agent:
+        msj = f'el Work con id {id} todabia no esta corriendo'
+        raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
 
     url = agent.get_url() + f'/api/v1/works/{id}/logs'
     result = requests.get(url, verify=False).content

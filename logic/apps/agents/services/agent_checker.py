@@ -17,7 +17,7 @@ def check_node_alive():
                 break
             else:
                 tries += 1
-                time.sleep(5000)
+                time.sleep(3)
 
             if tries == 3:
                 agent_service.delete(n.id)
@@ -35,7 +35,7 @@ def start_agent_thread():
         global _THREAD_AGENT_ACTIVE
         while _THREAD_AGENT_ACTIVE:
             check_node_alive()
-            time.sleep(30000)
+            time.sleep(10)
 
     thread = threading.Thread(target=thread_method)
     thread.start()
