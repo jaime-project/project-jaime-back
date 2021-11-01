@@ -29,10 +29,10 @@ class Server():
         short_version = self.version.split(".")[0]
 
         if short_version == "3":
-            cmd = f"{self.binary_name()} login {self.url} --token={self.token}"
+            cmd = f"{self.binary_name()} login {self.url} --token={self.token} --insecure-skip-tls-verify"
 
         if short_version == "4":
-            cmd = f"{self.binary_name()} login --server={self.url} --token={self.token}"
+            cmd = f"{self.binary_name()} login --server={self.url} --token={self.token} --insecure-skip-tls-verify"
 
         sh(cmd)
 

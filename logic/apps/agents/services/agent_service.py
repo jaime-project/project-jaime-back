@@ -64,7 +64,7 @@ def get_by_type(type: str) -> List[Agent]:
     return [
         n
         for _, n in _AGENTS_ONLINE.items()
-        if n.type == type
+        if n.type.lower() == type.lower()
     ]
 
 
