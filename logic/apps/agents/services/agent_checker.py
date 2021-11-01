@@ -17,11 +17,11 @@ def check_node_alive():
                 break
             else:
                 tries += 1
-                time.sleep(2)
+                time.sleep(3)
 
             if tries == 3:
                 agent_service.delete(n.id)
-                logger().info(f'Deleted node by long time ofline -> {n.id}')
+                logger().info(f'Borrando agente por fuera de linea -> {n.id}')
 
 
 def start_agent_thread():

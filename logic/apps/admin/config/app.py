@@ -12,7 +12,7 @@ def setup_modules():
     names_modules = module_service.list_default()
 
     default_path = module_service.get_default_path()
-    modules_path = f'{Path.home()}/.jaime/modules'
+    modules_path = module_service.get_path()
 
     if not os.path.exists(modules_path):
         os.makedirs(modules_path, exist_ok=True)
@@ -21,9 +21,9 @@ def setup_modules():
         shutil.copy(f'{default_path}/{name}.py', f'{modules_path}/{name}.py')
 
 
-def setup_servers_json():
+def setup_servers():
 
     yaml_path = server_service.get_path()
 
     if not os.path.exists(yaml_path):
-        subprocess.call(f"> {yaml_path}")
+        subprocess.getoutput(f"> {yaml_path}")
