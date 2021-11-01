@@ -2,12 +2,13 @@
 from flask.app import Flask
 
 from logic.apps.admin.config.logger import setup_loggers
-from logic.apps.admin.config.app import setup_modules, setup_servers_json
+from logic.apps.admin.config.app import setup_modules, setup_servers
 from logic.apps.admin.config.rest import setup_rest
 from logic.apps.admin.config.variables import Vars, setup_vars
 from logic.apps.works.services.work_runner import start_runner_thread
 from logic.apps.agents.services.agent_checker import start_agent_thread
 from logic.libs.variables.variables import get_var
+from logic.libs.logger.logger import logger
 
 app = Flask(__name__)
 
@@ -18,12 +19,12 @@ setup_rest(app)
 start_runner_thread()
 start_agent_thread()
 setup_modules()
-setup_servers_json()
+setup_servers()
 
-print("\n\n")
-print("> Jaimeeehhhh...!!!")
-print("> ¿Si? señora")
-print("""
+logger().info("\n\n")
+logger().info("> Jaimeeehhhh...!!!")
+logger().info("> ¿Si? señora")
+logger().info("""
 
                           `+yhyo-                           
                      `.-:/NMMMMMMo/:--`                     

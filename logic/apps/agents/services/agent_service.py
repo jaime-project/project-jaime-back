@@ -52,8 +52,7 @@ def is_alive(id: str) -> bool:
     agent = get(id)
 
     try:
-        url_alive = agent.get_url() + '/'
-        return requests.get(url_alive).status_code == 200
+        return requests.get(agent.get_url(), verify=False).status_code == 200
 
     except Exception as e:
         logger().error(e)
@@ -83,7 +82,7 @@ def get_logs(id: str) -> str:
     agent = work_service.get(id).agent
 
     url = agent.get_url() + f'/api/v1/works/{id}/logs'
-    result = requests.get(url).content
+    result = requests.get(url, verify=False).content
     return result.decode() if result else ""
 
 

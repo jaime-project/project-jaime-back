@@ -84,9 +84,12 @@ def _get_servers_from_file() -> List[Server]:
 
 def _save_server_in_file(server: Server):
 
-    servers = _get_servers_from_file()
+    servers_dict = [
+        s.__dict__
+        for s in _get_servers_from_file()
+    ]
 
-    servers.append({
+    servers_dict.append({
         "name": server.name,
         "url": server.url,
         "token": server.token,
@@ -94,4 +97,4 @@ def _save_server_in_file(server: Server):
     })
 
     with open(_YAML_SERVER_FILE, 'w') as f:
-        f.write(yaml.dump(servers))
+        f.write(yaml.dump(servers_dict))
