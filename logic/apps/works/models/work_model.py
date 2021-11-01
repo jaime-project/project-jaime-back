@@ -29,6 +29,7 @@ class WorkStatus():
         self.params = params
         self.status = Status.READY
         self.start_date = datetime.now()
+        self.agent = None
 
     def finish(self):
         self.terminated_date = datetime.now()

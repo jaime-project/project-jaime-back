@@ -2,6 +2,7 @@ import urllib.request
 from typing import Dict, List
 
 import requests
+from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent
 from logic.apps.works.services import work_service
@@ -21,6 +22,8 @@ def add(agent: Agent):
 
     id = agent.id
     _AGENTS_ONLINE[id] = agent
+
+    logger().info(f'Nuevo agente conectado -> id: {id}')
 
 
 def delete(id: str):
@@ -49,7 +52,7 @@ def is_alive(id: str) -> bool:
     agent = get(id)
 
     try:
-        url_alive = f'http://{agent.get_url()}/'
+        url_alive = agent.get_url() + '/'
         return requests.get(url_alive).status_code == 200
 
     except Exception as e:
@@ -77,7 +80,7 @@ def list_all() -> List[Agent]:
 
 def get_logs(id: str) -> str:
 
-    agent = get(id)
+    agent = work_service.get(id).agent
 
     url = agent.get_url() + f'/api/v1/works/{id}/logs'
     result = requests.get(url).content

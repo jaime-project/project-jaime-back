@@ -3,7 +3,9 @@ from datetime import datetime
 from typing import Dict, List
 from uuid import uuid4
 
+import requests
 import yaml
+from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.modules.errors.module_error import ModulesError
@@ -12,7 +14,6 @@ from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.libs.exception.exception import AppException
-import requests
 
 _WORKS_QUEUE: Dict[str, WorkStatus] = {}
 
