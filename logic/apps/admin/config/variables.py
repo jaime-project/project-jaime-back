@@ -9,6 +9,7 @@ class Vars(Enum):
     PYTHON_PORT = 'PYTHON_PORT'
     LOGS_LEVEL = 'LOGS_LEVEL'
     LOGS_BACKUPS = 'LOGS_BACKUPS'
+    AGENTS_HTTPS = 'AGENTS_HTTPS'
 
 
 def setup_vars():

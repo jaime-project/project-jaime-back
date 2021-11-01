@@ -34,7 +34,7 @@ def delete(id: str):
 @blue_print.route('/', methods=['GET'])
 def get():
 
-    result = work_service.list_all_running()
+    result = work_service.list_all()
     return jsonify(result), 200
 
 

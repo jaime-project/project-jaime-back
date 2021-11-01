@@ -1,28 +1,35 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from threading import Thread
+from typing import Dict
+
+from logic.apps.agents.models.agent_model import Agent
 
 
 class Status(Enum):
-    SUCCESS = 'SUCCESS'
-    ERROR = 'ERROR'
     RUNNING = 'RUNNING'
+    TERMINATED = 'TERMINATED'
+    READY = 'READY'
 
 
 @dataclass
 class WorkStatus():
 
-    thread: Thread
+    id = str
+    params: Dict[str, object]
+    agent: Agent
     status: Status
-    init_date: datetime
-    end_date: datetime
+    start_date: datetime
+    running_date: datetime
+    terminated_date: datetime
+    terminated_date: datetime
 
-    def __init__(self, thread: Thread, status: Status = Status.RUNNING, init_date: datetime = datetime.now, end_date: datetime = None) -> "WorkStatus":
-        self.thread = thread
-        self.status = status
-        self.init_date = init_date
-        self.end_date = end_date
+    def __init__(self, id: str, params: Dict[str, object]) -> "WorkStatus":
+        self.id = id
+        self.params = params
+        self.status = Status.READY
+        self.start_date = datetime.now()
+        self.agent = None
 
     def finish(self):
-        self.end_date = datetime.now()
+        self.terminated_date = datetime.now()
