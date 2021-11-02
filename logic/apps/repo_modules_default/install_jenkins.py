@@ -73,10 +73,10 @@ print(f'\n\n')
 
 print(f'Creando CRB con nombre jenkins-cluster-admin')
 crb_yaml = f"""
-kind: ClusterRoleBinding
+kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: jenkins-cluster-admin
+  name: jenkins-admin
 subjects:
   - kind: ServiceAccount
     name: jenkins
@@ -84,7 +84,7 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin
+  name: admin
 """
 with open('crb.yaml', 'w') as f:
     f.write(crb_yaml)
