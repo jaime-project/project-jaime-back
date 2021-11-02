@@ -5,7 +5,6 @@ from uuid import uuid4
 
 import requests
 import yaml
-from logic.apps.admin.config.variables import Vars, get_var
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.modules.errors.module_error import ModulesError

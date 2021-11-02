@@ -99,7 +99,7 @@ def get_available_agent_by_type(type: str) -> Agent:
     agents_working = [
         work_service.get(id_w).agent
         for id_w in work_service.list_all()
-        if work_service.get(id_w).status != Status.RUNNING
+        if work_service.get(id_w).status == Status.RUNNING
     ]
 
     for a in agents:
