@@ -22,14 +22,15 @@ class WorkStatus():
     start_date: datetime
     running_date: datetime
     terminated_date: datetime
-    terminated_date: datetime
 
     def __init__(self, id: str, params: Dict[str, object]) -> "WorkStatus":
         self.id = id
         self.params = params
+        self.agent = None
         self.status = Status.READY
         self.start_date = datetime.now()
-        self.agent = None
+        self.running_date = None
+        self.terminated_date = None
 
     def finish(self):
         self.terminated_date = datetime.now()

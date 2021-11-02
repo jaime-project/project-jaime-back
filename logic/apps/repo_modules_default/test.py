@@ -27,7 +27,7 @@ for ob in objects_to_migrate:
 
 print(f"{server_from} -> Proceso terminado OK")
 
-for ob in objects_to_migrate:
-    yaml_dict = oc_from.exec(
-        f'get {object_from} {ob} -n {namespace_from} -o yaml')
-    print(yaml_dict)
+# for ob in objects_to_migrate:
+#     yaml_dict = oc_from.exec(
+#         f'get {object_from} {ob} -n {namespace_from} -o yaml')
+#     print(yaml_dict)
