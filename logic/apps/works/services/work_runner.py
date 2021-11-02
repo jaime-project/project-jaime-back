@@ -27,8 +27,8 @@ def runner():
             continue
 
         work.agent = agent
-        work.start_date = datetime.now()
         work.status = Status.RUNNING
+        work.running_date = datetime.now()
 
         work_service.exec_into_agent(work)
 
