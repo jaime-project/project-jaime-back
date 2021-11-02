@@ -1,7 +1,7 @@
 from typing import Dict
 
 import yaml
-from logic.apps.repo_modules_default import tools
+import tools
 
 with open('params.yaml', 'r') as f:
     params = yaml.load(f.read(), Loader=yaml.FullLoader)
@@ -24,14 +24,14 @@ conf_storage_class = params['jenkins']['config']['storageClass']
 oc = tools.get_oc(server)
 oc.login()
 
-oc.exec('get pods')
 
 print(f'Creando {namespace}')
 oc.exec(f'new-project {namespace}')
 print(f'\n\n')
 
+
 print(f'Creando PVC en {namespace} con nombre jenkins-persistent')
-tools.sh(f""" echo "\
+pvc_yaml = f"""
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
@@ -46,19 +46,22 @@ resources:
     requests:
     storage: {conf_vol}
 storageClassName: {conf_storage_class}
-volumeMode: Filesystem \
-" | {oc.binary_name()} -n {namespace} apply -f -
-    """)
+volumeMode: Filesystem
+"""
+with open('pvc.yaml', 'w') as f:
+    f.write(pvc_yaml)
+oc.exec(f'apply -f pvc.yaml')
 print(f'\n\n')
+
 
 print(f'Descargando imagen {image_url}:{image_tag} en {is_namespace}')
 oc.exec(
-    f'import-image openshift4/{is_name}:{is_tag} --from={image_url}:{image_tag} --confirm -n {is_namespace}')
+    f'import-image openshift4/{is_name}:{is_tag} --from={image_url} --confirm -n {is_namespace}')
 print(f'\n\n')
 
+
 print(f'Instalando Jenkins en {namespace}')
-oc.exec(f"""
-oc new-app -n {namespace} \
+oc.exec(f"""new-app -n {namespace} \
 	--template={conf_template} \
 	--param=NAMESPACE={is_namespace} \
 	--param=MEMORY_LIMIT={conf_ram} \
@@ -67,8 +70,9 @@ oc new-app -n {namespace} \
 """)
 print(f'\n\n')
 
+
 print(f'Creando CRB con nombre jenkins-cluster-admin')
-tools.sh(f""" echo "\
+crb_yaml = f"""
 kind: ClusterRoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
@@ -80,10 +84,13 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: cluster-admin \
-" | {oc.binary_name()} -n {namespace} apply -f -
-    """)
+  name: cluster-admin
+"""
+with open('crb.yaml', 'w') as f:
+    f.write(crb_yaml)
+oc.exec(f'apply -f crb.yaml')
 print(f'\n\n')
+
 
 print(f'Configurando Jenkins')
 oc.exec(f"""set -n {namespace} env dc jenkins \
