@@ -4,6 +4,7 @@ import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent
 from logic.apps.works.errors.work_error import WorkError
+from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
@@ -98,6 +99,7 @@ def get_available_agent_by_type(type: str) -> Agent:
     agents_working = [
         work_service.get(id_w).agent
         for id_w in work_service.list_all()
+        if work_service.get(id_w).status != Status.RUNNING
     ]
 
     for a in agents:

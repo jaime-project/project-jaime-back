@@ -1,5 +1,6 @@
 import yaml
 from flask import Blueprint, jsonify, request
+from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 
 blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
@@ -31,8 +32,29 @@ def delete(id: str):
     return '', 200
 
 
+@blue_print.route('/<id>', methods=['GET'])
+def get(id: str):
+
+    result = work_service.get(id)
+    if not result:
+        return '', 204
+
+    
+    result_dict = result.__dict__
+    result_dict['status'] = str(result_dict['status'])
+
+    return jsonify(result.__dict__), 200
+
+
+@blue_print.route('/<id>/finish', methods=['PATCH'])
+def finish(id: str):
+
+    work_service.change_status(id, Status.TERMINATED)
+    return '', 200
+
+
 @blue_print.route('/', methods=['GET'])
-def get():
+def list():
 
     result = work_service.list_all()
     return jsonify(result), 200
