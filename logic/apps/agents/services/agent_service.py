@@ -79,10 +79,7 @@ def list_all() -> List[Agent]:
 
 def get_logs(id: str) -> str:
 
-    agent = work_service.get(id).agent
-    if not agent:
-        msj = f'el Work con id {id} todabia no esta corriendo'
-        raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
+    agent = _get_agent_from_work(id)
 
     url = agent.get_url() + f'/api/v1/works/{id}/logs'
     result = requests.get(url, verify=False).content
@@ -107,3 +104,21 @@ def get_available_agent_by_type(type: str) -> Agent:
             return a
 
     return None
+
+
+def delete_work(id: str):
+
+    agent = _get_agent_from_work(id)
+
+    url = agent.get_url() + f'/api/v1/works/{id}/'
+    requests.delete(url, verify=False)
+
+
+def _get_agent_from_work(id: str) -> Agent:
+
+    agent = work_service.get(id).agent
+    if not agent:
+        msj = f'el Work con id {id} todabia no esta corriendo'
+        raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
+
+    return agent

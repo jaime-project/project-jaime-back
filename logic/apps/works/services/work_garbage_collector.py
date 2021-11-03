@@ -20,8 +20,9 @@ def garbage_collector():
         if work.status != Status.TERMINATED:
             continue
 
-        if work.terminated_date + timedelta(minutes=10) > datetime.now():
+        if work.terminated_date + timedelta(hours=24) < datetime.now():
             work_service.delete(id)
+            agent_service.delete_work(id)
             logger().info(f'Borrando proceso TERMINATED -> id: {id}')
 
 
