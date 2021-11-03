@@ -37,14 +37,14 @@ apiVersion: v1
 metadata:
 name: jenkins
 labels:
-    app: jenkins-persistent
-    template: {conf_template}-template
+  app: jenkins-persistent
+  template: {conf_template}-template
 spec:
 accessModes:
-    - ReadWriteMany
+  - ReadWriteMany
 resources:
-    requests:
-    storage: {conf_vol}
+  requests:
+  storage: {conf_vol}
 storageClassName: {conf_storage_class}
 volumeMode: Filesystem
 """
