@@ -44,17 +44,18 @@ def delete(name: str):
 
     servers = _get_servers_from_file()
 
-    servers_new = [
-        s for s in servers
+    servers_dict = [
+        s.__dict__
+        for s in servers
         if s.name != name
     ]
 
-    if len(servers_new) == len(servers):
+    if len(servers_dict) == len(servers):
         msj = f"El server con nombre {name} no existe"
         raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
 
     with open(_YAML_SERVER_FILE, 'w') as f:
-        f.write(yaml.dump(servers_new))
+        f.write(yaml.dump(servers_dict))
 
 
 def get_path() -> str:

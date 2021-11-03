@@ -4,7 +4,7 @@ import re
 from typing import Dict
 
 import yaml
-from logic.apps.repo_modules_default import tools
+import tools
 
 
 with open('params.yaml', 'r') as f:
@@ -23,13 +23,15 @@ method_to = params['servers']['to'].get('method', 'apply')
 oc_from = tools.get_oc(server_from)
 oc_from.login()
 
+print(f"{server_from} -> Obtieniendo todos los objetos")
 objects_to_migrate = [
     ob
     for ob
     in oc_from.exec(f'get {object_from} -n {namespace_from} -o custom-columns=NAME:.metadata.name').split('\n')[1:-1]
 ]
+print(f"{server_from} -> Objetos entontrados: {len(objects_to_migrate)}")
 
-tools.sh('mkdir yamls')
+tools.sh('mkdir yamls/')
 
 for ob in objects_to_migrate:
 
@@ -52,16 +54,17 @@ for ob in objects_to_migrate:
 oc_to = tools.get_oc(server_to)
 oc_to.login()
 
-yamls_to_migrate = [
-    nombre_archivo
-    for _, _, nombre_archivo in os.walk('yamls/')
-]
+oc_to.exec(f'new-project {namespace_to}')
+
+yamls_to_migrate = []
+for _, _, file_name in os.walk('yamls/'):
+    yamls_to_migrate.extend(file_name)
 print(f'{server_to} -> Por migrar {len(yamls_to_migrate)} {object_from}')
 
 yamls_errors = []
 for yaml_to_migrate in yamls_to_migrate:
     try:
-        with open(f'yamls/{yaml_to_migrate}') as file:
+        with open(f'yamls/{yaml_to_migrate}', 'r') as file:
             dic_yaml = yaml.load(file, Loader=yaml.FullLoader)
 
         dic_yaml['metadata'].pop('creationTimestamp', None)
@@ -72,9 +75,10 @@ for yaml_to_migrate in yamls_to_migrate:
         dic_yaml.pop('status', None)
 
         yaml_to_apply = yaml.dump(dic_yaml, default_flow_style=False)
+        with open(f'yamls/{yaml_to_migrate}', 'w') as f:
+            f.write(yaml_to_apply)
 
-        tools.sh(
-            f'echo "{yaml_to_apply}" | {oc_to.server.binary_name()} {method_to} -n {namespace_to} -f -')
+        oc_to.exec(f'{method_to} -n {namespace_to} -f yamls/{yaml_to_migrate}')
         print(f'{server_to} -> Migrado {yaml_to_migrate}')
 
     except Exception as e:
