@@ -6,7 +6,7 @@ from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.libs.exception.exception import AppException
 
-_DEFAULT_RELATIVE_PATH = f'logic/apps/repo_modules_default'
+_DEFAULT_RELATIVE_PATH = f'repo_modules_default'
 _MODULES_PATH = f'{Path.home()}/.jaime/modules'
 
 
