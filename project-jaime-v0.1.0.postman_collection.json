@@ -32,6 +32,32 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/agents/:id",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"agents",
+												":id"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "825c2803ec30"
+												}
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						},
@@ -76,7 +102,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "f17653a91e16"
+													"value": "d27a033a5854"
 												}
 											]
 										}
@@ -90,7 +116,31 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "module: test\nagent:\n    type: oc\nservers:\n  from:\n    name: lasegunda\n    namespace: msdesa\n    object: bc"
+											"raw": "module: test\nagent:\n    type: oc\nservers:\n  from:\n    name: lasegunda\n    namespace: msdesa\n    object: configmaps"
+										},
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/works/",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"works",
+												""
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "exec migrate",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "module: migrate_object\nagent:\n    type: oc\nservers:\n  from:\n    name: lasegunda\n    namespace: msdesa\n    object: bc\n    only:\n      - \".*-pipeline-develop\"\n  to:\n    name: jaime\n    namespace: msdesa"
 										},
 										"url": {
 											"raw": "{{project-jaime}}/api/v1/works/",
@@ -114,7 +164,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "module: install_jenkins\nserver:\n  name: jaime\n  namespace: jaime\njenkins:\n  image:\n    url: registry.redhat.io/openshift4/ose-jenkins\n    tag: 4.8.0\n  imageStream:\n    namespace: jaime\n    name: oce-jenkins\n    tag: 4.8.0\n  config:\n    template: jenkins-persistent\n    memoryRAM: 4Gi\n    memoryVolume: 4Gi\n    storageClass: thin\n"
+											"raw": "module: install_jenkins\nagent:\n  type: oc\nserver:\n  name: jaime\n  namespace: jenkins\njenkins:\n  image:\n    url: registry.redhat.io/openshift4/ose-jenkins\n    tag: 4.8.0\n  imageStream:\n    namespace: jenkins\n    name: oce-jenkins\n    tag: 4.8.0\n  config:\n    template: jenkins-persistent\n    memoryRAM: 4Gi\n    memoryVolume: 4Gi\n    storageClass: gp2\n"
 										},
 										"url": {
 											"raw": "{{project-jaime}}/api/v1/works/",
@@ -151,7 +201,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "490caef099ee"
+													"value": "d27a033a5854"
 												}
 											]
 										}
@@ -288,6 +338,35 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "post jaime",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"name\": \"jaime\",\n    \"url\": \"https://api.cluster-7nv9j.7nv9j.sandbox1538.opentlc.com:6443\",\n    \"token\": \"sha256~cGUEHuuOPARrFFVBjyu5Nle0TRNoxk-F3DZl6cWOThg\",\n    \"version\": \"4.7\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/servers/",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"servers",
+												""
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						},
@@ -366,7 +445,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "import logging\nimport os\nimport re\nfrom typing import Dict\n\nimport yaml\n\nimport tools\n\n\ndef exec(params: Dict[str, any]):\n\n    server_from = params['servers']['from']['name']\n    namespace_from = params['servers']['from']['namespace']\n    object_from = params['servers']['from']['object']\n    only_from = params['servers']['from'].get('only', [])\n    ignore_from = params['servers']['from'].get('ignore', [])\n\n    server_to = params['servers']['to']['name']\n    namespace_to = params['servers']['to']['namespace']\n    method_to = params['servers']['to'].get('method', 'apply')\n\n    oc_from = tools.get_oc(server_from)\n    oc_from.login()\n\n    objects_to_migrate = [\n        ob\n        for ob\n        in oc_from.exec(f'get {object_from} -n {namespace_from} -o custom-columns=NAME:.metadata.name').split('\\n')[1:-1]\n    ]\n\n    tools.sh('mkdir yamls')\n\n    for ob in objects_to_migrate:\n\n        if only_from:\n            match_all_regex = len(\n                [regex for regex in only_from if re.match(regex, ob)]) == len(only_from)\n            if not match_all_regex:\n                continue\n\n        if ignore_from:\n            match_any_regex = any(\n                True for regex in ignore_from if re.match(regex, ob))\n            if match_any_regex:\n                continue\n\n        print(f'{server_from} -> Obteniendo {ob}')\n        oc_from.exec(\n            f'get {object_from} {ob} -n {namespace_from} -o yaml > yamls/{ob}.yaml')\n\n    oc_to = tools.get_oc(server_to)\n    oc_to.login()\n\n    yamls_to_migrate = [\n        nombre_archivo\n        for _, _, nombre_archivo in os.walk('yamls/')\n    ]\n    print(f'{server_to} -> Por migrar {len(yamls_to_migrate)} {object_from}')\n\n    yamls_errors = []\n    for yaml_to_migrate in yamls_to_migrate:\n        try:\n            with open(f'yamls/{yaml_to_migrate}') as file:\n                dic_yaml = yaml.load(file, Loader=yaml.FullLoader)\n\n            dic_yaml['metadata'].pop('creationTimestamp', None)\n            dic_yaml['metadata'].pop('namespace', None)\n            dic_yaml['metadata'].pop('resourceVersion', None)\n            dic_yaml['metadata'].pop('selfLink', None)\n            dic_yaml['metadata'].pop('uid', None)\n            dic_yaml.pop('status', None)\n\n            yaml_to_apply = yaml.dump(dic_yaml, default_flow_style=False)\n\n            tools.sh(\n                f'echo \"{yaml_to_apply}\" | {oc_to.server.binary_name()} {method_to} -n {namespace_to} -f -')\n            print(f'{server_to} -> Migrado {yaml_to_migrate}')\n\n        except Exception as e:\n            logging.exception(e)\n            logging.error(f'{server_to} -> ERROR al migrar {yaml_to_migrate}')\n\n            yamls_errors.append(yaml_to_migrate)\n            print(e.args)\n\n    if yamls_errors:\n        logging.error(f'{server_to} -> Yamls con errores al migrar:')\n        for y_error in yamls_errors:\n            logging.error(\n                f'{server_to} -> {y_error}')\n",
+											"raw": "import logging\nimport os\nimport re\nfrom typing import Dict\n\nimport yaml\nimport tools\n\n\nwith open('params.yaml', 'r') as f:\n    params = yaml.load(f.read(), Loader=yaml.FullLoader)\n\nserver_from = params['servers']['from']['name']\nnamespace_from = params['servers']['from']['namespace']\nobject_from = params['servers']['from']['object']\nonly_from = params['servers']['from'].get('only', [])\nignore_from = params['servers']['from'].get('ignore', [])\n\nserver_to = params['servers']['to']['name']\nnamespace_to = params['servers']['to']['namespace']\nmethod_to = params['servers']['to'].get('method', 'apply')\n\noc_from = tools.get_oc(server_from)\noc_from.login()\n\nprint(f\"{server_from} -> Obtieniendo todos los objetos\")\nobjects_to_migrate = [\n    ob\n    for ob\n    in oc_from.exec(f'get {object_from} -n {namespace_from} -o custom-columns=NAME:.metadata.name').split('\\n')[1:-1]\n]\nprint(f\"{server_from} -> Objetos entontrados: {len(objects_to_migrate)}\")\n\ntools.sh('mkdir yamls/')\n\nfor ob in objects_to_migrate:\n\n    if only_from:\n        match_all_regex = len(\n            [regex for regex in only_from if re.match(regex, ob)]) == len(only_from)\n        if not match_all_regex:\n            continue\n\n    if ignore_from:\n        match_any_regex = any(\n            True for regex in ignore_from if re.match(regex, ob))\n        if match_any_regex:\n            continue\n\n    print(f'{server_from} -> Obteniendo {ob}')\n    oc_from.exec(\n        f'get {object_from} {ob} -n {namespace_from} -o yaml > yamls/{ob}.yaml')\n\noc_to = tools.get_oc(server_to)\noc_to.login()\n\noc_to.exec(f'new-project {namespace_to}')\n\nyamls_to_migrate = []\nfor _, _, file_name in os.walk('yamls/'):\n    yamls_to_migrate.extend(file_name)\nprint(f'{server_to} -> Por migrar {len(yamls_to_migrate)} {object_from}')\n\nyamls_errors = []\nfor yaml_to_migrate in yamls_to_migrate:\n    try:\n        with open(f'yamls/{yaml_to_migrate}', 'r') as file:\n            dic_yaml = yaml.load(file, Loader=yaml.FullLoader)\n\n        dic_yaml['metadata'].pop('creationTimestamp', None)\n        dic_yaml['metadata'].pop('namespace', None)\n        dic_yaml['metadata'].pop('resourceVersion', None)\n        dic_yaml['metadata'].pop('selfLink', None)\n        dic_yaml['metadata'].pop('uid', None)\n        dic_yaml.pop('status', None)\n\n        yaml_to_apply = yaml.dump(dic_yaml, default_flow_style=False)\n        with open(f'yamls/{yaml_to_migrate}', 'w') as f:\n            f.write(yaml_to_apply)\n\n        oc_to.exec(f'{method_to} -n {namespace_to} -f yamls/{yaml_to_migrate}')\n        print(f'{server_to} -> Migrado {yaml_to_migrate}')\n\n    except Exception as e:\n        logging.exception(e)\n        logging.error(f'{server_to} -> ERROR al migrar {yaml_to_migrate}')\n\n        yamls_errors.append(yaml_to_migrate)\n        print(e.args)\n\nif yamls_errors:\n    logging.error(f'{server_to} -> Yamls con errores al migrar:')\n    for y_error in yamls_errors:\n        logging.error(\n            f'{server_to} -> {y_error}')\n",
 											"options": {
 												"raw": {
 													"language": "text"
@@ -374,7 +453,7 @@
 											}
 										},
 										"url": {
-											"raw": "{{project-jaime}}/api/v1/modules/migrate_object",
+											"raw": "{{project-jaime}}/api/v1/modules/:name",
 											"host": [
 												"{{project-jaime}}"
 											],
@@ -382,7 +461,13 @@
 												"api",
 												"v1",
 												"modules",
-												"migrate_object"
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "migrate_object"
+												}
 											]
 										}
 									},
