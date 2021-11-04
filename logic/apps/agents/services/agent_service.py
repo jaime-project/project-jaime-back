@@ -27,6 +27,9 @@ def add(agent: Agent):
 
 
 def delete(id: str):
+    
+    disconnec_agent(id)
+    
     global _AGENTS_ONLINE
 
     new_dict = {}
@@ -35,6 +38,14 @@ def delete(id: str):
             new_dict[k] = v
 
     _AGENTS_ONLINE = new_dict
+
+
+
+def disconnec_agent(id):
+
+    agent = get(id)
+    url = agent.get_url() + '/api/v1/jaime/'
+    requests.delete(url)
 
 
 def get(id: str) -> Agent:
