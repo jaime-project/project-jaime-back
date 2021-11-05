@@ -146,6 +146,6 @@ def _valid_work_running(id: str):
         msj = f'el Work con id {id} no existe'
         raise AppException(WorkError.WORK_NOT_EXIST_ERROR, msj)
 
-    if work.status != Status.RUNNING:
+    if work.status == Status.READY:
         msj = f'el Work con id {id} todabia no esta corriendo'
         raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
