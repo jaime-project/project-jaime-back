@@ -233,6 +233,33 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "download workspace link",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/works/:id/workspace",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"works",
+												":id",
+												"workspace"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "d27a033a5854"
+												}
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						},

@@ -3,7 +3,6 @@ from typing import Dict, List
 import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent
-from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
@@ -27,9 +26,9 @@ def add(agent: Agent):
 
 
 def delete(id: str):
-    
+
     disconnec_agent(id)
-    
+
     global _AGENTS_ONLINE
 
     new_dict = {}
@@ -38,7 +37,6 @@ def delete(id: str):
             new_dict[k] = v
 
     _AGENTS_ONLINE = new_dict
-
 
 
 def disconnec_agent(id):
@@ -86,18 +84,6 @@ def list_all() -> List[Agent]:
         return []
 
     return _AGENTS_ONLINE.values()
-
-
-def get_logs(id: str) -> str:
-
-    agent = work_service.get(id).agent
-    if not agent:
-        msj = f'el Work con id {id} todabia no esta corriendo'
-        raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
-
-    url = agent.get_url() + f'/api/v1/works/{id}/logs'
-    result = requests.get(url, verify=False).content
-    return result.decode() if result else ""
 
 
 def get_available_agent_by_type(type: str) -> Agent:
