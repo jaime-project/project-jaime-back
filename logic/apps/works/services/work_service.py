@@ -98,18 +98,27 @@ def change_status(id: str, status: Status):
     work.status = status
 
 
-def _generate_id() -> str:
-    return str(uuid4()).split('-')[4]
-
-
 def get_logs(id: str) -> str:
 
-    global _WORKS_QUEUE
-    if not id in _WORKS_QUEUE:
-        msj = f'el Work con id {id} todabia no esta corriendo'
-        raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
+    _valid_work_running(id)
 
-    return agent_service.get_logs(id)
+    agent = get(id).agent
+
+    url = agent.get_url() + f'/api/v1/works/{id}/logs'
+    result = requests.get(url, verify=False).content
+    return result.decode() if result else ""
+
+
+def download_workspace_link(id):
+
+    _valid_work_running(id)
+
+    agent = get(id).agent
+    return agent.get_url() + f'/api/v1/works/{id}/workspace'
+
+
+def _generate_id() -> str:
+    return str(uuid4()).split('-')[4]
 
 
 def _valid_params(params: Dict[str, object]):
@@ -127,3 +136,16 @@ def _valid_params(params: Dict[str, object]):
     if not module_name in module_service.list_all():
         msj = f'No existe modulo de nombre {module_name}'
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
+
+
+def _valid_work_running(id: str):
+
+    work = get(id)
+
+    if not work:
+        msj = f'el Work con id {id} no existe'
+        raise AppException(WorkError.WORK_NOT_EXIST_ERROR, msj)
+
+    if work.status == Status.READY:
+        msj = f'el Work con id {id} todabia no esta corriendo'
+        raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)

@@ -1,0 +1,19 @@
+module: install_jenkins
+agent:
+  type: oc
+server:
+  name: <server name>
+  namespace: <namespace>
+jenkins:
+  image:
+    url: <url image jenkins>
+    tag: <image tag>
+  imageStream:
+    namespace: <namespace>
+    name: <name>
+    tag: <tag>
+  config:
+    template: jenkins-persistent
+    memoryRAM: 4Gi
+    memoryVolume: 4Gi
+    storageClass: gp2

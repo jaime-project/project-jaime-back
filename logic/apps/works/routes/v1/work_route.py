@@ -39,7 +39,6 @@ def get(id: str):
     if not result:
         return '', 204
 
-    
     result_dict = result.__dict__
     result_dict['status'] = str(result_dict['status'])
 
@@ -57,6 +56,13 @@ def finish(id: str):
 def list():
 
     result = work_service.list_all()
+    return jsonify(result), 200
+
+
+@blue_print.route('/<id>/workspace', methods=['GET'])
+def download_workspace(id: str):
+
+    result = work_service.download_workspace_link(id)
     return jsonify(result), 200
 
 

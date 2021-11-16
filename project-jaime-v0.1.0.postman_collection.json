@@ -233,6 +233,33 @@
 										}
 									},
 									"response": []
+								},
+								{
+									"name": "download workspace link",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/works/:id/workspace",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"works",
+												":id",
+												"workspace"
+											],
+											"variable": [
+												{
+													"key": "id",
+													"value": "d27a033a5854"
+												}
+											]
+										}
+									},
+									"response": []
 								}
 							]
 						},
@@ -467,6 +494,117 @@
 												{
 													"key": "name",
 													"value": "migrate_object"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "docs",
+							"item": [
+								{
+									"name": "list",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/docs",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"docs"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/docs/:docs",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"docs",
+												":docs"
+											],
+											"variable": [
+												{
+													"key": "docs",
+													"value": "test"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "delete",
+									"request": {
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/docs/:doc",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"docs",
+												":doc"
+											],
+											"variable": [
+												{
+													"key": "doc",
+													"value": "test"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "post",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "module: test\nagent:\n    type: oc\nservers:\n  from:\n    name: <server name>\n    namespace: <namespace>\n    object: <openshift object type [svc, pod, bc, dc, secret, etc]>",
+											"options": {
+												"raw": {
+													"language": "text"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/docs/:name",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"docs",
+												":name"
+											],
+											"variable": [
+												{
+													"key": "name",
+													"value": "test"
 												}
 											]
 										}

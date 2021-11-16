@@ -1,0 +1,8 @@
+module: test
+agent:
+    type: oc
+servers:
+  from:
+    name: <server name>
+    namespace: <namespace>
+    object: <openshift object type [svc, pod, bc, dc, secret, etc]>
