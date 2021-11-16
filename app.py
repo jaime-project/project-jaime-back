@@ -2,7 +2,7 @@
 from flask.app import Flask
 
 from logic.apps.admin.config.logger import setup_loggers
-from logic.apps.admin.config.app import setup_modules, setup_servers
+from logic.apps.admin.config.app import setup_modules, setup_servers, setup_docs
 from logic.apps.admin.config.rest import setup_rest
 from logic.apps.admin.config.variables import Vars, setup_vars
 from logic.apps.works.services.work_runner import start_runner_thread
@@ -19,6 +19,7 @@ setup_rest(app)
 start_runner_thread()
 start_agent_thread()
 setup_modules()
+setup_docs()
 setup_servers()
 
 logger().info("\n\n")
