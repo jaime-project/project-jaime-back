@@ -17,7 +17,7 @@ def check_node_alive():
                 break
             else:
                 tries += 1
-                time.sleep(3)
+                time.sleep(2)
 
             if tries == 3:
                 agent_service.delete(n.id)
