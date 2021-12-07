@@ -10,6 +10,7 @@ blue_print = Blueprint('agent', __name__, url_prefix='/api/v1/agents')
 def exec():
     j = request.json
     n = Agent(
+        id=j['id'],
         host=j['host'],
         port=j['port'],
         type=j['type']

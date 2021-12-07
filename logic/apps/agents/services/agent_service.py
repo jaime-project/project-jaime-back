@@ -27,8 +27,6 @@ def add(agent: Agent):
 
 def delete(id: str):
 
-    disconnec_agent(id)
-
     global _AGENTS_ONLINE
 
     new_dict = {}
@@ -61,10 +59,14 @@ def is_alive(id: str) -> bool:
     agent = get(id)
 
     try:
-        return requests.get(agent.get_url(), verify=False).status_code == 200
+        request = requests.get(f'{agent.get_url()}/alive', verify=False)
+
+        status_code_ok = request.status_code == 200
+        id_ok = request.json().get('id') == id
+
+        return status_code_ok and id_ok
 
     except Exception as e:
-        logger().error(e)
         return False
 
 

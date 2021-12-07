@@ -22,46 +22,47 @@ setup_modules()
 setup_docs()
 setup_servers()
 
-logger().info("\n\n")
-logger().info("> Jaimeeehhhh...!!!")
-logger().info("> ¿Si? señora")
+
 logger().info("""
 
-                          `+yhyo-                           
-                     `.-:/NMMMMMMo/:--`                     
-                 `-/osyyyhMMMMMMMmyyyyss+:-`                
-              `:osyyyyyyydMMMMMMMmyyyyyyyysso:`             
-            .+syyyyyyyyyyyMMMMMMMdyyyyyyyyyyyys+.           
-          .+syyyyyyyyyyyysmMMMMMN+osyyyyyyyyyyyys+.   `     
-         :syyyyyyyyyys+/-:smMMMmy+``.:+syyyyyyyyyys/+oys.   
-       `/syyyyyyyyy+::/sdm:`+N/`:Nds+-``-+sso++yyyyyyyyyo`  
-      `+yyyyyyyyysyhmNMMMMN:sMo:NMMMMNmdo-```  -oyys+/-.`   
-      /yyyyyyyys+mMMMMMMMMMNNMmNMMMMMMMMMN.  `.-/o.`        
-     -syyyyyyyy:.NMMMMMMMMMMMMMMMMMMMMMMMM+/oossss/         
-     +yyyyyyyy+  hMMMMMMMMMMMMMMMMMMMMMMMMsssssssss.        
-    `syyyyyyys. `+MMMMMMMMMMMMMMMMMMMMMMMMsssssssss+        
-    .yyyyyyyys+os+NMMMMMMMMMMMMMMMMMMMMMMM+sssssssss.-:+-   
-    -so++yyyyyyyy+hMMMMMMMy+hMo+++++sMMMMM/sssosyyyysyyy:   
-    ``` .yyyso+/-./MMMMMMM+ oM.     :MMMMm-:-..syyyyyyyy.   
-       `.o:-.`    `NMMMMMMy/yM.     :Mmyo.    :yyyyyyyys    
-  `.:/+oss-        hdNMMMMMMMM.     :M/      .oyyyyyyyy/    
- -sssssssso`       +:oMMMMMMMM.`````:M/     .oyyyyyyyyo`    
- `osssssssso.      `oNMMMMMMMM..```.:Ms   `:syyyyyyyys.     
-  .ssssssssss/.-/+o:.-sMMMMMMM-.```.:Mh `:oyyyyyyyyys-      
-   .osssooyyyyyyyyyys++MMMMMMM:.---./hs/syyyyyyyyyyo.       
-    `:-.``/syyyyyyyyyysNMMMMMMNNNNNmsyyyyyyyyyyyys/`        
-           ./syyyyyyyysdMMMMMMMMMMMmyyyyyyyyyyyo/.          
-             `:osyyyyyyyMMMMMMMMMMMdyyyyyyyyso:`            
-                .:ossyysMMMMMMMMMMMyyyyysso:.               
-                   `.:/+mMMMMMMMMMMoso/:-`                  
-                        sMMMMMMMMMd`                        
-                        /MMMMMMMMMs                         
-                        .MMMMMMMMM:                         
-                         mMMMMMMMM`                         
-                        -dMMMMMMMN:`                        
-                     `/ydddddddddddh+.                      
-                                                                                
+                      ,^(]$%&&&&%$](+,`                                                                                                               
+                  ,)$#@@@@@@@@@@@@@@@@#$("                                                                                                            
+               '(&@@@@#####@@@@@@#####@@@@&('                                                                                                         
+             ,]#@@###@@@@@%]\+++/]#@@@@###@@#$,                                             .!?(]>                                                    
+           `]#@@##@@@@@@%!,,,,,,,,,?#@@@@@##@@#]`                                       ,)$@##@%(`                                                    
+          :&@@##@@@@@@@$,,,,,,,,,,,,:#@@@@@@##@@#:                                   `)&$):.]]`                                                       
+         ?#@@#@@@@@@@@$,,,,,,,,,,,,,,:#@@@@@@@#@@#?                                `]$>`  :#$                                                         
+        ?#@@#@@@@@@@@@$,,,,,,,,,,,,,,~&@@@@@@@@#@@#\                              ^$~    ;@#`                                                         
+       :#@@#@@@@@@@@@@@\,,,,,,,,,,,,,]@@@@@@@@@@#@@#!                            ]?     '@@*                                                          
+      `%@@#@@@@@@@@@@%,,,,,,,,,,,,,,,!]@@@@@@@@@@#@@&`                          ]:      $@#                       `                                   
+      ?@@##@@@@@@@@@@#:,,,,,,,,,,,,,,,]@@@@@@@@@@##@@/                         !*      ,@@\                     :],                                   
+      %@@#@@@@@@@@@@@@#^,,,,,:?:,,,,,]@@@@@@@@@@@@#@@%                         ]       $@#                    `$]                                     
+     .#@@#@@@@@@@@@@@@@@:,,:+\+\^",,\@@@@@@@@@@@@@#@@#'                        $      :@@^                    `/                                      
+     "#@@#@@@@@@@@@@@@@@&:,,,,,,,,,+@@@@@@@@@@@@@@#@@#:                        ]`     &@$       `"!!' ':      '`   `::   `:!`   `:!'       `:!,       
+     ~#@@#@@@@@@@@@@@@@@@%,,,,,,,,,#@@@@@@@@@@@@@@#@@#:                        .]`   ?@#`     ?\!,'+#@@!   ,(##` `*)@@:")/%@# ,(/$@@,    ,(/)#@&      
+     '#@@#@@@@@@@@@@@@@@@%,,,,,,,,,%@@@@@@@@@@@@@@#@@#'              ,!,         >+;;@@(,   >#!    '@@:   :^@#.  , /@#/!  ]@%+!  /@#    )%   ]@#`     
+      %@@#@@@@@@@@@@@@@#]],,,,,,,,,]]&@@@@@@@@@@@@#@@&          `^+;:.              &@^    ]@)    '#@)    `#@!     #@#.   #@%'  `@@:   )@]>?(]:       
+      \@@##@@@@@@&$]);",/@]",,,,,:$@(,,!\]$%#@@@@#@@@(        +]^                  $@*    ^@@`   :#@#     ]@$     (@#.   (@@'   $@]   '@@'            
+      `&@@#@#$]^,,,,,,,,#@@#]/\($@@@#,,,,,,,,:/$##@@#.      >&^                   ]@^     ]@@`  )=#@]  ` .@@; `` .@@:   '@@!   '@@` ` \@@'    :       
+       !#@@%:,,,,,,,,,,+@@@??%@$;]@@@*,,,,,,,,,!%@@#>      $@'                   $#"      !@@%]]' #@&)?  ;@@]\^  $@]    %@]    ;@@\?! ~@@#(\]('       
+        \#@@%;,,,,,,,,,]@@@!:]$)"]@@@$,,,,,,,,?&@@@]      $@(                  .%$`        :)>`   '(=`    ?(!    );    `(^      ?)!    '?(/!`         
+         ?#@@#]:,,,,,,,]@@@#@@@@@@@@@],,,,,,:]#@@@]      '@@^                 \%:                                                                     
+          !#@@#%(:,,,,,,%@@@@@@@@@@@%,,,,,:(&@@@@]       ,@@]               >$^                                                                       
+           `]#@@##]^",,,~$@@@@@@@@@$~,,:/]&#@@@#/         %@@)           !(]:                                                                         
+             ,$#@@@#&$]\:,(#@@@@@#(!/]$##@@@@@&:          `]#@@$]\?\)]]](:                                                                            
+               ,]#@@@@####&%##########@@@@@@#]`              .:^>>^:,`                                                                                
+                  :]%#@@@@@@@@@@@@@@@@@@@@#$,                                                                                                         
+                     `:]#@@@@@@@@@@@@@@@@$:                                                                                                           
+                        :#@@@@@@@@@@@@#$:                                                                                                             
+                         $@@@@@@@@@@#],                                                                                                               
+                         $@@@@@@@#%?`                                                                                                                 
+                         $@@@@@&(,                                                                                                                    
+                         $@#%(,                                                                                                                       
+                         \*'                                                                                                                          
+                                                                                                                                                                        
 """)
+logger().info("> Jaimeeehhhh...!!!")
+logger().info("> ¿Si, señora?")
 
 if __name__ == "__main__":
     flask_host = get_var(Vars.PYTHON_HOST)
