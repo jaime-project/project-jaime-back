@@ -7,8 +7,7 @@ import yaml
 import tools
 
 
-with open('params.yaml', 'r') as f:
-    params = yaml.load(f.read(), Loader=yaml.FullLoader)
+params = tools.get_params()
 
 server_from = params['servers']['from']['name']
 namespace_from = params['servers']['from']['namespace']
@@ -20,7 +19,7 @@ server_to = params['servers']['to']['name']
 namespace_to = params['servers']['to']['namespace']
 method_to = params['servers']['to'].get('method', 'apply')
 
-oc_from = tools.get_oc(server_from)
+oc_from = tools.get_client(server_from)
 oc_from.login()
 
 print(f"{server_from} -> Obtieniendo todos los objetos")
@@ -51,7 +50,7 @@ for ob in objects_to_migrate:
     oc_from.exec(
         f'get {object_from} {ob} -n {namespace_from} -o yaml > yamls/{ob}.yaml')
 
-oc_to = tools.get_oc(server_to)
+oc_to = tools.get_client(server_to)
 oc_to.login()
 
 oc_to.exec(f'new-project {namespace_to}')
