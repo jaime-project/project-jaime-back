@@ -35,6 +35,8 @@ RUN pip install -r requirements.txt --upgrade pip
 RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
-COPY repo_modules_default/ repo_modules_default/
 COPY *.json ./
 COPY variables.env ./
+
+COPY repo_modules_default/ repo_modules_default/
+COPY repo_docs_default/ repo_docs_default/
