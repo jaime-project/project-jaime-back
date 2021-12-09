@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from logic.apps.servers.models.server_model import Server
+from logic.apps.servers.models.server_model import Server, ServerType
 from logic.apps.servers.services import server_service
 
 blue_print = Blueprint('servers', __name__, url_prefix='/api/v1/servers')
@@ -12,7 +12,8 @@ def post():
         name=s['name'],
         url=s['url'],
         token=s['token'],
-        version=s['version']
+        version=s['version'],
+        type=ServerType(s['type'])
     ))
     return '', 201
 
@@ -23,7 +24,7 @@ def get(name: str):
     if not s:
         return '', 204
 
-    return jsonify(s.__dict__), 200
+    return jsonify(s.__dict__()), 200
 
 
 @blue_print.route('/', methods=['GET'])
@@ -36,3 +37,8 @@ def list_all():
 def delete(name: str):
     server_service.delete(name)
     return '', 200
+
+
+@blue_print.route('/types', methods=['GET'])
+def list_types():
+    return jsonify(server_service.list_types()), 200

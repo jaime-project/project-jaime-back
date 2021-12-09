@@ -3,8 +3,7 @@ from typing import Dict
 import yaml
 import tools
 
-with open('params.yaml', 'r') as f:
-    params = yaml.load(f.read(), Loader=yaml.FullLoader)
+params = tools.get_params()
 
 server = params['server']['name']
 namespace = params['server']['namespace']
@@ -21,7 +20,7 @@ conf_ram = params['jenkins']['config']['memoryRAM']
 conf_vol = params['jenkins']['config']['memoryVolume']
 conf_storage_class = params['jenkins']['config']['storageClass']
 
-oc = tools.get_oc(server)
+oc = tools.get_client(server)
 oc.login()
 
 

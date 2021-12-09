@@ -4,7 +4,7 @@ from typing import Dict, List
 
 import yaml
 from logic.apps.servers.errors.server_error import ServerError
-from logic.apps.servers.models.server_model import Server
+from logic.apps.servers.models.server_model import Server, ServerType
 from logic.libs.exception.exception import AppException
 
 _YAML_SERVER_FILE = f'{Path.home()}/.jaime/servers.yaml'
@@ -77,7 +77,8 @@ def _get_servers_from_file() -> List[Server]:
             name=s['name'],
             url=s['url'],
             token=s['token'],
-            version=s['version']
+            version=s['version'],
+            type=ServerType(s['type'])
         )
         for s in servers_dict
     ]
@@ -94,8 +95,13 @@ def _save_server_in_file(server: Server):
         "name": server.name,
         "url": server.url,
         "token": server.token,
-        "version": server.version
+        "version": server.version,
+        "type": server.type.value
     })
 
     with open(_YAML_SERVER_FILE, 'w') as f:
         f.write(yaml.dump(servers_dict))
+
+
+def list_types() -> str:
+    return [e.value for e in ServerType]

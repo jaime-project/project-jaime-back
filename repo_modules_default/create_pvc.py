@@ -7,8 +7,7 @@ import yaml
 import tools
 
 
-with open('params.yaml', 'r') as f:
-    params = yaml.load(f.read(), Loader=yaml.FullLoader)
+params = tools.get_params()
 
 server_from = params['servers']['from']['name']
 namespace_from = params['servers']['from']['namespace']
@@ -23,7 +22,7 @@ pvc_storage_class = params['pvc']['storage_class']
 # ------------------------
 
 # GET
-oc_from = tools.get_oc(server_from)
+oc_from = tools.get_client(server_from)
 oc_from.login()
 
 print(f"{server_from} -> Obtieniendo todos los pvs")

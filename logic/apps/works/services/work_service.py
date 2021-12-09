@@ -40,18 +40,13 @@ def exec_into_agent(work_status: WorkStatus):
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
 
-    tools_path = os.path.join(module_service.get_path(), f'tools.py')
-    with open(tools_path, 'r') as f:
-        tools_file_bytes = f.read().encode()
-
     params_file_bytes = str(yaml.dump(work_status.params)).encode()
 
     url = work_status.agent.get_url() + f'/api/v1/works'
     files = {
         'servers.yaml': servers_file_bytes,
         'module.py': module_file_bytes,
-        'params.yaml': params_file_bytes,
-        'tools.py': tools_file_bytes,
+        'params.yaml': params_file_bytes
     }
     payload = {
         'id': work_status.id
