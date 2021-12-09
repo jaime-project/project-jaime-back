@@ -45,7 +45,7 @@ def delete(name: str):
     servers = _get_servers_from_file()
 
     servers_dict = [
-        s.__dict__
+        s.__dict__()
         for s in servers
         if s.name != name
     ]
@@ -87,7 +87,7 @@ def _get_servers_from_file() -> List[Server]:
 def _save_server_in_file(server: Server):
 
     servers_dict = [
-        s.__dict__
+        s.__dict__()
         for s in _get_servers_from_file()
     ]
 
