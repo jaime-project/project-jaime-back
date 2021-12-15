@@ -121,12 +121,14 @@ def get_logs(id: str) -> str:
     return result.decode() if result else ""
 
 
-def download_workspace_link(id):
+def download_workspace(id):
 
     _valid_work_running(id)
 
     agent = get(id).agent
-    return agent.get_url() + f'/api/v1/works/{id}/workspace'
+    url = agent.get_url() + f'/api/v1/works/{id}/workspace'
+    response = requests.get(url, verify=False)
+    return response.content
 
 
 def _generate_id() -> str:
