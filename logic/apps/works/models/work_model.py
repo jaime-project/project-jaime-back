@@ -15,7 +15,9 @@ class Status(Enum):
 @dataclass
 class WorkStatus():
 
-    id = str
+    id: str
+    name: str
+    module_name: str
     params: Dict[str, object]
     agent: Agent
     status: Status
@@ -23,8 +25,10 @@ class WorkStatus():
     running_date: datetime
     terminated_date: datetime
 
-    def __init__(self, id: str, params: Dict[str, object]) -> "WorkStatus":
+    def __init__(self, id: str, name: str, module_name: str, params: Dict[str, object]) -> "WorkStatus":
         self.id = id
+        self.name = name
+        self.module_name = module_name
         self.params = params
         self.agent = None
         self.status = Status.READY

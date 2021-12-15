@@ -3,6 +3,7 @@ from typing import Dict, List
 import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent
+from logic.apps.servers.models.server_model import ServerType
 from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
@@ -70,13 +71,13 @@ def is_alive(id: str) -> bool:
         return False
 
 
-def get_by_type(type: str) -> List[Agent]:
+def get_by_type(type: ServerType) -> List[Agent]:
     global _AGENTS_ONLINE
 
     return [
         n
         for _, n in _AGENTS_ONLINE.items()
-        if n.type.lower() == type.lower()
+        if n.type.value.lower() == type.value.lower()
     ]
 
 
@@ -88,11 +89,11 @@ def list_all() -> List[Agent]:
     return _AGENTS_ONLINE.values()
 
 
-def get_available_agent_by_type(type: str) -> Agent:
+def get_available_agent_by_type(type: ServerType) -> Agent:
 
     agents = get_by_type(type)
     if not agents:
-        msj = f'No existe agente con el tipo {type}'
+        msj = f'No existe agente con el tipo {type.value}'
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR)
 
     agents_working = [

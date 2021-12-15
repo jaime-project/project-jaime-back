@@ -6,7 +6,7 @@ from logic.apps.servers.models.server_model import ServerType
 
 @dataclass
 class Agent():
-    type: str
+    type: ServerType
     host: str
     port: int
     id: str

@@ -5,6 +5,7 @@ from typing import Dict
 
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
+from logic.apps.servers.models.server_model import ServerType
 from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
@@ -21,7 +22,7 @@ def runner():
         if work.status != Status.READY:
             continue
 
-        agent_type = work.params['agent']['type']
+        agent_type = ServerType(work.params['agent']['type'])
         agent = agent_service.get_available_agent_by_type(agent_type)
         if not agent:
             continue

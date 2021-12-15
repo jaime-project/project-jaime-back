@@ -1,6 +1,3 @@
-module: test
-agent:
-    type: oc
 servers:
   from:
     name: <server name>
