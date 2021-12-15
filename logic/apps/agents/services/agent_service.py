@@ -106,3 +106,17 @@ def get_available_agent_by_type(type: str) -> Agent:
             return a
 
     return None
+
+
+def get_all_short() -> List[Dict[str, str]]:
+    global _AGENTS_ONLINE
+
+    return [
+        {
+            "id": n.id,
+            "host": n.host,
+            "port": n.port,
+            "type": n.type.value
+        }
+        for _, n in _AGENTS_ONLINE.items()
+    ]

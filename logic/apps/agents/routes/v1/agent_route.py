@@ -35,6 +35,13 @@ def list_all():
     return jsonify(result), 200
 
 
+@blue_print.route('/all/short', methods=['GET'])
+def get_all_short():
+
+    result = agent_service.get_all_short()
+    return jsonify(result), 200
+
+
 @blue_print.route('/<id>', methods=['GET'])
 def get(id: str):
 
