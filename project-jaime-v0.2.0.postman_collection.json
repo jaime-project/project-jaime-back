@@ -1,7 +1,7 @@
 {
 	"info": {
-		"_postman_id": "16362a51-e513-4fbc-b8c1-dab521d64e7b",
-		"name": "project-jaime-v0.1.0",
+		"_postman_id": "48ddf3f5-9291-4a47-a13b-67aa3bedc06c",
+		"name": "project-jaime-v0.2.0",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
@@ -28,6 +28,27 @@
 												"api",
 												"v1",
 												"agents"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "all short",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/agents/all/short",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"agents",
+												"all",
+												"short"
 											]
 										}
 									},
@@ -102,7 +123,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "d27a033a5854"
+													"value": "70f7d9d65d71"
 												}
 											]
 										}
@@ -116,7 +137,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "module: test\nagent:\n    type: oc\nservers:\n  from:\n    name: lasegunda\n    namespace: msdesa\n    object: configmaps"
+											"raw": "name: \"asi se hace\"\nmodule: test\nagent:\n    type: OPENSHIFT\nservers:\n  from:\n    name: lasegunda\n    namespace: msdesa\n    object: configmaps"
 										},
 										"url": {
 											"raw": "{{project-jaime}}/api/v1/works/",
@@ -201,7 +222,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "d27a033a5854"
+													"value": "26d1f5480662"
 												}
 											]
 										}
@@ -235,7 +256,7 @@
 									"response": []
 								},
 								{
-									"name": "download workspace link",
+									"name": "download workspace",
 									"request": {
 										"method": "GET",
 										"header": [],
@@ -254,7 +275,7 @@
 											"variable": [
 												{
 													"key": "id",
-													"value": "d27a033a5854"
+													"value": "26d1f5480662"
 												}
 											]
 										}
@@ -280,6 +301,27 @@
 												"api",
 												"v1",
 												"servers"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "get all short",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "{{project-jaime}}/api/v1/servers/all/short",
+											"host": [
+												"{{project-jaime}}"
+											],
+											"path": [
+												"api",
+												"v1",
+												"servers",
+												"all",
+												"short"
 											]
 										}
 									},
@@ -344,7 +386,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n    \"name\": \"lasegunda\",\n    \"url\": \"https://api.ocp01-noprod.ocplasegunda.com.ar:6443\",\n    \"token\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6InpJZDZMSzRxVXJvRkJLMVdCb2FEclFJTWZubXdIaXVqbGIzVl9xbkdWbDAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJmcm9udC1kZXNhIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImplbmtpbnMtZnJvbnQtYnVpbGRlci10b2tlbi0ycGRnaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJqZW5raW5zLWZyb250LWJ1aWxkZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIxNWYzN2U2Ny03NGViLTRlYzgtOTliNi05Y2U5M2YxNzFjNjYiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZnJvbnQtZGVzYTpqZW5raW5zLWZyb250LWJ1aWxkZXIifQ.GTCm9Vyabx2MNLpibzAxRRch-Cj7eJzbdG-b4knbjD2zKkDyLtRMcM92oOIa7XVA-vEIjAANsMOmiJ4nM7VwBxvqCmOY9B1Kg9ZKYc46OY6RLmMupr3dg8LRelb0UgKDX_Ln5o6XVyAzn8wtTwSUBWfwGzQzLX3G2EHWSwdvEAkI1bgEzulzVS-1t8Y1XmV3OBiDQN8u7iRml-NgSjpDvxfaK6Kin1Rvz5z8naC_cO6IE1SNQR-e7cp4cwhGB_J6rzOpGQoQNSPRpALPwipWEnzds3kr-WjqIXGE1J2QVGBWw89gODeCY6U0F9E9MuhN6O9gcsyu8R2AiAteFgk6LQ\",\n    \"version\": \"4.6\"\n}",
+											"raw": "{\n    \"name\": \"lasegunda\",\n    \"url\": \"https://api.ocp01-noprod.ocplasegunda.com.ar:6443\",\n    \"token\": \"eyJhbGciOiJSUzI1NiIsImtpZCI6InpJZDZMSzRxVXJvRkJLMVdCb2FEclFJTWZubXdIaXVqbGIzVl9xbkdWbDAifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJmcm9udC1kZXNhIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImplbmtpbnMtZnJvbnQtYnVpbGRlci10b2tlbi0ycGRnaCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJqZW5raW5zLWZyb250LWJ1aWxkZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIxNWYzN2U2Ny03NGViLTRlYzgtOTliNi05Y2U5M2YxNzFjNjYiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZnJvbnQtZGVzYTpqZW5raW5zLWZyb250LWJ1aWxkZXIifQ.GTCm9Vyabx2MNLpibzAxRRch-Cj7eJzbdG-b4knbjD2zKkDyLtRMcM92oOIa7XVA-vEIjAANsMOmiJ4nM7VwBxvqCmOY9B1Kg9ZKYc46OY6RLmMupr3dg8LRelb0UgKDX_Ln5o6XVyAzn8wtTwSUBWfwGzQzLX3G2EHWSwdvEAkI1bgEzulzVS-1t8Y1XmV3OBiDQN8u7iRml-NgSjpDvxfaK6Kin1Rvz5z8naC_cO6IE1SNQR-e7cp4cwhGB_J6rzOpGQoQNSPRpALPwipWEnzds3kr-WjqIXGE1J2QVGBWw89gODeCY6U0F9E9MuhN6O9gcsyu8R2AiAteFgk6LQ\",\n    \"version\": \"4.6\",\n    \"type\": \"OPENSHIFT\"\n}",
 											"options": {
 												"raw": {
 													"language": "json"
