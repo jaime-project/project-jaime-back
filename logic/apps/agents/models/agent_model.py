@@ -1,16 +1,17 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 from logic.apps.admin.config.variables import Vars, get_var
+from logic.apps.servers.models.server_model import ServerType
 
 
 @dataclass
 class Agent():
-    type: str
+    type: ServerType
     host: str
     port: int
     id: str
 
-    def __init__(self, id: UUID, type: str, host: str, port: int) -> None:
+    def __init__(self, id: UUID, type: ServerType, host: str, port: int) -> None:
         self.id = id
         self.host = host
         self.port = port

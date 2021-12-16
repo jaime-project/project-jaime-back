@@ -1,5 +1,8 @@
+import ntpath
+from io import BytesIO
+
 import yaml
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 
@@ -39,10 +42,24 @@ def get(id: str):
     if not result:
         return '', 204
 
-    result_dict = result.__dict__
-    result_dict['status'] = str(result_dict['status'])
+    result_dict = {
+        "id": result.id,
+        "name": result.name,
+        "module_name": result.module_name,
+        "params": result.params,
+        'agent': {
+            "type": result.agent.type.value,
+            "host": result.agent.host,
+            "port": result.agent.port,
+            "id": result.agent.id
+        },
+        "status": result.status.value,
+        "start_date": result.start_date.isoformat(),
+        "running_date": result.running_date.isoformat(),
+        "terminated_date": result.terminated_date.isoformat()
+    }
 
-    return jsonify(result.__dict__), 200
+    return jsonify(result_dict), 200
 
 
 @blue_print.route('/<id>/finish', methods=['PATCH'])
@@ -59,11 +76,21 @@ def list():
     return jsonify(result), 200
 
 
+@blue_print.route('/all/short', methods=['GET'])
+def get_all_short():
+
+    result = work_service.get_all_short()
+    return jsonify(result), 200
+
+
 @blue_print.route('/<id>/workspace', methods=['GET'])
 def download_workspace(id: str):
 
-    result = work_service.download_workspace_link(id)
-    return jsonify(result), 200
+    result = work_service.download_workspace(id)
+    return send_file(BytesIO(result),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=ntpath.basename(f'{id}.zip'))
 
 
 def _is_yaml(text: str) -> bool:

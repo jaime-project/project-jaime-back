@@ -40,6 +40,18 @@ def list_all() -> List[str]:
     ]
 
 
+def get_all_short() -> List[Dict[str, str]]:
+
+    return [
+        {
+            "name": s.name,
+            "type": s.type.value,
+            "url": s.url
+        }
+        for s in _get_servers_from_file()
+    ]
+
+
 def delete(name: str):
 
     servers = _get_servers_from_file()

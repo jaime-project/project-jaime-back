@@ -29,23 +29,23 @@ oc.exec(f'new-project {namespace}')
 print(f'\n\n')
 
 
-print(f'Creando PVC en {namespace} con nombre jenkins-persistent')
+print(f'Creando PVC en {namespace} con nombre jenkins')
 pvc_yaml = f"""
 kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
-name: jenkins
-labels:
-  app: jenkins-persistent
-  template: {conf_template}-template
+  name: jenkins
+  labels:
+    app: jenkins-persistent
+    template: {conf_template}-template
 spec:
-accessModes:
-  - ReadWriteMany
-resources:
-  requests:
-  storage: {conf_vol}
-storageClassName: {conf_storage_class}
-volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: {conf_vol}
+    storageClassName: {conf_storage_class}
+  volumeMode: Filesystem
 """
 with open('pvc.yaml', 'w') as f:
     f.write(pvc_yaml)
@@ -83,7 +83,7 @@ subjects:
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
-  name: admin
+  name: cluster-admin
 """
 with open('crb.yaml', 'w') as f:
     f.write(crb_yaml)

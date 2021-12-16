@@ -42,3 +42,8 @@ def delete(name: str):
 @blue_print.route('/types', methods=['GET'])
 def list_types():
     return jsonify(server_service.list_types()), 200
+
+
+@blue_print.route('/all/short', methods=['GET'])
+def get_all_short():
+    return jsonify(server_service.get_all_short()), 200

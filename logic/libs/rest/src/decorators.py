@@ -4,7 +4,7 @@ from logic.libs.logger.logger import logger
 from werkzeug.exceptions import HTTPException
 
 
-def load_generic_error_handler(app: Flask):
+def add_decorators(app: Flask):
     """
     Carga el handler de error basico para manejo de AppExceptions y excepciones comunes
     """
@@ -21,3 +21,10 @@ def load_generic_error_handler(app: Flask):
     def handle_exception(e: Exception):
         logger().exception(e)
         return UnknownException(e).to_json(), 500
+
+    @app.after_request
+    def apply_headers(response):
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        response.headers["Access-Control-Allow-Headers"] = "*"
+        response.headers["Access-Control-Allow-Methods"] = "*"
+        return response
