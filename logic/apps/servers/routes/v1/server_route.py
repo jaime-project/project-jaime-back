@@ -1,3 +1,4 @@
+from os import name
 from flask import Blueprint, jsonify, request
 from logic.apps.servers.models.server_model import Server, ServerType
 from logic.apps.servers.services import server_service
@@ -47,3 +48,8 @@ def list_types():
 @blue_print.route('/all/short', methods=['GET'])
 def get_all_short():
     return jsonify(server_service.get_all_short()), 200
+
+
+@blue_print.route('/<name>/test', methods=['GET'])
+def test_server(name):
+    return jsonify(server_service.test_server(name)), 200
