@@ -5,7 +5,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/project-jaime:local --no-cache
+	docker build . -t brianwolf94/jaime:0.7.0 --no-cache
 
 compile c:
 	python -m compile -b -f -o dist/ .

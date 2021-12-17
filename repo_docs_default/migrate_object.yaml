@@ -1,6 +1,3 @@
-module: migrate_object
-agent:
-    type: oc
 servers:
   from:
     name: <server name>
