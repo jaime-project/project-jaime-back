@@ -2,7 +2,10 @@
 from pathlib import Path
 from typing import Dict, List
 
+import requests
 import yaml
+from logic.apps.agents.errors.agent_error import AgentError
+from logic.apps.agents.services import agent_service
 from logic.apps.servers.errors.server_error import ServerError
 from logic.apps.servers.models.server_model import Server, ServerType
 from logic.libs.exception.exception import AppException
@@ -117,3 +120,19 @@ def _save_server_in_file(server: Server):
 
 def list_types() -> str:
     return [e.value for e in ServerType]
+
+
+def test_server(name: str) -> Dict[str, str]:
+
+    server = get(name)
+    agents = agent_service.get_by_type(server.type)
+    if not agents:
+        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
+                           "No hay agentes para la tarea")
+
+    url = agents[0].get_url()
+    json = {
+        'url': server.url,
+        'token': server.token
+    }
+    return requests.post(url=f'{url}/api/v1/jaime/servers/test', json=json).json()
