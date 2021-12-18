@@ -26,8 +26,8 @@ ENV TZ America/Argentina/Buenos_Aires
 
 CMD gunicorn \
     -b ${PYTHON_HOST}:${PYTHON_PORT} \
-    --workers=2 \
-    --worker-connections=1000 \
+    --workers=1 \
+    --threads=6 \
     app:app
 
 COPY requirements.txt ./
