@@ -6,6 +6,7 @@ from uuid import uuid4
 import requests
 import yaml
 from logic.apps.agents.errors.agent_error import AgentError
+from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.apps.modules.services import module_service
@@ -68,13 +69,16 @@ def delete(id: str):
     if not worker:
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
-    
+
     _WORKS_QUEUE.pop(id)
+
+    if worker.agent:
+        agent_service.change_status(worker.agent.id, AgentStatus.READY)
 
 
 def list_all() -> List[str]:
     global _WORKS_QUEUE
-    return _WORKS_QUEUE.keys()
+    return list(_WORKS_QUEUE.keys())
 
 
 def get_all_short() -> List[Dict[str, str]]:
@@ -159,3 +163,11 @@ def _valid_work_running(id: str):
     if work.status == Status.READY:
         msj = f'el Work con id {id} todabia no esta corriendo'
         raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
+
+
+def finish_work(id: str):
+
+    change_status(id, Status.TERMINATED)
+
+    agent = get(id).agent
+    agent_service.change_status(agent.id, AgentStatus.READY)
