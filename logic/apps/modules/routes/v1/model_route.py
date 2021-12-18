@@ -26,3 +26,10 @@ def list_all():
 def delete(name: str):
     module_service.delete(name)
     return '', 200
+
+
+@blue_print.route('/<name>', methods=['PUT'])
+def modify(name: str):
+    content = request.get_data().decode('utf8')
+    module_service.modify(name, content)
+    return '', 200

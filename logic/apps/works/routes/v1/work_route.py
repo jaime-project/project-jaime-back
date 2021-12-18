@@ -95,7 +95,7 @@ def download_workspace(id: str):
 
 def _is_yaml(text: str) -> bool:
     try:
-        yaml.load(request.data, Loader=yaml.FullLoader)
+        yaml.load(text, Loader=yaml.FullLoader)
         return True
 
     except Exception:

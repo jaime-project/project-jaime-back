@@ -136,3 +136,8 @@ def test_server(name: str) -> Dict[str, str]:
         'token': server.token
     }
     return requests.post(url=f'{url}/api/v1/jaime/servers/test', json=json).json()
+
+
+def modify(name: str, server: Server):
+    delete(name)
+    add(server)

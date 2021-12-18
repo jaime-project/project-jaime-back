@@ -53,3 +53,19 @@ def get_all_short():
 @blue_print.route('/<name>/test', methods=['GET'])
 def test_server(name):
     return jsonify(server_service.test_server(name)), 200
+
+
+@blue_print.route('/<name>', methods=['PUT'])
+def modify_server(name):
+
+    s = request.json
+    server = Server(
+        name=s['name'],
+        url=s['url'],
+        token=s['token'],
+        version=s['version'],
+        type=ServerType(s['type'])
+    )
+    server_service.modify(name, server)
+
+    return '', 200
