@@ -1,6 +1,3 @@
-from multiprocessing import Pool
-from typing import Dict
-
 import requests
 import tools
 
@@ -46,7 +43,7 @@ servers:
 """
 
         print(f"{server_to} -> Generando work para {np} {ob}")
-        Pool(processes=1).apply_async(post_work(yaml_params))
+        post_work(yaml_params)
 
 
 print(f"{server_to} -> Proceso terminado")

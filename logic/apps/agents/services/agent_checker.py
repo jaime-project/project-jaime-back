@@ -9,7 +9,7 @@ _THREAD_AGENT_ACTIVE = True
 
 def check_node_alive():
 
-    for n in agent_service.list_all():
+    for n in list(agent_service.list_all()):
 
         tries = 0
         while tries < 3:
