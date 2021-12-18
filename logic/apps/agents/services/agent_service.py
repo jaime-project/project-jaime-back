@@ -2,7 +2,7 @@ from typing import Dict, List
 
 import requests
 from logic.apps.agents.errors.agent_error import AgentError
-from logic.apps.agents.models.agent_model import Agent
+from logic.apps.agents.models.agent_model import Agent, AgentStatus
 from logic.apps.servers.models.server_model import ServerType
 from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
@@ -50,7 +50,7 @@ def get(id: str) -> Agent:
 
     if id not in _AGENTS_ONLINE.keys():
         msj = f'No existe nodo con el id {id}'
-        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR)
+        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR, msj)
 
     return _AGENTS_ONLINE[id]
 
@@ -86,7 +86,7 @@ def list_all() -> List[Agent]:
     if not _AGENTS_ONLINE:
         return []
 
-    return _AGENTS_ONLINE.values()
+    return list(_AGENTS_ONLINE.values())
 
 
 def get_available_agent_by_type(type: ServerType) -> Agent:
@@ -94,16 +94,10 @@ def get_available_agent_by_type(type: ServerType) -> Agent:
     agents = get_by_type(type)
     if not agents:
         msj = f'No existe agente con el tipo {type.value}'
-        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR)
-
-    agents_working = [
-        work_service.get(id_w).agent
-        for id_w in work_service.list_all()
-        if work_service.get(id_w).status == Status.RUNNING
-    ]
+        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR, msj)
 
     for a in agents:
-        if a not in agents_working:
+        if a.status == AgentStatus.READY:
             return a
 
     return None
@@ -119,5 +113,11 @@ def get_all_short() -> List[Dict[str, str]]:
             "port": n.port,
             "type": n.type.value
         }
-        for _, n in _AGENTS_ONLINE.items()
+        for _, n in list(_AGENTS_ONLINE.items())
     ]
+
+
+def change_status(id: str, status: AgentStatus):
+    agent = get(id)
+    if agent:
+        agent.status = status

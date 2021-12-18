@@ -65,7 +65,7 @@ def get(id: str):
 @blue_print.route('/<id>/finish', methods=['PATCH'])
 def finish(id: str):
 
-    work_service.change_status(id, Status.TERMINATED)
+    work_service.finish_work(id)
     return '', 200
 
 
