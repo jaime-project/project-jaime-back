@@ -68,12 +68,8 @@ def delete(id: str):
     if not worker:
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
-
-    _WORKS_QUEUE = {
-        k: v
-        for k, v in _WORKS_QUEUE.items()
-        if k != id
-    }
+    
+    _WORKS_QUEUE.pop(id)
 
 
 def list_all() -> List[str]:
