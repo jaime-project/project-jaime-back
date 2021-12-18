@@ -18,24 +18,28 @@ _THREAD_RUNNER_ACTIVE = True
 
 def runner():
 
-    for id in work_service.list_all():
+    try:
+        for id in work_service.list_all():
 
-        work = work_service.get(id)
-        if work.status != Status.READY:
-            continue
+            work = work_service.get(id)
+            if work.status != Status.READY:
+                continue
 
-        agent_type = ServerType(work.params['agent']['type'])
-        agent = agent_service.get_available_agent_by_type(agent_type)
-        if not agent:
-            continue
+            agent_type = ServerType(work.params['agent']['type'])
+            agent = agent_service.get_available_agent_by_type(agent_type)
+            if not agent:
+                continue
 
-        agent_service.change_status(agent.id, AgentStatus.WORKING)
+            agent_service.change_status(agent.id, AgentStatus.WORKING)
 
-        work.agent = agent
-        work.status = Status.RUNNING
-        work.running_date = datetime.now()
+            work.agent = agent
+            work.status = Status.RUNNING
+            work.running_date = datetime.now()
 
-        work_service.exec_into_agent(work)
+            work_service.exec_into_agent(work)
+
+    except Exception as e:
+        logger().error(str(e))
 
 
 def start_runner_thread():

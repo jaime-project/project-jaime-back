@@ -32,7 +32,18 @@ def delete(id: str):
 @blue_print.route('/', methods=['GET'])
 def list_all():
 
-    result = agent_service.list_all()
+    agents = agent_service.list_all()
+    result = [
+        {
+            'id': a.id,
+            'host': a.host,
+            'port': a.port,
+            'type': a.type.value,
+            'status': a.status.value,
+        }
+        for a in agents
+    ]
+
     return jsonify(result), 200
 
 
@@ -55,6 +66,7 @@ def get(id: str):
         "host": n.host,
         "port": n.port,
         "id": n.id,
+        'status': n.status.value,
     }
 
     return jsonify(result), 200

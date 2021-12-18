@@ -14,16 +14,19 @@ _THREAD_GARBAGE_COLLECTOR_ACTIVE = True
 
 def garbage_collector():
 
-    for id in list(work_service.list_all()):
+    try:
+        for id in list(work_service.list_all()):
 
-        work = work_service.get(id)
-        if work.status != Status.TERMINATED:
-            continue
+            work = work_service.get(id)
+            if work.status != Status.TERMINATED:
+                continue
 
-        if work.terminated_date + timedelta(hours=24) < datetime.now():
-            work_service.delete(id)
-            agent_service.delete_work(id)
-            logger().info(f'Borrando proceso TERMINATED -> id: {id}')
+            if work.terminated_date + timedelta(hours=48) < datetime.now():
+                work_service.delete(id)
+                logger().info(f'Borrando proceso TERMINATED -> id: {id}')
+
+    except Exception as e:
+        logger().error(str(e))
 
 
 def start_runner_thread():

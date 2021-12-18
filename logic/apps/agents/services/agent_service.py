@@ -4,8 +4,6 @@ import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent, AgentStatus
 from logic.apps.servers.models.server_model import ServerType
-from logic.apps.works.models.work_model import Status
-from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
