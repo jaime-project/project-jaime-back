@@ -20,7 +20,11 @@ namespace_to = params['servers']['to']['namespace']
 method_to = params['servers']['to'].get('method', 'apply')
 
 oc_from = tools.get_client(server_from)
-oc_from.login()
+login_success = oc_from.login()
+if not login_success:
+    print(f'Error en login {server_from}')
+    exit(0)
+
 
 print(f"{server_from} -> Obtieniendo todos los objetos")
 objects_to_migrate = [
@@ -50,8 +54,13 @@ for ob in objects_to_migrate:
     oc_from.exec(
         f'get {object_from} {ob} -n {namespace_from} -o yaml > yamls/{ob}.yaml')
 
+
 oc_to = tools.get_client(server_to)
-oc_to.login()
+login_success = oc_to.login()
+if not login_success:
+    print(f'Error en login {server_to}')
+    exit(0)
+
 
 oc_to.exec(f'new-project {namespace_to}')
 

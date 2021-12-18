@@ -12,7 +12,11 @@ jaime_url = params['jaime']['url']
 
 
 oc = tools.get_client(server_from)
-oc.login()
+login_success = oc.login()
+if not login_success:
+    print(f'Error en login {server_from}')
+    exit(0)
+
 
 
 def post_work(yaml_params: str):
