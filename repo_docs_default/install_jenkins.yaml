@@ -1,6 +1,3 @@
-module: install_jenkins
-agent:
-  type: oc
 server:
   name: <server name>
   namespace: <namespace>
