@@ -29,7 +29,7 @@ print(f"{server_from} -> Obtieniendo todos los pvs")
 pvc_to_migrate = [
     ob
     for ob
-    in oc_from.exec(f'get pv -n {namespace_from} -o custom-columns=NAME:.metadata.name').split('\n')[1:-1]
+    in oc_from.exec(f'get pv -n {namespace_from} -o custom-columns=NAME:.metadata.name').split('\n')[1:]
 ]
 
 tools.sh('mkdir yamls/')

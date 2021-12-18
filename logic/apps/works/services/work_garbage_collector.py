@@ -14,7 +14,7 @@ _THREAD_GARBAGE_COLLECTOR_ACTIVE = True
 
 def garbage_collector():
 
-    for id in work_service.list_all():
+    for id in list(work_service.list_all()):
 
         work = work_service.get(id)
         if work.status != Status.TERMINATED:

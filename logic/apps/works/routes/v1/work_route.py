@@ -52,11 +52,11 @@ def get(id: str):
             "host": result.agent.host,
             "port": result.agent.port,
             "id": result.agent.id
-        },
+        } if result.agent else "",
         "status": result.status.value,
-        "start_date": result.start_date.isoformat(),
-        "running_date": result.running_date.isoformat(),
-        "terminated_date": result.terminated_date.isoformat()
+        "start_date": result.start_date.isoformat() if result.start_date else "",
+        "running_date": result.running_date.isoformat() if result.running_date else "",
+        "terminated_date": result.terminated_date.isoformat() if result.terminated_date else ""
     }
 
     return jsonify(result_dict), 200

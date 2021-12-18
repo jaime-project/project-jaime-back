@@ -25,7 +25,7 @@ print(f"{server} -> Obtieniendo todos los buildconfigs")
 bc_list = [
     bc
     for bc
-    in oc.exec(f'get bc -n {namespace} -o custom-columns=NAME:.metadata.name').split('\n')[1:-1]
+    in oc.exec(f'get bc -n {namespace} -o custom-columns=NAME:.metadata.name').split('\n')[1:]
 ]
 
 
@@ -62,8 +62,7 @@ for bc in bc_list_to_execute:
     lot_exec_count += 1
 
     print(f"{server} -> Ejecutando bc: {bc}")
-    # oc.exec(f'start-build {bc} -n {namespace}')
-    print(f'start-build {bc} -n {namespace}')
+    oc.exec(f'start-build {bc} -n {namespace}')
 
     if lot_exec_count == size:
         lot_exec_count = 0
