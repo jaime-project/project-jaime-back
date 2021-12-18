@@ -26,7 +26,7 @@ ENV TZ America/Argentina/Buenos_Aires
 
 CMD gunicorn \
     -b ${PYTHON_HOST}:${PYTHON_PORT} \
-    --workers=1 \
+    --workers=2 \
     --worker-connections=1000 \
     app:app
 
