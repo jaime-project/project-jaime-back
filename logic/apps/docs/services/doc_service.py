@@ -72,3 +72,8 @@ def list_default() -> List[str]:
         nf.replace('.yaml', '')
         for nf in filesystem_service.name_files_from_path(get_default_path())
     ]
+
+
+def modify(name: str, content: str):
+    delete(name)
+    add(name, content)

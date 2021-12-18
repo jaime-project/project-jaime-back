@@ -74,3 +74,8 @@ def list_default() -> List[str]:
         for nf in filesystem_service.name_files_from_path(get_default_path())
         if not nf.endswith('.pyc')
     ]
+
+
+def modify(name: str, content: str):
+    delete(name)
+    add(name, content)
