@@ -23,7 +23,11 @@ pvc_storage_class = params['pvc']['storage_class']
 
 # GET
 oc_from = tools.get_client(server_from)
-oc_from.login()
+login_success = oc_from.login()
+if not login_success:
+    print(f'Error en login {server_from}')
+    exit(0)
+
 
 print(f"{server_from} -> Obtieniendo todos los pvs")
 pvc_to_migrate = [

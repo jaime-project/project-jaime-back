@@ -11,7 +11,10 @@ namespace_from = params['servers']['from']['namespace']
 object_from = params['servers']['from']['object']
 
 oc_from = tools.get_client(server_from)
-oc_from.login()
+login_success = oc_from.login()
+if not login_success:
+    print(f'Error en login {server_from}')
+    exit(0)
 
 print(f"{server_from} -> Obtieniendo todos los objetos")
 objects_to_migrate = [

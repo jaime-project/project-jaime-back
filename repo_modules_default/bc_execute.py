@@ -17,7 +17,11 @@ ignore = params['servers'].get('ignore', [])
 
 
 oc = tools.get_client(server)
-oc.login()
+
+login_success = oc.login()
+if not login_success:
+    print(f'Error en login {server}')
+    exit(0)
 
 
 print(f"{server} -> Obtieniendo todos los buildconfigs")

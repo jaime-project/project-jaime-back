@@ -21,7 +21,10 @@ conf_vol = params['jenkins']['config']['memoryVolume']
 conf_storage_class = params['jenkins']['config']['storageClass']
 
 oc = tools.get_client(server)
-oc.login()
+login_success = oc.login()
+if not login_success:
+    print(f'Error en login {server}')
+    exit(0)
 
 
 print(f'Creando {namespace}')
