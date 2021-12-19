@@ -15,6 +15,7 @@ from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.libs.exception.exception import AppException
+from logic.libs.logger.logger import logger
 
 _WORKS_QUEUE: Dict[str, WorkStatus] = {}
 
@@ -55,6 +56,7 @@ def exec_into_agent(work_status: WorkStatus):
     }
 
     requests.post(url, files=files, data=payload, verify=False)
+    logger().info(f'Work con id: {work_status.id} enviado')
 
 
 def get(id: str) -> WorkStatus:
