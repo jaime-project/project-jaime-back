@@ -3,7 +3,6 @@ import time
 from typing import Dict
 
 import tools
-import yaml
 
 params = tools.get_params()
 
