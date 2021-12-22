@@ -1,0 +1,10 @@
+servers:
+  from:
+    name: <string | server name>
+    namespace: <string | namespace>
+    object: <string | openshift object type [svc, pod, bc, dc, secret, etc]>
+    only: <list[string] | regular expresion list, can be null>
+    ignore: <list[string] | regular expresion list, can be null>
+  to:
+    name: <string | server name>
+    namespace: <string | namespace>

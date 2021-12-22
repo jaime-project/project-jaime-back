@@ -20,7 +20,7 @@ print(f"{server_from} -> Obtieniendo todos los objetos")
 objects_to_migrate = [
     ob
     for ob
-    in oc_from.exec(f'get {object_from} -n {namespace_from} -o custom-columns=NAME:.metadata.name').split('\n')[1:]
+    in oc_from.exec(f'get {object_from} -n {namespace_from} -o custom-columns=NAME:.metadata.name', echo=False).split('\n')[1:]
 ]
 
 print(f"{server_from} -> Objetos entontrados: {len(objects_to_migrate)}")
