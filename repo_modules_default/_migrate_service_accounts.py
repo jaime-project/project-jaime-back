@@ -1,3 +1,5 @@
+from typing import Dict
+
 import requests
 import tools
 
@@ -22,14 +24,16 @@ def post_work(yaml_params: str):
 def generate_yaml_params(server_from, server_to, np, ob) -> str:
     return f"""
 name: migrate-{np}-{ob}
-module: migrate_object
+module: _migrate_object
 agent:
     type: OPENSHIFT
 servers:
     from:
         name: {server_from}
         namespace: {np}
-        object: {ob}
+        object: {ob}        
+        ignore: 
+            - "system:*"
     to:
         name: {server_to}
         namespace: {np}
@@ -38,10 +42,17 @@ servers:
 
 for np in namespaces:
 
-    for ob in ['secrets', 'configmaps', 'buildconfigs']:
+    # SERVICEACCOUNTS
+    print(f"{server_to} -> Generando work para {np} sa")
+    post_work(generate_yaml_params(server_from, server_to, np, 'sa'))
 
-        print(f"{server_to} -> Generando work para {np} {ob}")
-        post_work(generate_yaml_params(server_from, server_to, np, ob))
+    # ROLES
+    print(f"{server_to} -> Generando work para {np} roles")
+    post_work(generate_yaml_params(server_from, server_to, np, 'roles'))
+
+    # ROLEBINDINGS
+    print(f"{server_to} -> Generando work para {np} rolebindings")
+    post_work(generate_yaml_params(server_from, server_to, np, 'rolebindings'))
 
 
 print(f"{server_to} -> Proceso terminado")

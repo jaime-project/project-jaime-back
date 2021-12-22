@@ -98,4 +98,3 @@ print(f'Configurando Jenkins')
 oc.exec(f"""set -n {namespace} env dc jenkins \
 JAVA_TOOL_OPTIONS="-Dhttps.protocols=TLSv1.2" \
 JAVA_OPTS="-Dhttps.protocols=TLSv1.2 -Djdk.tls.client.protocols=TLSv1.2" """)
-print(f'\n\n')
