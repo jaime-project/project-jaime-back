@@ -74,7 +74,8 @@ for yaml_to_migrate in yamls_to_migrate:
     try:
         with open(f'yamls/{yaml_to_migrate}', 'r') as file:
             dic_yaml = yaml.load(file, Loader=yaml.FullLoader)
-
+        
+        dic_yaml['metadata'].pop('managedFields', None)
         dic_yaml['metadata'].pop('creationTimestamp', None)
         dic_yaml['metadata'].pop('namespace', None)
         dic_yaml['metadata'].pop('resourceVersion', None)
