@@ -1,16 +1,16 @@
 server:
-  name: <server name>
-  namespace: <namespace>
+  name: <str | nombre del server>
+  namespace: <str | nombre del namespace>
 jenkins:
   image:
-    url: <url image jenkins>
-    tag: <image tag>
+    url: <str | url de la imagen de jenkins>
+    tag: <str | tag de la imagen>
   imageStream:
-    namespace: <namespace>
-    name: <name>
-    tag: <tag>
+    namespace: <str | namespace del IS donde se guardara la imagen descargada>
+    name: <str | nombre del IS>
+    tag: <str | tag del IS>
   config:
     template: jenkins-persistent
-    memoryRAM: 4Gi
-    memoryVolume: 4Gi
-    storageClass: gp2
+    memoryRAM: <str | RAM ejemplo 4Gi>
+    memoryVolume: <str | disco ejemplo 4Gi>
+    storageClass: <str | ejemplo thin>

@@ -12,8 +12,10 @@ blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
 @blue_print.route('/', methods=['POST'])
 def exec():
 
-    params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
-        request.data) else request.json
+    params_dict = {}
+    if request.data:
+        params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
+            request.data) else request.json
 
     id = work_service.start(params_dict)
 
