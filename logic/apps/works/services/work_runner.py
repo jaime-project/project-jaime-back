@@ -53,7 +53,7 @@ def start_runner_thread():
         global _THREAD_RUNNER_ACTIVE
         while _THREAD_RUNNER_ACTIVE:
             runner()
-            time.sleep(5)
+            time.sleep(3)
 
     thread = threading.Thread(target=thread_method)
     thread.start()

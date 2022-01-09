@@ -1,4 +1,5 @@
 import os
+import shutil
 from datetime import datetime
 from typing import Dict, List
 from uuid import uuid4
@@ -8,17 +9,18 @@ import yaml
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
+from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.apps.modules.services import module_service
 from logic.apps.servers.models.server_model import ServerType
 from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
+from logic.apps.zip.service import zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
 _WORKS_QUEUE: Dict[str, WorkStatus] = {}
-
 
 def start(params: Dict[str, object]) -> str:
 
@@ -74,8 +76,13 @@ def delete(id: str):
 
     _WORKS_QUEUE.pop(id)
 
-    if worker.agent:
+    if worker.status == Status.RUNNING:
         agent_service.change_status(worker.agent.id, AgentStatus.READY)
+        
+    url = worker.agent.get_url() + f'/api/v1/works/{id}'
+    requests.delete(url, verify=False)
+
+    shutil.rmtree(workingdir_service.fullpath(id), ignore_errors=True)
 
 
 def list_all() -> List[str]:
@@ -116,21 +123,23 @@ def get_logs(id: str) -> str:
 
     _valid_work_running(id)
 
-    agent = get(id).agent
-
-    url = agent.get_url() + f'/api/v1/works/{id}/logs'
-    result = requests.get(url, verify=False).content
-    return result.decode() if result else ""
+    with open(workingdir_service.getLogsPath(id), 'r') as f:
+        return f.read()
 
 
-def download_workspace(id):
+def download_workspace(id) -> bytes:
 
     _valid_work_running(id)
 
-    agent = get(id).agent
-    url = agent.get_url() + f'/api/v1/works/{id}/workspace'
-    response = requests.get(url, verify=False)
-    return response.content
+    zip_result_path = workingdir_service.fullpath(id) + '.zip'
+    path = workingdir_service.fullpath(id)
+
+    zip_service.create(zip_result_path, path)
+
+    final_zip_path = workingdir_service.fullpath(id) + f'/{id}.zip'
+    shutil.move(zip_result_path, final_zip_path)
+
+    return open(final_zip_path, 'rb').read()
 
 
 def _generate_id() -> str:

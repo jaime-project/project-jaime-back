@@ -4,7 +4,8 @@ from pathlib import Path
 from typing import Any, List
 from uuid import UUID, uuid4
 
-_TEMP_PATH = '/tmp'
+_TEMP_PATH = '/data/workingdir'
+_NAME_FILE_LOGS = 'logs.log'
 
 
 def create() -> UUID:
@@ -31,3 +32,6 @@ def get(id: Any) -> List[str]:
         result.extend(dirpath)
 
     return result
+
+def getLogsPath(id) -> str:
+    return f'{fullpath(id)}/{_NAME_FILE_LOGS}'
