@@ -13,7 +13,7 @@ RUN rm -fr dist/repo_modules_default
 
 # EXECUTION
 # ---------------------------------------------
-FROM python:3.9-alpine3.14
+FROM python:3.9-slim
 
 WORKDIR /home/src
 

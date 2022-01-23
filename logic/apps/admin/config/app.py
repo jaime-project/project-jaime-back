@@ -34,11 +34,3 @@ def setup_docs():
 
     for name in names_docs:
         shutil.copy(f'{default_path}/{name}.yaml', f'{docs_path}/{name}.yaml')
-
-
-def setup_servers():
-
-    yaml_path = server_service.get_path()
-
-    if not os.path.exists(yaml_path):
-        subprocess.getoutput(f"> {yaml_path}")

@@ -1,5 +1,4 @@
 
-from pathlib import Path
 from typing import Dict, List
 
 import requests
@@ -8,38 +7,32 @@ from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.servers.errors.server_error import ServerError
 from logic.apps.servers.models.server_model import Server, ServerType
+from logic.apps.servers.repositories import server_repository
 from logic.libs.exception.exception import AppException
-
-_YAML_SERVER_FILE = f'{Path.home()}/.jaime/servers.yaml'
 
 
 def add(server: Server):
 
-    servers = _get_servers_from_file()
-
-    if server in servers:
+    if server in server_repository.exist(server.name):
         msj = f"El server con nombre {server.name} ya existe"
         raise AppException(ServerError.SERVER_ALREADY_EXISTS_ERROR, msj)
 
-    _save_server_in_file(server)
+    server_repository.add(server)
 
 
 def get(name: str) -> Server:
 
-    servers = _get_servers_from_file()
+    if not server_repository.exist(name):
+        return None
 
-    for s in servers:
-        if s.name == name:
-            return s
-
-    return None
+    return server_repository.get(name)
 
 
 def list_all() -> List[str]:
 
     return [
         s.name
-        for s in _get_servers_from_file()
+        for s in server_repository.get_all()
     ]
 
 
@@ -51,71 +44,17 @@ def get_all_short() -> List[Dict[str, str]]:
             "type": s.type.value,
             "url": s.url
         }
-        for s in _get_servers_from_file()
+        for s in server_repository.get_all()
     ]
 
 
 def delete(name: str):
 
-    servers = _get_servers_from_file()
-
-    servers_dict = [
-        s.__dict__()
-        for s in servers
-        if s.name != name
-    ]
-
-    if len(servers_dict) == len(servers):
+    if not server_repository.exist(name):
         msj = f"El server con nombre {name} no existe"
         raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
 
-    with open(_YAML_SERVER_FILE, 'w') as f:
-        f.write(yaml.dump(servers_dict))
-
-
-def get_path() -> str:
-
-    global _YAML_SERVER_FILE
-    return _YAML_SERVER_FILE
-
-
-def _get_servers_from_file() -> List[Server]:
-
-    with open(_YAML_SERVER_FILE, 'r') as f:
-        servers_dict = yaml.load(f.read(), Loader=yaml.FullLoader)
-
-    if not servers_dict:
-        return []
-
-    return [
-        Server(
-            name=s['name'],
-            url=s['url'],
-            token=s['token'],
-            version=s['version'],
-            type=ServerType(s['type'])
-        )
-        for s in servers_dict
-    ]
-
-
-def _save_server_in_file(server: Server):
-
-    servers_dict = [
-        s.__dict__()
-        for s in _get_servers_from_file()
-    ]
-
-    servers_dict.append({
-        "name": server.name,
-        "url": server.url,
-        "token": server.token,
-        "version": server.version,
-        "type": server.type.value
-    })
-
-    with open(_YAML_SERVER_FILE, 'w') as f:
-        f.write(yaml.dump(servers_dict))
+    server_repository.delete(name)
 
 
 def list_types() -> str:
