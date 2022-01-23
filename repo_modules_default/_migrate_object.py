@@ -75,7 +75,7 @@ for ob in objects:
 
     print(f'{server_from} -> Obteniendo {ob}')
     oc_from.exec(f'get {object_from} {ob} -n {namespace_from} -o yaml > yamls/{ob}.yaml')
-    objects_to_migrate.extend(ob)
+    objects_to_migrate.append(ob)
 
 print(f'{server_from} -> por migrar {len(objects_to_migrate)} {object_from}')
 
