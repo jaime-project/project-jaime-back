@@ -16,11 +16,13 @@ from logic.apps.servers.models.server_model import ServerType
 from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
+from logic.apps.works.repositories import work_repository
 from logic.apps.zip.service import zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
-_WORKS_QUEUE: Dict[str, WorkStatus] = {}
+# _WORKS_QUEUE: Dict[str, WorkStatus] = {}
+
 
 def start(params: Dict[str, object]) -> str:
 
@@ -28,8 +30,8 @@ def start(params: Dict[str, object]) -> str:
 
     id = _generate_id()
 
-    global _WORKS_QUEUE
-    _WORKS_QUEUE[id] = WorkStatus(id, params["name"], params["module"], params)
+    work_repository.add(WorkStatus(
+        id, params["name"], params["module"], params))
 
     return id
 
@@ -62,23 +64,21 @@ def exec_into_agent(work_status: WorkStatus):
 
 
 def get(id: str) -> WorkStatus:
-    global _WORKS_QUEUE
-    return _WORKS_QUEUE.get(id, None)
+    return work_repository.get(id)
 
 
 def delete(id: str):
-    global _WORKS_QUEUE
 
     worker = get(id)
     if not worker:
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
-    _WORKS_QUEUE.pop(id)
+    work_repository.delete(worker)
 
     if worker.status == Status.RUNNING:
         agent_service.change_status(worker.agent.id, AgentStatus.READY)
-        
+
     url = worker.agent.get_url() + f'/api/v1/works/{id}'
     requests.delete(url, verify=False)
 
@@ -86,12 +86,14 @@ def delete(id: str):
 
 
 def list_all() -> List[str]:
-    global _WORKS_QUEUE
-    return list(_WORKS_QUEUE.keys())
+    return [
+        work.id
+        for work
+        in work_repository.get_all()
+    ]
 
 
 def get_all_short() -> List[Dict[str, str]]:
-    global _WORKS_QUEUE
     return [
         {
             "name": w.name,
@@ -102,13 +104,12 @@ def get_all_short() -> List[Dict[str, str]]:
             "module_name": w.module_name,
             "start_date": w.start_date.isoformat()
         }
-        for _, w in _WORKS_QUEUE.items()
+        for w in work_repository.get_all()
     ]
 
 
 def change_status(id: str, status: Status):
-    global _WORKS_QUEUE
-    work = _WORKS_QUEUE[id]
+    work = work_repository.get(id)
 
     if status == Status.TERMINATED:
         work.terminated_date = datetime.now()

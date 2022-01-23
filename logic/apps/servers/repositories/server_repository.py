@@ -18,7 +18,7 @@ def get_all() -> List[Server]:
 def get(name: str) -> Server:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(ServerEntity).filter_by(name=name).get()
+    result = s.query(ServerEntity).get({'name': name})
     s.close()
 
     return result.to_model()
@@ -35,11 +35,11 @@ def add(m: Server):
     s.flush()
 
 
-def delete(m: Server):
-
-    e = ServerEntity.from_model(m)
+def delete(name: str):
 
     s = sqliteAlchemy.make_session()
+
+    e = s.query(ServerEntity).get({'name': name})
     s.delete(e)
 
     s.commit()

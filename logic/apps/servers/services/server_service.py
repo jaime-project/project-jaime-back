@@ -13,7 +13,7 @@ from logic.libs.exception.exception import AppException
 
 def add(server: Server):
 
-    if server in server_repository.exist(server.name):
+    if server_repository.exist(server.name):
         msj = f"El server con nombre {server.name} ya existe"
         raise AppException(ServerError.SERVER_ALREADY_EXISTS_ERROR, msj)
 

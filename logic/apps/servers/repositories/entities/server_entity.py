@@ -1,4 +1,4 @@
-from logic.apps.servers.models.server_model import Server
+from logic.apps.servers.models.server_model import Server, ServerType
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 from sqlalchemy import Column, String
 
@@ -19,7 +19,7 @@ class ServerEntity(Entity):
             name=self.name,
             url=self.url,
             token=self.token,
-            type=self.type,
+            type=ServerType(self.type),
             version=self.version
         )
 
@@ -29,6 +29,6 @@ class ServerEntity(Entity):
             name=m.name,
             url=m.url,
             token=m.token,
-            type=m.type,
+            type=m.type.value,
             version=m.version
         )
