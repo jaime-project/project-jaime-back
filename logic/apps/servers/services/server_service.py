@@ -36,6 +36,10 @@ def list_all() -> List[str]:
     ]
 
 
+def get_all() -> List[str]:
+    return server_repository.get_all()
+
+
 def get_all_short() -> List[Dict[str, str]]:
 
     return [

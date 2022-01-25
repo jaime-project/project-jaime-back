@@ -19,13 +19,12 @@ _THREAD_RUNNER_ACTIVE = True
 def runner():
 
     try:
-        for id in work_service.list_all():
+
+        for id in work_service.list_by_status(Status.READY):
 
             work = work_service.get(id)
-            if work.status != Status.READY:
-                continue
-
-            agent_type = ServerType(work.params['agent']['type'])
+            agent_type = ServerType(work.params['agent'])
+            
             agent = agent_service.get_available_agent_by_type(agent_type)
             if not agent:
                 continue

@@ -38,14 +38,12 @@ def start(params: Dict[str, object]) -> str:
 
 def exec_into_agent(work_status: WorkStatus):
 
-    yaml_path = server_service.get_path()
-    with open(yaml_path, 'r') as f:
-        servers_file_bytes = f.read().encode()
-
     module_name = work_status.params['module']
     module_path = os.path.join(module_service.get_path(), f'{module_name}.py')
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
+
+    servers_file_bytes = str(yaml.dump(server_service.get_all())).encode()
 
     params_file_bytes = str(yaml.dump(work_status.params)).encode()
 
@@ -69,13 +67,13 @@ def get(id: str) -> WorkStatus:
 
 def delete(id: str):
 
-    worker = get(id)
-    if not worker:
+    if not work_repository.exist(id):
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
-    work_repository.delete(worker)
+    work_repository.delete(id)
 
+    worker = get(id)
     if worker.status == Status.RUNNING:
         agent_service.change_status(worker.agent.id, AgentStatus.READY)
 
@@ -90,6 +88,14 @@ def list_all() -> List[str]:
         work.id
         for work
         in work_repository.get_all()
+    ]
+
+
+def list_by_status(status: WorkStatus) -> List[str]:
+    return [
+        work.id
+        for work
+        in work_repository.get_all_by_status(status)
     ]
 
 

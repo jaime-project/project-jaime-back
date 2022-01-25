@@ -15,11 +15,9 @@ _THREAD_GARBAGE_COLLECTOR_ACTIVE = True
 def garbage_collector():
 
     try:
-        for id in list(work_service.list_all()):
+        for id in work_service.list_by_status(Status.TERMINATED):
 
             work = work_service.get(id)
-            if work.status != Status.TERMINATED:
-                continue
 
             if work.terminated_date + timedelta(hours=48) < datetime.now():
                 work_service.delete(id)
