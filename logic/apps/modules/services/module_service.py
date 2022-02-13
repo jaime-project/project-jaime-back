@@ -6,7 +6,6 @@ from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.libs.exception.exception import AppException
 
-_DEFAULT_RELATIVE_PATH = f'repo_modules_default'
 _MODULES_PATH = f'{Path.home()}/.jaime/modules'
 
 
@@ -31,11 +30,11 @@ def get(name: str) -> str:
         )
 
 
-def list_all() -> List[str]:
+def list_all(repo_name: str) -> List[str]:
 
     return [
         nf.replace('.py', '')
-        for nf in filesystem_service.name_files_from_path(get_path())
+        for nf in filesystem_service.name_files_from_path(f'{get_path()}/{repo_name}')
         if not nf.endswith('.pyc')
     ]
 
@@ -59,21 +58,6 @@ def get_path() -> str:
 
     global _MODULES_PATH
     return _MODULES_PATH
-
-
-def get_default_path() -> str:
-
-    global _DEFAULT_RELATIVE_PATH
-    return _DEFAULT_RELATIVE_PATH
-
-
-def list_default() -> List[str]:
-
-    return [
-        nf.replace('.py', '')
-        for nf in filesystem_service.name_files_from_path(get_default_path())
-        if not nf.endswith('.pyc')
-    ]
 
 
 def modify(name: str, content: str):

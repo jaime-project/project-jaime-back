@@ -10,7 +10,7 @@ from logic.apps.clusters.services import cluster_service
 
 def setup_modules():
 
-    names_modules = module_service.list_default()
+    names_modules = module_service.list()
 
     default_path = module_service.get_default_path()
     modules_path = module_service.get_path()

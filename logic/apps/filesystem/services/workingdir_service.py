@@ -33,5 +33,6 @@ def get(id: Any) -> List[str]:
 
     return result
 
+
 def getLogsPath(id) -> str:
     return f'{fullpath(id)}/{_NAME_FILE_LOGS}'

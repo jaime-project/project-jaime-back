@@ -62,10 +62,6 @@ def delete(name: str):
     repo_repository.delete(name)
 
 
-def list_types() -> str:
-    return [e.value for e in RepoType]
-
-
 def modify(name: str, repo: RepoGit):
     delete(name)
     add(repo)

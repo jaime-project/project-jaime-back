@@ -1,4 +1,4 @@
-from logic.apps.repos.models.repo_model import RepoGit, Repo
+from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 from sqlalchemy import Column, String
 
@@ -17,6 +17,7 @@ class RepoGitEntity(Entity):
     def to_model(self) -> RepoGit:
         return RepoGit(
             name=self.name,
+            type=RepoType.GIT,
             git_path=self.git_path,
             git_user=self.git_user,
             git_pass=self.git_pass,
@@ -41,7 +42,8 @@ class RepoLocalEntity(Entity):
 
     def to_model(self) -> Repo:
         return Repo(
-            name=self.name
+            name=self.name,
+            type=RepoType.LOCAL
         )
 
     @staticmethod
