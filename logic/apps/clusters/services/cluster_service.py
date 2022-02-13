@@ -5,39 +5,39 @@ import requests
 import yaml
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
-from logic.apps.servers.errors.server_error import ServerError
-from logic.apps.servers.models.server_model import Server, ServerType
-from logic.apps.servers.repositories import server_repository
+from logic.apps.clusters.errors.cluster_error import ClusterError
+from logic.apps.clusters.models.cluster_model import Cluster, ClusterType
+from logic.apps.clusters.repositories import cluster_repository
 from logic.libs.exception.exception import AppException
 
 
-def add(server: Server):
+def add(server: Cluster):
 
-    if server_repository.exist(server.name):
+    if cluster_repository.exist(server.name):
         msj = f"El server con nombre {server.name} ya existe"
-        raise AppException(ServerError.SERVER_ALREADY_EXISTS_ERROR, msj)
+        raise AppException(ClusterError.CLUSTER_ALREADY_EXISTS_ERROR, msj)
 
-    server_repository.add(server)
+    cluster_repository.add(server)
 
 
-def get(name: str) -> Server:
+def get(name: str) -> Cluster:
 
-    if not server_repository.exist(name):
+    if not cluster_repository.exist(name):
         return None
 
-    return server_repository.get(name)
+    return cluster_repository.get(name)
 
 
 def list_all() -> List[str]:
 
     return [
         s.name
-        for s in server_repository.get_all()
+        for s in cluster_repository.get_all()
     ]
 
 
 def get_all() -> List[str]:
-    return server_repository.get_all()
+    return cluster_repository.get_all()
 
 
 def get_all_short() -> List[Dict[str, str]]:
@@ -48,21 +48,21 @@ def get_all_short() -> List[Dict[str, str]]:
             "type": s.type.value,
             "url": s.url
         }
-        for s in server_repository.get_all()
+        for s in cluster_repository.get_all()
     ]
 
 
 def delete(name: str):
 
-    if not server_repository.exist(name):
+    if not cluster_repository.exist(name):
         msj = f"El server con nombre {name} no existe"
-        raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
+        raise AppException(ClusterError.CLUSTER_NOT_EXISTS_ERROR, msj)
 
-    server_repository.delete(name)
+    cluster_repository.delete(name)
 
 
 def list_types() -> str:
-    return [e.value for e in ServerType]
+    return [e.value for e in ClusterType]
 
 
 def test_server(name: str) -> Dict[str, str]:
@@ -81,6 +81,6 @@ def test_server(name: str) -> Dict[str, str]:
     return requests.post(url=f'{url}/api/v1/jaime/servers/test', json=json).json()
 
 
-def modify(name: str, server: Server):
+def modify(name: str, server: Cluster):
     delete(name)
     add(server)

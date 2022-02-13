@@ -1,12 +1,12 @@
-from logic.apps.servers.models.server_model import Server, ServerType
+from logic.apps.clusters.models.cluster_model import Cluster, ClusterType
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 from sqlalchemy import Column, String
 
 Entity = sqliteAlchemy.get_entity_class()
 
 
-class ServerEntity(Entity):
-    __tablename__ = 'SERVERS'
+class ClusterEntity(Entity):
+    __tablename__ = 'CLUSTERS'
 
     name = Column(String, primary_key=True, nullable=False)
     url = Column(String)
@@ -14,18 +14,18 @@ class ServerEntity(Entity):
     type = Column(String)
     version = Column(String)
 
-    def to_model(self) -> Server:
-        return Server(
+    def to_model(self) -> Cluster:
+        return Cluster(
             name=self.name,
             url=self.url,
             token=self.token,
-            type=ServerType(self.type),
+            type=ClusterType(self.type),
             version=self.version
         )
 
     @staticmethod
-    def from_model(m: Server) -> 'ServerEntity':
-        return ServerEntity(
+    def from_model(m: Cluster) -> 'ClusterEntity':
+        return ClusterEntity(
             name=m.name,
             url=m.url,
             token=m.token,

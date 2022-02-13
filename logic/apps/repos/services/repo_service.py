@@ -1,13 +1,11 @@
 
+import os
 from pathlib import Path
-import shutil
 from typing import Dict, List
 
-import requests
-import os
 from logic.apps.modules.services import module_service
 from logic.apps.repos.errors.repo_error import RepoError
-from logic.apps.repos.models.repo_model import Repo
+from logic.apps.repos.models.repo_model import RepoGit, Repo
 from logic.apps.repos.repositories import repo_repository
 from logic.libs.exception.exception import AppException
 
@@ -23,7 +21,7 @@ def add(repo: Repo):
     repo_repository.add(repo)
 
 
-def get(name: str) -> Repo:
+def get(name: str) -> RepoGit:
 
     if not repo_repository.exist(name):
         return None
@@ -59,7 +57,7 @@ def delete(name: str):
 
     if not repo_repository.exist(name):
         msj = f"El repo con nombre {name} no existe"
-        raise AppException(RepoError.SERVER_NOT_EXISTS_ERROR, msj)
+        raise AppException(RepoError.REPO_NOT_EXISTS_ERROR, msj)
 
     repo_repository.delete(name)
 
@@ -68,28 +66,12 @@ def list_types() -> str:
     return [e.value for e in RepoType]
 
 
-def test_repo(name: str) -> Dict[str, str]:
-
-    repo = get(name)
-    agents = agent_service.get_by_type(repo.type)
-    if not agents:
-        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
-                           "No hay agentes para la tarea")
-
-    url = agents[0].get_url()
-    json = {
-        'url': repo.url,
-        'token': repo.token
-    }
-    return requests.post(url=f'{url}/api/v1/jaime/repos/test', json=json).json()
-
-
-def modify(name: str, repo: Repo):
+def modify(name: str, repo: RepoGit):
     delete(name)
     add(repo)
 
 
-def update_git_repo(repo: Repo):
+def update_git_repo(repo: RepoGit):
 
     tmp_path = '/temp'
     repo_name = _get_git_repo_name(repo.git_url)
@@ -99,7 +81,7 @@ def update_git_repo(repo: Repo):
     download_git_repo(repo)
 
 
-def download_git_repo(repo: Repo):
+def download_git_repo(repo: RepoGit):
 
     repo_name = _get_git_repo_name(repo.git_url)
     repo_git_without_https = repo.git_url.replace("https://", "")

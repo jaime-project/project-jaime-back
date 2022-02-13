@@ -1,34 +1,34 @@
 from typing import List
 
-from logic.apps.servers.models.server_model import Server
+from logic.apps.clusters.models.cluster_model import Cluster
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
-from .entities.server_entity import ServerEntity
+from .entities.cluster_entity import ClusterEntity
 
 
-def get_all() -> List[Server]:
+def get_all() -> List[Cluster]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(ServerEntity).all()
+    result = s.query(ClusterEntity).all()
     s.close()
 
     return [r.to_model() for r in result]
 
 
-def get(name: str) -> Server:
+def get(name: str) -> Cluster:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(ServerEntity).get({'name': name})
+    result = s.query(ClusterEntity).get({'name': name})
     s.close()
 
     return result.to_model()
 
 
-def add(m: Server):
+def add(m: Cluster):
 
     s = sqliteAlchemy.make_session()
 
-    e = ServerEntity.from_model(m)
+    e = ClusterEntity.from_model(m)
     s.add(e)
 
     s.commit()
@@ -39,7 +39,7 @@ def delete(name: str):
 
     s = sqliteAlchemy.make_session()
 
-    e = s.query(ServerEntity).get({'name': name})
+    e = s.query(ClusterEntity).get({'name': name})
     s.delete(e)
 
     s.commit()
@@ -49,7 +49,7 @@ def delete(name: str):
 def exist(name: str) -> bool:
 
     s = sqliteAlchemy.make_session()
-    if s.query(ServerEntity).filter_by(name=name).count() == 0:
+    if s.query(ClusterEntity).filter_by(name=name).count() == 0:
         return False
 
     return True

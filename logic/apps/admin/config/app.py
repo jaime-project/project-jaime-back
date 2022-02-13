@@ -5,7 +5,7 @@ from pathlib import Path
 
 from logic.apps.modules.services import module_service
 from logic.apps.docs.services import doc_service
-from logic.apps.servers.services import server_service
+from logic.apps.clusters.services import cluster_service
 
 
 def setup_modules():

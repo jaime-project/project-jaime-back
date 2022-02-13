@@ -2,20 +2,20 @@ from dataclasses import dataclass
 from enum import Enum
 
 
-class ServerType(Enum):
+class ClusterType(Enum):
     OPENSHIFT = 'OPENSHIFT'
     KUBERNETES = 'KUBERNETES'
 
 
 @dataclass
-class Server():
+class Cluster():
     name: str
     url: str
     token: str
-    type: ServerType
+    type: ClusterType
     version: str
 
-    def __init__(self, name: str, url: str, token: str, version: str, type: ServerType) -> "Server":
+    def __init__(self, name: str, url: str, token: str, version: str, type: ClusterType) -> "Cluster":
         self.name = name
         self.url = url
         self.token = token

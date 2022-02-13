@@ -3,9 +3,9 @@ import tools
 
 params = tools.get_params()
 
-server_from = params['servers']['from']['name']
+cluster_from = params['servers']['from']['name']
 
-server_to = params['servers']['to']['name']
+cluster_to = params['servers']['to']['name']
 
 jaime_url = params['jaime']['url']
 
@@ -18,7 +18,7 @@ def post_work(yaml_params: str):
     )
 
 
-def generate_yaml_params(server_from, server_to, ob) -> str:
+def generate_yaml_params(cluster_from, cluster_to, ob) -> str:
     return f"""
 name: migrate-{ob}
 module: _migrate_object
@@ -26,24 +26,24 @@ agent:
     type: OPENSHIFT
 servers:
     from:
-        name: {server_from}
+        name: {cluster_from}
         namespace: openshift
         object: {ob}        
         ignore: 
             - "system:*"
     to:
-        name: {server_to}
+        name: {cluster_to}
         namespace: openshift
 """
 
 
 # CLUSTERROLES
-print(f"{server_to} -> Generando work para clusterroles")
-post_work(generate_yaml_params(server_from, server_to, 'clusterroles'))
+print(f"{cluster_to} -> Generando work para clusterroles")
+post_work(generate_yaml_params(cluster_from, cluster_to, 'clusterroles'))
 
 # CLUSTERROLEBINDINGS
-print(f"{server_to} -> Generando work para clusterrolebindings")
-post_work(generate_yaml_params(server_from, server_to, 'clusterrolebindings'))
+print(f"{cluster_to} -> Generando work para clusterrolebindings")
+post_work(generate_yaml_params(cluster_from, cluster_to, 'clusterrolebindings'))
 
 
-print(f"{server_to} -> Proceso terminado")
+print(f"{cluster_to} -> Proceso terminado")

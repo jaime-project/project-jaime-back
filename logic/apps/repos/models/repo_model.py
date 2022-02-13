@@ -3,8 +3,20 @@ from dataclasses import dataclass
 
 @dataclass
 class Repo():
-
     name: str
+
+    def __eq__(self, o: object) -> bool:
+        return self.name == o.name
+
+    def __dict__(self):
+        return {
+            'name': self.name
+        }
+
+
+@dataclass
+class RepoGit(Repo):
+
     git_path: str
     git_user: str
     git_pass: str

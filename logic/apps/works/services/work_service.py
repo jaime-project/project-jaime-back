@@ -12,8 +12,8 @@ from logic.apps.agents.services import agent_service
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.apps.modules.services import module_service
-from logic.apps.servers.models.server_model import ServerType
-from logic.apps.servers.services import server_service
+from logic.apps.clusters.models.cluster_model import ClusterType
+from logic.apps.clusters.services import cluster_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.apps.works.repositories import work_repository
@@ -43,7 +43,7 @@ def exec_into_agent(work_status: WorkStatus):
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
 
-    servers_file_bytes = str(yaml.dump(server_service.get_all())).encode()
+    servers_file_bytes = str(yaml.dump(cluster_service.get_all())).encode()
 
     params_file_bytes = str(yaml.dump(work_status.params)).encode()
 
@@ -159,7 +159,7 @@ def _valid_params(params: Dict[str, object]):
         msj = f'El tipo de agente es requerido'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
-    agent_type = ServerType(params['agent']['type'])
+    agent_type = ClusterType(params['agent']['type'])
     if not agent_service.get_by_type(agent_type):
         msj = f'No existen agentes de tipo {agent_type}'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)

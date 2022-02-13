@@ -7,7 +7,7 @@ from typing import Dict
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
-from logic.apps.servers.models.server_model import ServerType
+from logic.apps.clusters.models.cluster_model import ClusterType
 from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
@@ -23,7 +23,7 @@ def runner():
         for id in work_service.list_by_status(Status.READY):
 
             work = work_service.get(id)
-            agent_type = ServerType(work.params['agent'])
+            agent_type = ClusterType(work.params['agent'])
             
             agent = agent_service.get_available_agent_by_type(agent_type)
             if not agent:

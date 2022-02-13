@@ -1,12 +1,12 @@
-from logic.apps.repos.models.repo_model import Repo
+from logic.apps.repos.models.repo_model import RepoGit, Repo
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 from sqlalchemy import Column, String
 
 Entity = sqliteAlchemy.get_entity_class()
 
 
-class RepoEntity(Entity):
-    __tablename__ = 'REPOSITORIES'
+class RepoGitEntity(Entity):
+    __tablename__ = 'REPOSITORIES_GIT'
 
     name = Column(String, primary_key=True, nullable=False)
     git_path = Column(String)
@@ -14,8 +14,8 @@ class RepoEntity(Entity):
     git_pass = Column(String)
     git_url = Column(String)
 
-    def to_model(self) -> Repo:
-        return Repo(
+    def to_model(self) -> RepoGit:
+        return RepoGit(
             name=self.name,
             git_path=self.git_path,
             git_user=self.git_user,
@@ -24,11 +24,28 @@ class RepoEntity(Entity):
         )
 
     @staticmethod
-    def from_model(m: Repo) -> 'RepoEntity':
-        return RepoEntity(
+    def from_model(m: RepoGit) -> 'RepoGitEntity':
+        return RepoGitEntity(
             name=m.name,
             git_path=m.git_path,
             git_user=m.git_user,
             git_pass=m.git_pass,
             git_url=m.git_url
+        )
+
+
+class RepoLocalEntity(Entity):
+    __tablename__ = 'REPOSITORIES_LOCAL'
+
+    name = Column(String, primary_key=True, nullable=False)
+
+    def to_model(self) -> Repo:
+        return Repo(
+            name=self.name
+        )
+
+    @staticmethod
+    def from_model(m: Repo) -> 'RepoLocalEntity':
+        return RepoGitEntity(
+            name=m.name
         )
