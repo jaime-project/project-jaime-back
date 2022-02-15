@@ -1,4 +1,4 @@
-import re
+import yaml
 from flask import Blueprint, Response, jsonify, request
 from logic.apps.docs.services import doc_service
 
@@ -17,6 +17,18 @@ def post(name: str, repo: str):
 def get(name: str, repo: str):
     content = doc_service.get(name, repo)
     return Response(content, mimetype='text/plain', status=200)
+
+
+@blue_print.route('/<name>/yaml', methods=['GET'])
+def get_yaml(name: str, repo: str):
+    content = doc_service.get(name, repo)
+
+    dict_yaml = yaml.load(content)
+    if 'yaml' in dict_yaml:
+        dict_yaml = dict_yaml['yaml']
+        return Response(yaml.dump(dict_yaml), mimetype='text/plain', status=200)
+
+    return Response('', mimetype='text/plain', status=200)
 
 
 @blue_print.route('/', methods=['GET'])
