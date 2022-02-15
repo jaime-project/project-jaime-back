@@ -35,7 +35,7 @@ def list_all(repo_name: str) -> List[str]:
     return [
         nf.replace('.py', '')
         for nf in filesystem_service.name_files_from_path(f'{get_path()}/{repo_name}')
-        if not nf.endswith('.pyc')
+        if nf.endswith('.py') 
     ]
 
 

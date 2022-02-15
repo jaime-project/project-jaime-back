@@ -4,11 +4,9 @@ from logic.apps.repos.services import repo_service
 _REPO_DEFAULT_NAME = 'local'
 
 _REPO_GIT_DEFAULT_NAME = 'ocp_migrate'
-_REPO_GIT_DEFAULT_URL = 'https://github.com/brianwolf/project-jaime.git'
-_REPO_GIT_DEFAULT_PATH = '/repo_modules_default'
-_REPO_GIT_DEFAULT_USER = 'brianwolf94'
-_REPO_GIT_DEFAULT_PASS = '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'
-_REPO_GIT_DEFAULT_BRANCH = 'main'
+_REPO_GIT_DEFAULT_URL = 'https://github.com/brianwolf/repo-jaime-modules.git'
+_REPO_GIT_DEFAULT_PATH = '/ocp_migrate'
+_REPO_GIT_DEFAULT_BRANCH = 'master'
 
 
 def setup_repos():
@@ -30,8 +28,6 @@ def setup_repos_default():
     if _REPO_DEFAULT_NAME not in repos_list:
         repo_service.add(RepoGit(
             name=_REPO_GIT_DEFAULT_NAME,
-            git_user=_REPO_GIT_DEFAULT_USER,
-            git_pass=_REPO_GIT_DEFAULT_PASS,
             git_path=_REPO_GIT_DEFAULT_PATH,
             git_branch=_REPO_GIT_DEFAULT_BRANCH,
             git_url=_REPO_GIT_DEFAULT_URL))

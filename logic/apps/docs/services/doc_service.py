@@ -1,24 +1,21 @@
 
-from pathlib import Path
 from typing import List
 
-from logic.apps.filesystem.services import filesystem_service
 from logic.apps.docs.errors.doc_error import DocsError
+from logic.apps.filesystem.services import filesystem_service
+from logic.apps.modules.services import module_service
 from logic.libs.exception.exception import AppException
 
-_DEFAULT_RELATIVE_PATH = f'repo_docs_default'
-_DOCS_PATH = f'{Path.home()}/.jaime/docs'
 
+def add(name: str, content: str, repo: str):
 
-def add(name: str, content: str):
-
-    path = f'{get_path()}/{name}.yaml'
+    path = f'{get_path()}/{repo}/{name}.yaml'
     filesystem_service.create_file(path, content)
 
 
-def get(name: str) -> str:
+def get(name: str, repo: str) -> str:
 
-    path = f'{get_path()}/{name}.yaml'
+    path = f'{get_path()}/{repo}/{name}.yaml'
 
     try:
         return filesystem_service.get_file_content(path).decode('utf-8')
@@ -31,18 +28,10 @@ def get(name: str) -> str:
         )
 
 
-def list_all() -> List[str]:
-
-    return [
-        nf.replace('.yaml', '')
-        for nf in filesystem_service.name_files_from_path(get_path())
-    ]
-
-
-def delete(name: str):
+def delete(name: str, repo: str):
 
     try:
-        get(name)
+        get(name, repo)
 
     except Exception:
         raise AppException(
@@ -55,25 +44,18 @@ def delete(name: str):
 
 
 def get_path() -> str:
-
-    global _DOCS_PATH
-    return _DOCS_PATH
+    return module_service.get_path()
 
 
-def get_default_path() -> str:
-
-    global _DEFAULT_RELATIVE_PATH
-    return _DEFAULT_RELATIVE_PATH
-
-
-def list_default() -> List[str]:
+def list_all(repo: str) -> List[str]:
 
     return [
         nf.replace('.yaml', '')
-        for nf in filesystem_service.name_files_from_path(get_default_path())
+        for nf in filesystem_service.name_files_from_path(f'{get_path()}/{repo}')
+        if nf.endswith('.yaml')
     ]
 
 
-def modify(name: str, content: str):
-    delete(name)
-    add(name, content)
+def modify(name: str, content: str, repo: str):
+    delete(name, repo)
+    add(name, content, repo)
