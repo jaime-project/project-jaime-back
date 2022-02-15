@@ -3,9 +3,23 @@ import shutil
 import subprocess
 from pathlib import Path
 
-from logic.apps.modules.services import module_service
-from logic.apps.docs.services import doc_service
 from logic.apps.clusters.services import cluster_service
+from logic.apps.docs.services import doc_service
+from logic.apps.modules.services import module_service
+from logic.apps.repos.models.repo_model import RepoType
+from logic.apps.repos.services import repo_service
+
+
+def setup_repos():
+
+    repos_list = repo_service.list_all_by_type(RepoType.GIT)
+
+    for repo_name in repos_list:
+
+        if repo_service.is_downloaded(repo_name):
+            continue
+
+        repo_service.download_git_repo(repo_service.get(repo_name))
 
 
 def setup_modules():
