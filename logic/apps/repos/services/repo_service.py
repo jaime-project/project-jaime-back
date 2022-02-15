@@ -114,3 +114,7 @@ def is_downloaded(name: str) -> bool:
 
 def _get_git_repo_name(repo_url: str) -> str:
     return repo_url.split('/')[-1].replace('.git', '')
+
+
+def list_types() -> List[str]:
+    return [e.value for e in RepoType]
