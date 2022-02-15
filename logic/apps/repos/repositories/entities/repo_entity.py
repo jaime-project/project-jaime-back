@@ -48,6 +48,6 @@ class RepoLocalEntity(Entity):
 
     @staticmethod
     def from_model(m: Repo) -> 'RepoLocalEntity':
-        return RepoGitEntity(
+        return RepoLocalEntity(
             name=m.name
         )

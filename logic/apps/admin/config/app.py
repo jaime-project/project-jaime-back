@@ -1,13 +1,13 @@
-import os
-import shutil
-import subprocess
-from pathlib import Path
-
-from logic.apps.clusters.services import cluster_service
-from logic.apps.docs.services import doc_service
-from logic.apps.modules.services import module_service
-from logic.apps.repos.models.repo_model import RepoType
+from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
 from logic.apps.repos.services import repo_service
+
+_REPO_DEFAULT_NAME = 'local'
+
+_REPO_GIT_DEFAULT_NAME = 'ocp_migrate'
+_REPO_GIT_DEFAULT_URL = 'https://github.com/brianwolf/project-jaime.git'
+_REPO_GIT_DEFAULT_PATH = '/repo_modules_default'
+_REPO_GIT_DEFAULT_USER = 'brianwolf94'
+_REPO_GIT_DEFAULT_PASS = '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'
 
 
 def setup_repos():
@@ -15,36 +15,23 @@ def setup_repos():
     repos_list = repo_service.list_all_by_type(RepoType.GIT)
 
     for repo_name in repos_list:
-
         if repo_service.is_downloaded(repo_name):
             continue
 
         repo_service.download_git_repo(repo_service.get(repo_name))
 
 
-def setup_modules():
+def setup_repos_default():
 
-    names_modules = module_service.list()
+    repos_list = repo_service.list_all()
 
-    default_path = module_service.get_default_path()
-    modules_path = module_service.get_path()
+    if _REPO_DEFAULT_NAME not in repos_list:
+        repo_service.add(Repo(name=_REPO_DEFAULT_NAME))
 
-    if not os.path.exists(modules_path):
-        os.makedirs(modules_path, exist_ok=True)
-
-    for name in names_modules:
-        shutil.copy(f'{default_path}/{name}.py', f'{modules_path}/{name}.py')
-
-
-def setup_docs():
-
-    names_docs = doc_service.list_default()
-
-    default_path = doc_service.get_default_path()
-    docs_path = doc_service.get_path()
-
-    if not os.path.exists(docs_path):
-        os.makedirs(docs_path, exist_ok=True)
-
-    for name in names_docs:
-        shutil.copy(f'{default_path}/{name}.yaml', f'{docs_path}/{name}.yaml')
+    if _REPO_DEFAULT_NAME not in repos_list:
+        repo_service.add(RepoGit(
+            name=_REPO_GIT_DEFAULT_NAME,
+            git_user=_REPO_GIT_DEFAULT_USER,
+            git_pass=_REPO_GIT_DEFAULT_PASS,
+            git_path=_REPO_GIT_DEFAULT_PATH,
+            git_url=_REPO_GIT_DEFAULT_URL))

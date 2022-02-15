@@ -82,8 +82,8 @@ def exist(name: str) -> bool:
 
 def _get_entity_class_by_type(type: RepoType) -> Entity:
 
-    if type.GIT:
+    if type == type.GIT:
         return RepoGitEntity
 
-    if type.LOCAL:
+    if type == type.LOCAL:
         return RepoLocalEntity

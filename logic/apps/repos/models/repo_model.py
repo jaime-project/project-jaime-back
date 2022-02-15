@@ -1,6 +1,8 @@
 from dataclasses import dataclass
 from enum import Enum
 
+from sqlalchemy import false
+
 
 class RepoType(Enum):
     GIT = 'GIT'
@@ -13,6 +15,8 @@ class Repo():
     type: RepoType = RepoType.LOCAL
 
     def __eq__(self, o: object) -> bool:
+        if not o:
+            false
         return self.name == o.name
 
     def __dict__(self):
@@ -32,6 +36,8 @@ class RepoGit(Repo):
     git_url: str = None
 
     def __eq__(self, o: object) -> bool:
+        if not o:
+            false
         return self.name == o.name
 
     def __dict__(self):

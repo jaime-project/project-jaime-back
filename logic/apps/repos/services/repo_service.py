@@ -22,10 +22,6 @@ def add(repo: Repo):
 
 
 def get(name: str) -> Repo:
-
-    if not repo_repository.exist(name):
-        return None
-
     return repo_repository.get(name)
 
 
@@ -78,7 +74,7 @@ def modify(name: str, repo: RepoGit):
 
 def update_git_repo(repo: RepoGit):
 
-    tmp_path = '/temp'
+    tmp_path = '/tmp'
     repo_name = _get_git_repo_name(repo.git_url)
     in_path = f'{tmp_path}/{repo_name}'
     os.system(f'rm -fr {in_path}')
@@ -94,15 +90,19 @@ def download_git_repo(repo: RepoGit):
     repo_name = _get_git_repo_name(repo.git_url)
     repo_git_without_https = repo.git_url.replace("https://", "")
 
-    url = f'https://{repo.git_user}:{repo.git_pass}@{repo_git_without_https}'
-    tmp_path = '/temp'
-    os.system(f'git clone {url} {tmp_path}')
+    url = repo.git_url
+    if repo.git_user and repo.git_pass:
+        url = f'https://{repo.git_user}:{repo.git_pass}@{repo_git_without_https}'
+
+    tmp_path = '/tmp'
+    os.system(f'rm -fr {tmp_path}/{repo_name}')
+    os.system(f'git clone {url} {tmp_path}/{repo_name}')
 
     in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'
     out_path = f'{module_service.get_path()}/{repo.name}'
-    if not Path.exists(out_path):
-        os.mkdir(out_path)
-    os.system(f'mv -rf {in_path} {out_path}')
+    if not os.path.exists(out_path):
+        Path(out_path).mkdir(parents=True)
+    os.system(f'mv {in_path} {out_path}')
 
 
 def is_downloaded(name: str) -> bool:

@@ -1,7 +1,7 @@
 #!env/bin/python
 from flask.app import Flask
 
-from logic.apps.admin.config.app import setup_docs, setup_modules
+from logic.apps.admin.config.app import setup_repos, setup_repos_default
 from logic.apps.admin.config.logger import setup_loggers
 from logic.apps.admin.config.rest import setup_rest
 from logic.apps.admin.config.sqlite import setup_sqlite
@@ -20,8 +20,8 @@ setup_rest(app)
 setup_sqlite()
 start_runner_thread()
 start_agent_thread()
-setup_modules()
-setup_docs()
+setup_repos_default()
+setup_repos()
 
 logger().info("""
 
