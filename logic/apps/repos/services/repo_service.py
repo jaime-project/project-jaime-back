@@ -100,9 +100,11 @@ def download_git_repo(repo: RepoGit):
 
     in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'.replace('//', '/')
     out_path = f'{module_service.get_path()}/{repo.name}'
+
     if not os.path.exists(out_path):
         Path(out_path).mkdir(parents=True)
-    os.system(f'mv {in_path} {out_path}')
+
+    os.system(f'mv {in_path}/* {out_path}')
 
 
 def is_downloaded(name: str) -> bool:

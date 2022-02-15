@@ -16,10 +16,8 @@ def setup_repos():
     repos_list = repo_service.list_all_by_type(RepoType.GIT)
 
     for repo_name in repos_list:
-        if repo_service.is_downloaded(repo_name):
-            continue
-
-        repo_service.download_git_repo(repo_service.get(repo_name))
+        if not repo_service.is_downloaded(repo_name):
+            repo_service.download_git_repo(repo_service.get(repo_name))
 
 
 def setup_repos_default():
