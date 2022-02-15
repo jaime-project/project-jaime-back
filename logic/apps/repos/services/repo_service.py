@@ -96,9 +96,9 @@ def download_git_repo(repo: RepoGit):
 
     tmp_path = '/tmp'
     os.system(f'rm -fr {tmp_path}/{repo_name}')
-    os.system(f'git clone {url} {tmp_path}/{repo_name}')
+    os.system(f'git clone {url} {tmp_path}/{repo_name} -b {repo.git_branch}')
 
-    in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'
+    in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'.replace('//', '/')
     out_path = f'{module_service.get_path()}/{repo.name}'
     if not os.path.exists(out_path):
         Path(out_path).mkdir(parents=True)

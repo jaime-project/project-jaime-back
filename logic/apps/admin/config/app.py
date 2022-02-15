@@ -8,6 +8,7 @@ _REPO_GIT_DEFAULT_URL = 'https://github.com/brianwolf/project-jaime.git'
 _REPO_GIT_DEFAULT_PATH = '/repo_modules_default'
 _REPO_GIT_DEFAULT_USER = 'brianwolf94'
 _REPO_GIT_DEFAULT_PASS = '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'
+_REPO_GIT_DEFAULT_BRANCH = 'main'
 
 
 def setup_repos():
@@ -34,4 +35,5 @@ def setup_repos_default():
             git_user=_REPO_GIT_DEFAULT_USER,
             git_pass=_REPO_GIT_DEFAULT_PASS,
             git_path=_REPO_GIT_DEFAULT_PATH,
+            git_branch=_REPO_GIT_DEFAULT_BRANCH,
             git_url=_REPO_GIT_DEFAULT_URL))

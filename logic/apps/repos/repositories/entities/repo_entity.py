@@ -12,6 +12,7 @@ class RepoGitEntity(Entity):
     git_path = Column(String)
     git_user = Column(String)
     git_pass = Column(String)
+    git_branch = Column(String)
     git_url = Column(String)
 
     def to_model(self) -> RepoGit:
@@ -21,6 +22,7 @@ class RepoGitEntity(Entity):
             git_path=self.git_path,
             git_user=self.git_user,
             git_pass=self.git_pass,
+            git_branch=self.git_branch,
             git_url=self.git_url
         )
 
@@ -31,6 +33,7 @@ class RepoGitEntity(Entity):
             git_path=m.git_path,
             git_user=m.git_user,
             git_pass=m.git_pass,
+            git_branch=m.git_branch,
             git_url=m.git_url
         )
 

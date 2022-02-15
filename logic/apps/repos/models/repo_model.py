@@ -34,6 +34,7 @@ class RepoGit(Repo):
     git_user: str = None
     git_pass: str = None
     git_url: str = None
+    git_branch: str = None
 
     def __eq__(self, o: object) -> bool:
         if not o:
@@ -48,4 +49,5 @@ class RepoGit(Repo):
             'git_user': self.git_user,
             'git_pass': self.git_pass,
             'git_url': self.git_url,
+            'git_branch': self.git_branch,
         }
