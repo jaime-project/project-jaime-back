@@ -39,7 +39,7 @@ def delete(name: str, repo: str):
             msj=f'La documentacion {name} no existe'
         )
 
-    path = f'{get_path()}/{name}.yaml'
+    path = f'{get_path()}/{repo}/{name}.yaml'
     filesystem_service.delete_file(path)
 
 

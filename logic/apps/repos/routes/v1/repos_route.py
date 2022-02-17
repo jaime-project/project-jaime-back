@@ -80,11 +80,11 @@ def _request_body_to_repo(s: Dict[str, Any]) -> Repo:
     if type_repo == RepoType.GIT:
         repo = RepoGit(
             name=s['name'],
-            git_branch=s['git_branch'],
-            git_path=s['git_path'],
-            git_url=s['git_url'],
-            git_user=s.get('git_user', None),
-            git_pass=s.get('git_pass', None)
+            git_branch=s['branch'],
+            git_path=s['path'],
+            git_url=s['url'],
+            git_user=s.get('user', None),
+            git_pass=s.get('pass', None)
         )
 
     return repo

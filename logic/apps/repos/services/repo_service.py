@@ -20,6 +20,7 @@ def add(repo: Repo):
         raise AppException(RepoError.REPO_ALREADY_EXISTS_ERROR, msj)
 
     repo_repository.add(repo)
+    load_repo(repo)
 
 
 def get(name: str) -> Repo:
