@@ -1,6 +1,7 @@
+from lib2to3.pytree import type_repr
 from typing import Any, Dict
+
 from flask import Blueprint, jsonify, request
-from logic.apps.clusters.models.cluster_model import Cluster, ClusterType
 from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
 from logic.apps.repos.services import repo_service
 
@@ -28,6 +29,13 @@ def get(name: str):
 
 @blue_print.route('/', methods=['GET'])
 def list_all():
+
+    type_repo = request.args.get('type', None)
+
+    if type_repo:
+        result = repo_service.list_all_by_type(RepoType(type_repo))
+        return jsonify(result), 200
+
     return jsonify(repo_service.list_all()), 200
 
 
@@ -50,6 +58,12 @@ def modify(name):
 
     repo_service.modify(name, repo)
 
+    return '', 200
+
+
+@blue_print.route('/<name>/reload', methods=['POST'])
+def reload(name):
+    repo_service.reload_repo_git(name)
     return '', 200
 
 

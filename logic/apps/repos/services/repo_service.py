@@ -3,9 +3,10 @@ import os
 from pathlib import Path
 from typing import Dict, List
 
+from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.services import module_service
 from logic.apps.repos.errors.repo_error import RepoError
-from logic.apps.repos.models.repo_model import RepoGit, Repo, RepoType
+from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
 from logic.apps.repos.repositories import repo_repository
 from logic.libs.exception.exception import AppException
 
@@ -65,6 +66,7 @@ def delete(name: str):
         raise AppException(RepoError.REPO_NOT_EXISTS_ERROR, msj)
 
     repo_repository.delete(name)
+    filesystem_service.delete_folder(f'{module_service.get_path()}/{name}')
 
 
 def modify(name: str, repo: RepoGit):
@@ -72,17 +74,24 @@ def modify(name: str, repo: RepoGit):
     add(repo)
 
 
-def update_git_repo(repo: RepoGit):
+def reload_repo_git(repo_name: str):
+
+    repo = get(repo_name)
 
     tmp_path = '/tmp'
     repo_name = _get_git_repo_name(repo.git_url)
     in_path = f'{tmp_path}/{repo_name}'
     os.system(f'rm -fr {in_path}')
 
-    download_git_repo(repo)
+    load_repo(repo)
 
 
-def download_git_repo(repo: RepoGit):
+def load_repo(repo: Repo):
+
+    out_path = f'{module_service.get_path()}/{repo.name}'
+
+    if not os.path.exists(out_path):
+        Path(out_path).mkdir(parents=True)
 
     if repo.type != RepoType.GIT:
         return
@@ -99,15 +108,11 @@ def download_git_repo(repo: RepoGit):
     os.system(f'git clone {url} {tmp_path}/{repo_name} -b {repo.git_branch}')
 
     in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'.replace('//', '/')
-    out_path = f'{module_service.get_path()}/{repo.name}'
-
-    if not os.path.exists(out_path):
-        Path(out_path).mkdir(parents=True)
 
     os.system(f'mv {in_path}/* {out_path}')
 
 
-def is_downloaded(name: str) -> bool:
+def is_loaded(name: str) -> bool:
     module_path = f'{module_service.get_path()}/{name}'
     return os.path.exists(module_path)
 

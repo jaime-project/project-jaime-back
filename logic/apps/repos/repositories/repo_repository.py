@@ -73,7 +73,6 @@ def delete(name: str):
 
 def exist(name: str) -> bool:
 
-    s = sqliteAlchemy.make_session()
     if get(name) == None:
         return False
 

@@ -11,11 +11,11 @@ _REPO_GIT_DEFAULT_BRANCH = 'master'
 
 def setup_repos():
 
-    repos_list = repo_service.list_all_by_type(RepoType.GIT)
+    repos_list = repo_service.list_all()
 
     for repo_name in repos_list:
-        if not repo_service.is_downloaded(repo_name):
-            repo_service.download_git_repo(repo_service.get(repo_name))
+        if not repo_service.is_loaded(repo_name):
+            repo_service.load_repo(repo_service.get(repo_name))
 
 
 def setup_repos_default():

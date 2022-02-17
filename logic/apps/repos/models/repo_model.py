@@ -16,7 +16,7 @@ class Repo():
 
     def __eq__(self, o: object) -> bool:
         if not o:
-            false
+            return False
         return self.name == o.name
 
     def __dict__(self):
@@ -38,7 +38,7 @@ class RepoGit(Repo):
 
     def __eq__(self, o: object) -> bool:
         if not o:
-            false
+            return False
         return self.name == o.name
 
     def __dict__(self):
