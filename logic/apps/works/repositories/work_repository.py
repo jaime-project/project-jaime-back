@@ -1,6 +1,7 @@
 from typing import List
 
 from logic.apps.works.models.work_model import WorkStatus, Status
+from logic.apps.agents.services import agent_service
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 from .entities.work_entity import WorkEntity
@@ -30,7 +31,10 @@ def get(id: str) -> WorkStatus:
     result = s.query(WorkEntity).get({'id': id})
     s.close()
 
-    return result.to_model()
+    if result:
+        return result.to_model()
+
+    return None
 
 
 def add(m: WorkStatus):

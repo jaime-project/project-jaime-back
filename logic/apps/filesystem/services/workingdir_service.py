@@ -4,7 +4,8 @@ from pathlib import Path
 from typing import Any, List
 from uuid import UUID, uuid4
 
-_TEMP_PATH = '/data/workingdir'
+from logic.apps.admin.config.variables import Vars, get_var
+
 _NAME_FILE_LOGS = 'logs.log'
 
 
@@ -23,7 +24,7 @@ def delete(id: Any):
 
 
 def fullpath(id: Any) -> str:
-    return f'{_TEMP_PATH}/{id}'
+    return f'{get_var(Vars.AGENTS_LOGS_PATH)}/{id}'
 
 
 def get(id: Any) -> List[str]:

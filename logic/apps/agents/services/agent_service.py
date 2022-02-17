@@ -91,7 +91,7 @@ def get_available_agent_by_type(type: ClusterType) -> Agent:
 
     agents = get_by_type(type)
     if not agents:
-        msj = f'No existe agente con el tipo {type.value}'
+        msj = f'No hay agentes de tipo {type.value} desponibles'
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR, msj)
 
     for a in agents:

@@ -10,6 +10,7 @@ class Status(Enum):
     RUNNING = 'RUNNING'
     TERMINATED = 'TERMINATED'
     READY = 'READY'
+    ERROR = 'ERROR'
 
 
 @dataclass
@@ -18,6 +19,7 @@ class WorkStatus():
     id: str
     name: str
     module_name: str
+    module_repo: str
     params: Dict[str, object]
     agent: Agent
     status: Status
@@ -25,10 +27,11 @@ class WorkStatus():
     running_date: datetime
     terminated_date: datetime
 
-    def __init__(self, id: str, name: str, module_name: str, params: Dict[str, object]) -> "WorkStatus":
+    def __init__(self, id: str, params: Dict[str, object]) -> "WorkStatus":
         self.id = id
-        self.name = name
-        self.module_name = module_name
+        self.name = params['name']
+        self.module_name = params['module']['name']
+        self.module_repo = params['module']['repo']
         self.params = params
         self.agent = None
         self.status = Status.READY

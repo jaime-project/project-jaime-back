@@ -23,8 +23,8 @@ def runner():
         for id in work_service.list_by_status(Status.READY):
 
             work = work_service.get(id)
-            agent_type = ClusterType(work.params['agent'])
-            
+            agent_type = ClusterType(work.params['agent']['type'])
+
             agent = agent_service.get_available_agent_by_type(agent_type)
             if not agent:
                 continue
@@ -35,10 +35,12 @@ def runner():
             work.status = Status.RUNNING
             work.running_date = datetime.now()
 
+            work_service.modify(work)
+
             work_service.exec_into_agent(work)
 
     except Exception as e:
-        logger().error(str(e))
+        logger().error(e)
 
 
 def start_runner_thread():

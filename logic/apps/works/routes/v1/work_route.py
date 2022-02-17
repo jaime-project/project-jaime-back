@@ -47,6 +47,7 @@ def get(id: str):
     result_dict = {
         "id": result.id,
         "name": result.name,
+        "module_repo": result.module_repo,
         "module_name": result.module_name,
         "params": result.params,
         'agent': {

@@ -9,19 +9,17 @@ import yaml
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
+from logic.apps.clusters.models.cluster_model import ClusterType
+from logic.apps.clusters.services import cluster_service
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.apps.modules.services import module_service
-from logic.apps.clusters.models.cluster_model import ClusterType
-from logic.apps.clusters.services import cluster_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.apps.works.repositories import work_repository
 from logic.apps.zip.service import zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
-
-# _WORKS_QUEUE: Dict[str, WorkStatus] = {}
 
 
 def start(params: Dict[str, object]) -> str:
@@ -30,16 +28,17 @@ def start(params: Dict[str, object]) -> str:
 
     id = _generate_id()
 
-    work_repository.add(WorkStatus(
-        id, params["name"], params["module"], params))
+    work_repository.add(WorkStatus(id, params))
 
     return id
 
 
 def exec_into_agent(work_status: WorkStatus):
 
-    module_name = work_status.params['module']
-    module_path = os.path.join(module_service.get_path(), f'{module_name}.py')
+    module_name = work_status.params['module']['name']
+    module_repo = work_status.params['module']['repo']
+    module_path = os.path.join(
+        module_service.get_path(), f'{module_repo}/{module_name}.py')
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
 
@@ -71,8 +70,6 @@ def delete(id: str):
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
-    work_repository.delete(id)
-
     worker = get(id)
     if worker.status == Status.RUNNING:
         agent_service.change_status(worker.agent.id, AgentStatus.READY)
@@ -81,6 +78,7 @@ def delete(id: str):
     requests.delete(url, verify=False)
 
     shutil.rmtree(workingdir_service.fullpath(id), ignore_errors=True)
+    work_repository.delete(id)
 
 
 def list_all() -> List[str]:
@@ -124,6 +122,7 @@ def change_status(id: str, status: Status):
         work.running_date = datetime.now()
 
     work.status = status
+    modify(work)
 
 
 def get_logs(id: str) -> str:
@@ -161,12 +160,12 @@ def _valid_params(params: Dict[str, object]):
 
     agent_type = ClusterType(params['agent']['type'])
     if not agent_service.get_by_type(agent_type):
-        msj = f'No existen agentes de tipo {agent_type}'
+        msj = f'No existen agentes activos de tipo {agent_type}'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
-    module_name = params['module']
-    if not module_name in module_service.list_all():
-        msj = f'No existe modulo de nombre {module_name}'
+    if not 'module' in params or not 'repo' in params['module'] or not 'name' in params['module'] or not params['module']['name'] in module_service.list_all(params['module']['repo']):
+        name = params['module']['name']
+        msj = f'No existe modulo de nombre {name}'
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
 
@@ -189,3 +188,8 @@ def finish_work(id: str):
 
     agent = get(id).agent
     agent_service.change_status(agent.id, AgentStatus.READY)
+
+
+def modify(work: WorkStatus):
+    work_repository.delete(work.id)
+    work_repository.add(work)
