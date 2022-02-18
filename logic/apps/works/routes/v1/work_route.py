@@ -85,6 +85,13 @@ def finish(id: str):
     return '', 200
 
 
+@blue_print.route('/<id>/status/<status>', methods=['PATCH'])
+def changeStatus(id: str, status: str):
+
+    work_service.change_status(id, Status(status))
+    return '', 200
+
+
 @blue_print.route('/', methods=['GET'])
 def list():
 
