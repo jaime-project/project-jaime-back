@@ -2,7 +2,6 @@
 from typing import Dict, List
 
 import requests
-import yaml
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.clusters.errors.cluster_error import ClusterError
@@ -36,7 +35,7 @@ def list_all() -> List[str]:
     ]
 
 
-def get_all() -> List[str]:
+def get_all() -> List[Cluster]:
     return cluster_repository.get_all()
 
 

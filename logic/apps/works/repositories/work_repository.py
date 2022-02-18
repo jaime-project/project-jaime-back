@@ -60,8 +60,11 @@ def delete(id: str):
 
 def exist(id: str) -> bool:
 
+    result = True
+
     s = sqliteAlchemy.make_session()
     if s.query(WorkEntity).filter_by(id=id).count() == 0:
-        return False
+        result = False
 
-    return True
+    s.close()
+    return result

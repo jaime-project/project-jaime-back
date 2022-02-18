@@ -18,14 +18,16 @@ FROM python:3.9-slim
 WORKDIR /home/src
 
 RUN apt-get update
-RUN apt-get install iputils-ping curl -y
+RUN apt-get install iputils-ping curl git -y
 
 ARG ARG_VERSION=local
 
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=80
+ENV AGENTS_LOGS_PATH=/data/workingdir
 ENV TZ America/Argentina/Buenos_Aires
+ENV PYTHONPATH "${PYTHONPATH}:/home/src"
 
 CMD gunicorn \
     -b ${PYTHON_HOST}:${PYTHON_PORT} \

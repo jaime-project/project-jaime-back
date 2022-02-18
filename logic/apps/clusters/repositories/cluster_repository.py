@@ -48,8 +48,11 @@ def delete(name: str):
 
 def exist(name: str) -> bool:
 
+    result = True
+
     s = sqliteAlchemy.make_session()
     if s.query(ClusterEntity).filter_by(name=name).count() == 0:
-        return False
+        result = False
 
-    return True
+    s.close()
+    return result

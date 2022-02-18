@@ -42,7 +42,11 @@ def exec_into_agent(work_status: WorkStatus):
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
 
-    servers_file_bytes = str(yaml.dump(cluster_service.get_all())).encode()
+    servers_dict = [
+        s.__dict__()
+        for s in cluster_service.get_all()
+    ]
+    servers_file_bytes = str(yaml.dump(servers_dict)).encode()
 
     params_file_bytes = str(yaml.dump(work_status.params)).encode()
 
