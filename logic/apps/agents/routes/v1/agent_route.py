@@ -2,7 +2,7 @@ import yaml
 from flask import Blueprint, jsonify, request
 from logic.apps.agents.models.agent_model import Agent
 from logic.apps.agents.services import agent_service
-from logic.apps.servers.models.server_model import ServerType
+from logic.apps.clusters.models.cluster_model import ClusterType
 
 blue_print = Blueprint('agent', __name__, url_prefix='/api/v1/agents')
 
@@ -14,7 +14,7 @@ def post():
         id=j['id'],
         host=j['host'],
         port=j['port'],
-        type=ServerType(j['type'])
+        type=ClusterType(j['type'])
     )
 
     agent_service.add(n)
