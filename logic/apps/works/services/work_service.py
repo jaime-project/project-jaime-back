@@ -9,18 +9,18 @@ import yaml
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
+from logic.apps.clusters.models.cluster_model import ClusterType
+from logic.apps.clusters.services import cluster_service
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.apps.modules.services import module_service
-from logic.apps.servers.models.server_model import ServerType
-from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, WorkStatus
+from logic.apps.works.repositories import work_repository
 from logic.apps.zip.service import zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
-_WORKS_QUEUE: Dict[str, WorkStatus] = {}
 
 def start(params: Dict[str, object]) -> str:
 
@@ -28,22 +28,25 @@ def start(params: Dict[str, object]) -> str:
 
     id = _generate_id()
 
-    global _WORKS_QUEUE
-    _WORKS_QUEUE[id] = WorkStatus(id, params["name"], params["module"], params)
+    work_repository.add(WorkStatus(id, params))
 
     return id
 
 
 def exec_into_agent(work_status: WorkStatus):
 
-    yaml_path = server_service.get_path()
-    with open(yaml_path, 'r') as f:
-        servers_file_bytes = f.read().encode()
-
-    module_name = work_status.params['module']
-    module_path = os.path.join(module_service.get_path(), f'{module_name}.py')
+    module_name = work_status.params['module']['name']
+    module_repo = work_status.params['module']['repo']
+    module_path = os.path.join(
+        module_service.get_path(), f'{module_repo}/{module_name}.py')
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
+
+    servers_dict = [
+        s.__dict__()
+        for s in cluster_service.get_all()
+    ]
+    servers_file_bytes = str(yaml.dump(servers_dict)).encode()
 
     params_file_bytes = str(yaml.dump(work_status.params)).encode()
 
@@ -62,36 +65,49 @@ def exec_into_agent(work_status: WorkStatus):
 
 
 def get(id: str) -> WorkStatus:
-    global _WORKS_QUEUE
-    return _WORKS_QUEUE.get(id, None)
+    return work_repository.get(id)
 
 
 def delete(id: str):
-    global _WORKS_QUEUE
 
-    worker = get(id)
-    if not worker:
+    if not work_repository.exist(id):
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
-    _WORKS_QUEUE.pop(id)
-
+    worker = get(id)
     if worker.status == Status.RUNNING:
         agent_service.change_status(worker.agent.id, AgentStatus.READY)
-        
+
     url = worker.agent.get_url() + f'/api/v1/works/{id}'
     requests.delete(url, verify=False)
 
     shutil.rmtree(workingdir_service.fullpath(id), ignore_errors=True)
+    work_repository.delete(id)
+
+
+def delete_by_status(status: Status):
+
+    for id in list_by_status(status):
+        delete(id)
 
 
 def list_all() -> List[str]:
-    global _WORKS_QUEUE
-    return list(_WORKS_QUEUE.keys())
+    return [
+        work.id
+        for work
+        in work_repository.get_all()
+    ]
+
+
+def list_by_status(status: WorkStatus) -> List[str]:
+    return [
+        work.id
+        for work
+        in work_repository.get_all_by_status(status)
+    ]
 
 
 def get_all_short() -> List[Dict[str, str]]:
-    global _WORKS_QUEUE
     return [
         {
             "name": w.name,
@@ -102,21 +118,21 @@ def get_all_short() -> List[Dict[str, str]]:
             "module_name": w.module_name,
             "start_date": w.start_date.isoformat()
         }
-        for _, w in _WORKS_QUEUE.items()
+        for w in work_repository.get_all()
     ]
 
 
 def change_status(id: str, status: Status):
-    global _WORKS_QUEUE
-    work = _WORKS_QUEUE[id]
+    work = work_repository.get(id)
 
-    if status == Status.TERMINATED:
+    if status == Status.TERMINATED or status == Status.ERROR or status == Status.SUCCESS:
         work.terminated_date = datetime.now()
 
     if status == Status.RUNNING:
         work.running_date = datetime.now()
 
     work.status = status
+    modify(work)
 
 
 def get_logs(id: str) -> str:
@@ -152,14 +168,14 @@ def _valid_params(params: Dict[str, object]):
         msj = f'El tipo de agente es requerido'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
-    agent_type = ServerType(params['agent']['type'])
+    agent_type = ClusterType(params['agent']['type'])
     if not agent_service.get_by_type(agent_type):
-        msj = f'No existen agentes de tipo {agent_type}'
+        msj = f'No existen agentes activos de tipo {agent_type}'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
-    module_name = params['module']
-    if not module_name in module_service.list_all():
-        msj = f'No existe modulo de nombre {module_name}'
+    if not 'module' in params or not 'repo' in params['module'] or not 'name' in params['module'] or not params['module']['name'] in module_service.list_all(params['module']['repo']):
+        name = params['module']['name']
+        msj = f'No existe modulo de nombre {name}'
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
 
@@ -176,9 +192,14 @@ def _valid_work_running(id: str):
         raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
 
 
-def finish_work(id: str):
+def finish_work(id: str, status: Status):
 
-    change_status(id, Status.TERMINATED)
+    change_status(id, status)
 
     agent = get(id).agent
     agent_service.change_status(agent.id, AgentStatus.READY)
+
+
+def modify(work: WorkStatus):
+    work_repository.delete(work.id)
+    work_repository.add(work)

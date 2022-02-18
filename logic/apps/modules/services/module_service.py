@@ -6,19 +6,18 @@ from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.libs.exception.exception import AppException
 
-_DEFAULT_RELATIVE_PATH = f'repo_modules_default'
 _MODULES_PATH = f'{Path.home()}/.jaime/modules'
 
 
-def add(name: str, content: str):
+def add(name: str, content: str, repo: str):
 
-    path = f'{get_path()}/{name}.py'
+    path = f'{get_path()}/{repo}/{name}.py'
     filesystem_service.create_file(path, content)
 
 
-def get(name: str) -> str:
+def get(name: str, repo: str) -> str:
 
-    path = f'{get_path()}/{name}.py'
+    path = f'{get_path()}/{repo}/{name}.py'
 
     try:
         return filesystem_service.get_file_content(path).decode('utf-8')
@@ -31,19 +30,19 @@ def get(name: str) -> str:
         )
 
 
-def list_all() -> List[str]:
+def list_all(repo_name: str) -> List[str]:
 
     return [
         nf.replace('.py', '')
-        for nf in filesystem_service.name_files_from_path(get_path())
-        if not nf.endswith('.pyc')
+        for nf in filesystem_service.name_files_from_path(f'{get_path()}/{repo_name}')
+        if nf.endswith('.py') 
     ]
 
 
-def delete(name: str):
+def delete(name: str, repo: str):
 
     try:
-        get(name)
+        get(name, repo)
 
     except Exception:
         raise AppException(
@@ -51,7 +50,7 @@ def delete(name: str):
             msj=f'El modulo {name} no existe o tiene un formato invalido'
         )
 
-    path = f'{get_path()}/{name}.py'
+    path = f'{get_path()}/{repo}/{name}.py'
     filesystem_service.delete_file(path)
 
 
@@ -61,21 +60,6 @@ def get_path() -> str:
     return _MODULES_PATH
 
 
-def get_default_path() -> str:
-
-    global _DEFAULT_RELATIVE_PATH
-    return _DEFAULT_RELATIVE_PATH
-
-
-def list_default() -> List[str]:
-
-    return [
-        nf.replace('.py', '')
-        for nf in filesystem_service.name_files_from_path(get_default_path())
-        if not nf.endswith('.pyc')
-    ]
-
-
-def modify(name: str, content: str):
-    delete(name)
-    add(name, content)
+def modify(name: str, content: str, repo: str):
+    delete(name, repo)
+    add(name, content, repo)

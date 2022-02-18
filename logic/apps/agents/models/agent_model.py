@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from uuid import UUID, uuid4
 from logic.apps.admin.config.variables import Vars, get_var
-from logic.apps.servers.models.server_model import ServerType
+from logic.apps.clusters.models.cluster_model import ClusterType
 from enum import Enum
 
 
@@ -12,13 +12,13 @@ class AgentStatus(Enum):
 
 @dataclass
 class Agent():
-    type: ServerType
+    type: ClusterType
     host: str
     port: int
     id: str
     status: AgentStatus
 
-    def __init__(self, id: UUID, type: ServerType, host: str, port: int, status: AgentStatus = AgentStatus.READY) -> None:
+    def __init__(self, id: UUID, type: ClusterType, host: str, port: int, status: AgentStatus = AgentStatus.READY) -> None:
         self.id = id
         self.host = host
         self.port = port

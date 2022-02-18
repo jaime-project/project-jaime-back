@@ -3,7 +3,7 @@ from typing import Dict, List
 import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent, AgentStatus
-from logic.apps.servers.models.server_model import ServerType
+from logic.apps.clusters.models.cluster_model import ClusterType
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
@@ -69,7 +69,7 @@ def is_alive(id: str) -> bool:
         return False
 
 
-def get_by_type(type: ServerType) -> List[Agent]:
+def get_by_type(type: ClusterType) -> List[Agent]:
     global _AGENTS_ONLINE
 
     return [
@@ -87,11 +87,11 @@ def list_all() -> List[Agent]:
     return list(_AGENTS_ONLINE.values())
 
 
-def get_available_agent_by_type(type: ServerType) -> Agent:
+def get_available_agent_by_type(type: ClusterType) -> Agent:
 
     agents = get_by_type(type)
     if not agents:
-        msj = f'No existe agente con el tipo {type.value}'
+        msj = f'No hay agentes de tipo {type.value} desponibles'
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR, msj)
 
     for a in agents:
