@@ -37,6 +37,16 @@ def delete(id: str):
     return '', 200
 
 
+@blue_print.route('/', methods=['DELETE'])
+def delete_by_filters():
+
+    status = request.args.get('status', None)
+    if status:
+        work_service.delete_by_status(Status(status))
+
+    return '', 200
+
+
 @blue_print.route('/<id>', methods=['GET'])
 def get(id: str):
 
@@ -68,7 +78,10 @@ def get(id: str):
 @blue_print.route('/<id>/finish', methods=['PATCH'])
 def finish(id: str):
 
-    work_service.finish_work(id)
+    body = request.json
+    status = Status(body["status"])
+
+    work_service.finish_work(id, status)
     return '', 200
 
 

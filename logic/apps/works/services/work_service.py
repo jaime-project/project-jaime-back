@@ -81,6 +81,12 @@ def delete(id: str):
     work_repository.delete(id)
 
 
+def delete_by_status(status: Status):
+
+    for id in list_by_status(status):
+        delete(id)
+
+
 def list_all() -> List[str]:
     return [
         work.id
@@ -115,7 +121,7 @@ def get_all_short() -> List[Dict[str, str]]:
 def change_status(id: str, status: Status):
     work = work_repository.get(id)
 
-    if status == Status.TERMINATED:
+    if status == Status.TERMINATED or status == Status.ERROR or status == Status.SUCCESS:
         work.terminated_date = datetime.now()
 
     if status == Status.RUNNING:
@@ -182,9 +188,9 @@ def _valid_work_running(id: str):
         raise AppException(WorkError.WORK_NOT_RUNNING_ERROR, msj)
 
 
-def finish_work(id: str):
+def finish_work(id: str, status: Status):
 
-    change_status(id, Status.TERMINATED)
+    change_status(id, status)
 
     agent = get(id).agent
     agent_service.change_status(agent.id, AgentStatus.READY)
