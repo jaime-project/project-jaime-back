@@ -25,6 +25,15 @@ class Agent():
         self.type = type
         self.status = status
 
+    def __dict__(self):
+        return {
+            'type': self.type.value,
+            'host': self.host,
+            'port': self.port,
+            'id': self.id,
+            'status': self.status.value
+        }
+
     def __eq__(self, o: object) -> bool:
         if not o:
             return False
