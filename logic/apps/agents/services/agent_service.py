@@ -45,12 +45,7 @@ def disconnec_agent(id):
 
 def get(id: str) -> Agent:
     global _AGENTS_ONLINE
-
-    if id not in _AGENTS_ONLINE.keys():
-        msj = f'No existe nodo con el id {id}'
-        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR, msj)
-
-    return _AGENTS_ONLINE[id]
+    return _AGENTS_ONLINE.get(id, None)
 
 
 def is_alive(id: str) -> bool:
