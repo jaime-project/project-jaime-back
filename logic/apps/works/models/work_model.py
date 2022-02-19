@@ -8,7 +8,6 @@ from logic.apps.agents.models.agent_model import Agent
 
 class Status(Enum):
     RUNNING = 'RUNNING'
-    TERMINATED = 'TERMINATED'
     READY = 'READY'
     ERROR = 'ERROR'
     SUCCESS = 'SUCCESS'

@@ -125,7 +125,7 @@ def get_all_short() -> List[Dict[str, str]]:
 def change_status(id: str, status: Status):
     work = work_repository.get(id)
 
-    if status == Status.TERMINATED or status == Status.ERROR or status == Status.SUCCESS:
+    if status == Status.ERROR or status == Status.SUCCESS:
         work.terminated_date = datetime.now()
 
     if status == Status.RUNNING:
@@ -203,3 +203,7 @@ def finish_work(id: str, status: Status):
 def modify(work: WorkStatus):
     work_repository.delete(work.id)
     work_repository.add(work)
+
+
+def list_types() -> str:
+    return [e.value for e in Status]

@@ -3,7 +3,7 @@ from io import BytesIO
 
 import yaml
 from flask import Blueprint, jsonify, request, send_file
-from logic.apps.works.models.work_model import Status
+from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.apps.works.services import work_service
 
 blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
@@ -97,6 +97,11 @@ def list():
 
     result = work_service.list_all()
     return jsonify(result), 200
+
+
+@blue_print.route('/status', methods=['GET'])
+def get_status_works():
+    return jsonify(work_service.list_types()), 200
 
 
 @blue_print.route('/all/short', methods=['GET'])
