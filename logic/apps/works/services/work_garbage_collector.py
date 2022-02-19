@@ -15,7 +15,11 @@ _THREAD_GARBAGE_COLLECTOR_ACTIVE = True
 def garbage_collector():
 
     try:
-        for id in work_service.list_by_status(Status.TERMINATED):
+        works = []
+        works += work_service.list_by_status(Status.ERROR)
+        works += work_service.list_by_status(Status.SUCCESS)
+
+        for id in works:
 
             work = work_service.get(id)
 
