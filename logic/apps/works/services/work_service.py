@@ -78,8 +78,9 @@ def delete(id: str):
     if worker.status == Status.RUNNING:
         agent_service.change_status(worker.agent.id, AgentStatus.READY)
 
-    url = worker.agent.get_url() + f'/api/v1/works/{id}'
-    requests.delete(url, verify=False)
+    if worker.agent:
+        url = worker.agent.get_url() + f'/api/v1/works/{id}'
+        requests.delete(url, verify=False)
 
     shutil.rmtree(workingdir_service.fullpath(id), ignore_errors=True)
     work_repository.delete(id)
