@@ -70,20 +70,24 @@ def get(id: str) -> WorkStatus:
 
 def delete(id: str):
 
+    cancel(id)
+    shutil.rmtree(workingdir_service.fullpath(id), ignore_errors=True)
+    work_repository.delete(id)
+
+
+def cancel(id: str):
+
     if not work_repository.exist(id):
         msj = f"No existe worker con id {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
     worker = get(id)
-    if worker.status == Status.RUNNING:
-        agent_service.change_status(worker.agent.id, AgentStatus.READY)
 
     if worker.agent:
         url = worker.agent.get_url() + f'/api/v1/works/{id}'
         requests.delete(url, verify=False)
 
-    shutil.rmtree(workingdir_service.fullpath(id), ignore_errors=True)
-    work_repository.delete(id)
+        agent_service.change_status(worker.agent.id, AgentStatus.READY)
 
 
 def delete_by_status(status: Status):
@@ -131,6 +135,9 @@ def change_status(id: str, status: Status):
 
     if status == Status.RUNNING:
         work.running_date = datetime.now()
+
+    if status == Status.CANCEL:
+        cancel(id)
 
     work.status = status
     modify(work)

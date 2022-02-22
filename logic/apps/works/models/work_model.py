@@ -11,6 +11,7 @@ class Status(Enum):
     READY = 'READY'
     ERROR = 'ERROR'
     SUCCESS = 'SUCCESS'
+    CANCEL = 'CANCEL'
 
 
 @dataclass
