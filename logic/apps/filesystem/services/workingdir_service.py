@@ -24,7 +24,7 @@ def delete(id: Any):
 
 
 def fullpath(id: Any) -> str:
-    return f'{get_var(Vars.AGENTS_LOGS_PATH)}/{id}'
+    return f'{get_var(Vars.WORKINGDIR_PATH)}/{id}'
 
 
 def get(id: Any) -> List[str]:
