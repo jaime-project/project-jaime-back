@@ -40,5 +40,3 @@ RUN pip3 install -r requirements.txt --upgrade pip
 RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
-COPY *.json ./
-COPY variables.yaml ./

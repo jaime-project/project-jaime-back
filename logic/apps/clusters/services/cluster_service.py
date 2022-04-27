@@ -66,18 +66,19 @@ def list_types() -> str:
 
 def test_server(name: str) -> Dict[str, str]:
 
-    server = get(name)
-    agents = agent_service.get_by_type(server.type)
+    cluster = get(name)
+    agents = agent_service.get_by_type(cluster.type)
     if not agents:
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
                            "No hay agentes para la tarea")
 
     url = agents[0].get_url()
     json = {
-        'url': server.url,
-        'token': server.token
+        'url': cluster.url,
+        'token': cluster.token,
+        'type': cluster.type,
     }
-    return requests.post(url=f'{url}/api/v1/jaime/servers/test', json=json).json()
+    return requests.post(url=f'{url}/api/v1/jaime/cluster/test', json=json).json()
 
 
 def modify(name: str, server: Cluster):
