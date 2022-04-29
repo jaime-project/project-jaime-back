@@ -76,7 +76,7 @@ def test_server(name: str) -> Dict[str, str]:
     json = {
         'url': cluster.url,
         'token': cluster.token,
-        'type': cluster.type,
+        'type': cluster.type.value,
     }
     return requests.post(url=f'{url}/api/v1/jaime/cluster/test', json=json).json()
 
