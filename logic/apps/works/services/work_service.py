@@ -1,6 +1,6 @@
 import os
 import shutil
-from datetime import datetime
+from datetime import date, datetime
 from typing import Dict, List
 from uuid import uuid4
 
@@ -129,7 +129,7 @@ def get_all_short() -> List[Dict[str, str]]:
             "agent_id": w.agent.id if w.agent else "",
             "agent_type": w.agent.type.value if w.agent else "",
             "module_name": w.module_name,
-            "start_date": w.start_date.isoformat()
+            "start_date": w.start_date.isoformat() if w.start_date else "" 
         }
         for w in work_repository.get_all()
     ]
@@ -149,6 +149,12 @@ def change_status(id: str, status: Status):
     if status == Status.READY and work.status == Status.RUNNING:
         msj = f"No se puede poner en READY cuando el work esta siendo ejecutado"
         raise AppException(WorkError.WORK_INVALID_STATUS_ERROR, msj)
+
+    if status == Status.READY:
+        work.running_date = None
+        work.start_date = datetime.now()
+        work.terminated_date = None
+        work.agent = None
 
     if status == Status.ERROR or status == Status.SUCCESS:
         work.terminated_date = datetime.now()

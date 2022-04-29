@@ -1,9 +1,11 @@
 from typing import Dict, List
 
+import paramiko
 from logic.apps.servers.errors.server_error import ServerError
 from logic.apps.servers.models.server_model import Server
 from logic.apps.servers.repositories import server_repository
 from logic.libs.exception.exception import AppException
+from sqlalchemy import false, true
 
 
 def add(server: Server):
@@ -57,7 +59,27 @@ def delete(name: str):
 
 
 def test_server(name: str) -> Dict[str, str]:
-    any
+
+    server = get(name)
+    if not server:
+        msj = f"El server con nombre {name} no existe"
+        raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
+
+    try:
+        ssh = paramiko.SSHClient()
+        ssh.connect(hostname=server.host, username=server.user,
+                    password=server.password, port=server.port)
+        ssh.exec_command('ls')
+
+        return {
+            'success': True,
+            'text': ''
+        }
+    except Exception as e:
+        return {
+            'success': False,
+            'text': str(e)
+        }
 
 
 def modify(name: str, server: Server):
