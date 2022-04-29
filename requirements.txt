@@ -7,3 +7,4 @@ compile==1.0.3
 SQLAlchemy==1.4.27
 pyinstaller==4.10
 paramiko==2.10.4
+cryptography==36.0.2
