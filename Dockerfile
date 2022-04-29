@@ -8,7 +8,6 @@ COPY . .
 RUN pip3 install compile --upgrade pip
 
 RUN	python -m compile -b -f -o dist/ .
-RUN rm -fr dist/repo_modules_default
 
 
 # EXECUTION
@@ -41,5 +40,3 @@ RUN pip3 install -r requirements.txt --upgrade pip
 RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
-COPY *.json ./
-COPY variables.yaml ./

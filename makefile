@@ -5,16 +5,15 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/jaime:1.0.0
+	docker build . -t brianwolf94/jaime:1.1.0
 
 compile c:
 	python -m compile -b -f -o dist/ .
-	rm -fr dist/repo_modules_default dist/env/
-	cp -rf repo_modules_default dist/
-	cp -rf variables.env dist/
+	cp -rf variables.yaml dist/
 
 package p:
 	rm -fr build dist *.spec
-	pyinstaller --add-binary logic:logic --onefile app.py
-	mv dist/app app
+	pyinstaller --add-binary logic:logic -n jaime --onefile app.py 
+	mv dist/jaime jaime
 	rm -fr build dist *.spec
+	

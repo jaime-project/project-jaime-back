@@ -5,3 +5,5 @@ xmltodict==0.12.0
 requests==2.26.0
 compile==1.0.3
 SQLAlchemy==1.4.27
+pyinstaller==4.10
+paramiko==2.10.4

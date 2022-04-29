@@ -1,4 +1,3 @@
-from lib2to3.pytree import type_repr
 from typing import Any, Dict
 
 from flask import Blueprint, jsonify, request
