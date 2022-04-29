@@ -21,13 +21,11 @@ RUN apt-get install iputils-ping curl git -y
 
 ARG ARG_VERSION=local
 
+ENV TZ America/Argentina/Buenos_Aires
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
-ENV PYTHON_PORT=80
+ENV PYTHON_PORT=5000
 ENV WORKINGDIR_PATH=/data/workingdir
-
-ENV TZ America/Argentina/Buenos_Aires
-ENV PYTHONPATH "${PYTHONPATH}:/home/src"
 
 CMD gunicorn \
     -b ${PYTHON_HOST}:${PYTHON_PORT} \
@@ -40,3 +38,4 @@ RUN pip3 install -r requirements.txt --upgrade pip
 RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
+COPY logic/resources logic/resources
