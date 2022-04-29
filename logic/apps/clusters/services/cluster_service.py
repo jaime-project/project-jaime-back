@@ -78,7 +78,7 @@ def test_server(name: str) -> Dict[str, str]:
         'token': cluster.token,
         'type': cluster.type.value,
     }
-    return requests.post(url=f'{url}/api/v1/jaime/cluster/test', json=json).json()
+    return requests.post(url=f'{url}/api/v1/jaime/clusters/test', json=json).json()
 
 
 def modify(name: str, server: Cluster):
