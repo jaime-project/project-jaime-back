@@ -64,7 +64,7 @@ def list_types() -> str:
     return [e.value for e in ClusterType]
 
 
-def test_server(name: str) -> Dict[str, str]:
+def test_cluster(name: str) -> Dict[str, str]:
 
     cluster = get(name)
     agents = agent_service.get_by_type(cluster.type)
