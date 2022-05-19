@@ -28,6 +28,11 @@ def delete(id: str):
 
     global _AGENTS_ONLINE
 
+    try:
+        disconnec_agent(id)
+    except Exception as e:
+        logger().error(e)
+
     new_dict = {}
     for k, v in _AGENTS_ONLINE.items():
         if k != id:

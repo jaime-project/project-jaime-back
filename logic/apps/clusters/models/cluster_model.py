@@ -4,7 +4,6 @@ from enum import Enum
 
 class ClusterType(Enum):
     OPENSHIFT = 'OPENSHIFT'
-    KUBERNETES = 'KUBERNETES'
 
 
 @dataclass

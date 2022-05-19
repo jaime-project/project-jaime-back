@@ -51,8 +51,8 @@ def get_all_short():
 
 
 @blue_print.route('/<name>/test', methods=['GET'])
-def test_server(name):
-    return jsonify(cluster_service.test_server(name)), 200
+def test_cluster(name):
+    return jsonify(cluster_service.test_cluster(name)), 200
 
 
 @blue_print.route('/<name>', methods=['PUT'])
