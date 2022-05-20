@@ -91,7 +91,7 @@ def cancel(id: str):
 
     worker = get(id)
 
-    if worker.agent:
+    if worker.agent in agent_service.list_all():
         url = worker.agent.get_url() + f'/api/v1/works/{id}'
         requests.delete(url, verify=False)
 
