@@ -5,7 +5,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/jaime:1.2.0
+	docker build . -t brianwolf94/jaime:1.3.0
 
 compile c:
 	python -m compile -b -f -o dist/ .

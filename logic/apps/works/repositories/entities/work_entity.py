@@ -2,7 +2,6 @@
 import json
 
 from logic.apps.agents.models.agent_model import Agent
-from logic.apps.clusters.models.cluster_model import ClusterType
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 from sqlalchemy import Column, DateTime, String
@@ -41,7 +40,7 @@ class WorkEntity(Entity):
             a = json.loads(self.agent)
             w.agent = Agent(
                 id=a['id'],
-                type=ClusterType(a['type']),
+                type=a['type'],
                 host=a['host'],
                 port=a['port']
             )

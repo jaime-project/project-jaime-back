@@ -23,6 +23,7 @@ class WorkStatus():
     module_repo: str
     params: Dict[str, object]
     agent: Agent
+    agent_type: str
     status: Status
     start_date: datetime
     running_date: datetime
@@ -35,6 +36,7 @@ class WorkStatus():
         self.module_repo = params['module']['repo']
         self.params = params
         self.agent = None
+        self.agent_type = params['agent']['type']
         self.status = Status.READY
         self.start_date = datetime.now()
         self.running_date = None

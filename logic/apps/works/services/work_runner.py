@@ -4,7 +4,6 @@ from datetime import datetime
 
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
-from logic.apps.clusters.models.cluster_model import ClusterType
 from logic.apps.works.models.work_model import Status
 from logic.apps.works.services import work_service
 from logic.libs.logger.logger import logger
@@ -19,9 +18,8 @@ def runner():
         for id in work_service.list_by_status(Status.READY):
 
             work = work_service.get(id)
-            agent_type = ClusterType(work.params['agent']['type'])
 
-            agent = agent_service.get_available_agent_by_type(agent_type)
+            agent = agent_service.get_available_agent_by_type(work.agent_type)
             if not agent:
                 continue
 

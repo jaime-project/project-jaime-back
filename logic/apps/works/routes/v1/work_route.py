@@ -61,7 +61,7 @@ def get(id: str):
         "module_name": result.module_name,
         "params": result.params,
         'agent': {
-            "type": result.agent.type.value,
+            "type": result.agent.type,
             "host": result.agent.host,
             "port": result.agent.port,
             "id": result.agent.id

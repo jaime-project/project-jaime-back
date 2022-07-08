@@ -9,7 +9,6 @@ import yaml
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
-from logic.apps.clusters.models.cluster_model import ClusterType
 from logic.apps.clusters.services import cluster_service
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.errors.module_error import ModulesError
@@ -127,9 +126,9 @@ def get_all_short() -> List[Dict[str, str]]:
             "status": w.status.value,
             "id": w.id,
             "agent_id": w.agent.id if w.agent else "",
-            "agent_type": w.agent.type.value if w.agent else "",
+            "agent_type": w.agent.type if w.agent else "",
             "module_name": w.module_name,
-            "start_date": w.start_date.isoformat() if w.start_date else "" 
+            "start_date": w.start_date.isoformat() if w.start_date else ""
         }
         for w in work_repository.get_all()
     ]
@@ -202,7 +201,7 @@ def _valid_params(params: Dict[str, object]):
         msj = f'El tipo de agente es requerido'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
-    agent_type = ClusterType(params['agent']['type'])
+    agent_type = params['agent']['type']
     if not agent_service.get_by_type(agent_type):
         msj = f'No existen agentes activos de tipo {agent_type}'
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)

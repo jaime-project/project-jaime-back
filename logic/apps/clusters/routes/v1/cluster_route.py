@@ -1,6 +1,5 @@
-from os import name
 from flask import Blueprint, jsonify, request
-from logic.apps.clusters.models.cluster_model import Cluster, ClusterType
+from logic.apps.clusters.models.cluster_model import Cluster
 from logic.apps.clusters.services import cluster_service
 
 blue_print = Blueprint('clusters', __name__, url_prefix='/api/v1/clusters')
@@ -14,7 +13,7 @@ def post():
         url=s['url'],
         token=s['token'],
         version=s['version'],
-        type=ClusterType(s['type'])
+        type=s['type']
     ))
     return '', 201
 
@@ -40,11 +39,6 @@ def delete(name: str):
     return '', 200
 
 
-@blue_print.route('/types', methods=['GET'])
-def list_types():
-    return jsonify(cluster_service.list_types()), 200
-
-
 @blue_print.route('/all/short', methods=['GET'])
 def get_all_short():
     return jsonify(cluster_service.get_all_short()), 200
@@ -64,7 +58,7 @@ def modify_server(name):
         url=s['url'],
         token=s['token'],
         version=s['version'],
-        type=ClusterType(s['type'])
+        type=s['type']
     )
     cluster_service.modify(name, server)
 
