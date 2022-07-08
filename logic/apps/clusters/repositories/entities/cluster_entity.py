@@ -1,4 +1,4 @@
-from logic.apps.clusters.models.cluster_model import Cluster, ClusterType
+from logic.apps.clusters.models.cluster_model import Cluster
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 from sqlalchemy import Column, String
 
@@ -19,7 +19,7 @@ class ClusterEntity(Entity):
             name=self.name,
             url=self.url,
             token=self.token,
-            type=ClusterType(self.type),
+            type=self.type,
             version=self.version
         )
 
@@ -29,6 +29,6 @@ class ClusterEntity(Entity):
             name=m.name,
             url=m.url,
             token=m.token,
-            type=m.type.value,
+            type=m.type,
             version=m.version
         )

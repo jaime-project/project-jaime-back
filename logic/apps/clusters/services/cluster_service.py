@@ -5,7 +5,7 @@ import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.clusters.errors.cluster_error import ClusterError
-from logic.apps.clusters.models.cluster_model import Cluster, ClusterType
+from logic.apps.clusters.models.cluster_model import Cluster
 from logic.apps.clusters.repositories import cluster_repository
 from logic.libs.exception.exception import AppException
 
@@ -44,7 +44,7 @@ def get_all_short() -> List[Dict[str, str]]:
     return [
         {
             "name": s.name,
-            "type": s.type.value,
+            "type": s.type,
             "url": s.url
         }
         for s in cluster_repository.get_all()
@@ -58,10 +58,6 @@ def delete(name: str):
         raise AppException(ClusterError.CLUSTER_NOT_EXISTS_ERROR, msj)
 
     cluster_repository.delete(name)
-
-
-def list_types() -> str:
-    return [e.value for e in ClusterType]
 
 
 def test_cluster(name: str) -> Dict[str, str]:

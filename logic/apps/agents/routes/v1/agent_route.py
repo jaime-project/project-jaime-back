@@ -2,7 +2,6 @@ import yaml
 from flask import Blueprint, jsonify, request
 from logic.apps.agents.models.agent_model import Agent
 from logic.apps.agents.services import agent_service
-from logic.apps.clusters.models.cluster_model import ClusterType
 
 blue_print = Blueprint('agent', __name__, url_prefix='/api/v1/agents')
 
@@ -14,7 +13,7 @@ def post():
         id=j['id'],
         host=j['host'],
         port=j['port'],
-        type=ClusterType(j['type'])
+        type=j['type']
     )
 
     agent_service.add(n)
@@ -38,7 +37,7 @@ def list_all():
             'id': a.id,
             'host': a.host,
             'port': a.port,
-            'type': a.type.value,
+            'type': a.type,
             'status': a.status.value,
         }
         for a in agents
@@ -62,7 +61,7 @@ def get(id: str):
         return '', 204
 
     result = {
-        "type": n.type.value,
+        "type": n.type,
         "host": n.host,
         "port": n.port,
         "id": n.id,
@@ -70,3 +69,8 @@ def get(id: str):
     }
 
     return jsonify(result), 200
+
+
+@blue_print.route('/types', methods=['GET'])
+def list_types():
+    return jsonify(agent_service.list_types()), 200

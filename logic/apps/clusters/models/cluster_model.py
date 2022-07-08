@@ -1,9 +1,4 @@
 from dataclasses import dataclass
-from enum import Enum
-
-
-class ClusterType(Enum):
-    OPENSHIFT = 'OPENSHIFT'
 
 
 @dataclass
@@ -11,10 +6,10 @@ class Cluster():
     name: str
     url: str
     token: str
-    type: ClusterType
+    type: str
     version: str
 
-    def __init__(self, name: str, url: str, token: str, version: str, type: ClusterType) -> "Cluster":
+    def __init__(self, name: str, url: str, token: str, version: str, type: str) -> "Cluster":
         self.name = name
         self.url = url
         self.token = token
@@ -29,6 +24,6 @@ class Cluster():
             'name': self.name,
             'url': self.url,
             'token': self.token,
-            'type': self.type.value,
+            'type': self.type,
             'version': self.version
         }

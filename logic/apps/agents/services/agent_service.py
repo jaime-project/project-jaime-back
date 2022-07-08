@@ -3,11 +3,12 @@ from typing import Dict, List
 import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent, AgentStatus
-from logic.apps.clusters.models.cluster_model import ClusterType
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
 _AGENTS_ONLINE: Dict[str, Agent] = {}
+
+_AGENTS_TYPES: List[str] = []
 
 
 def add(agent: Agent):
@@ -18,27 +19,26 @@ def add(agent: Agent):
         msj = f'Ya existe un agente con el id {agent.id}'
         raise AppException(AgentError.AGENT_ALREADY_EXIST_ERROR, msj)
 
-    id = agent.id
-    _AGENTS_ONLINE[id] = agent
+    _AGENTS_ONLINE[agent.id] = agent
+
+    add_agent_type(agent.type)
 
     logger().info(f'Nuevo agente conectado -> id: {id}')
 
 
 def delete(id: str):
 
-    global _AGENTS_ONLINE
-
     try:
         disconnec_agent(id)
     except Exception as e:
         logger().error(e)
 
-    new_dict = {}
-    for k, v in _AGENTS_ONLINE.items():
-        if k != id:
-            new_dict[k] = v
+    agent_type = get(id).type
 
-    _AGENTS_ONLINE = new_dict
+    global _AGENTS_ONLINE
+    _AGENTS_ONLINE.pop(id)
+
+    delete_agent_type(agent_type)
 
 
 def disconnec_agent(id):
@@ -69,13 +69,13 @@ def is_alive(id: str) -> bool:
         return False
 
 
-def get_by_type(type: ClusterType) -> List[Agent]:
+def get_by_type(type: str) -> List[Agent]:
     global _AGENTS_ONLINE
 
     return [
         n
         for _, n in _AGENTS_ONLINE.items()
-        if n.type.value.lower() == type.value.lower()
+        if n.type == type.upper().lstrip()
     ]
 
 
@@ -87,11 +87,11 @@ def list_all() -> List[Agent]:
     return list(_AGENTS_ONLINE.values())
 
 
-def get_available_agent_by_type(type: ClusterType) -> Agent:
+def get_available_agent_by_type(type: str) -> Agent:
 
     agents = get_by_type(type)
     if not agents:
-        msj = f'No hay agentes de tipo {type.value} desponibles'
+        msj = f'No hay agentes de tipo {type} desponibles'
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR, msj)
 
     for a in agents:
@@ -109,7 +109,7 @@ def get_all_short() -> List[Dict[str, str]]:
             "id": n.id,
             "host": n.host,
             "port": n.port,
-            "type": n.type.value
+            "type": n.type
         }
         for _, n in list(_AGENTS_ONLINE.items())
     ]
@@ -119,3 +119,31 @@ def change_status(id: str, status: AgentStatus):
     agent = get(id)
     if agent:
         agent.status = status
+
+
+def list_types() -> List[str]:
+    global _AGENTS_TYPES
+    return _AGENTS_TYPES
+
+
+def add_agent_type(type: str):
+    global _AGENTS_TYPES
+
+    type = type.upper().lstrip()
+
+    if type not in _AGENTS_TYPES:
+        _AGENTS_TYPES.append(type)
+
+
+def delete_agent_type(type: str):
+    global _AGENTS_TYPES, _AGENTS_ONLINE
+
+    type = type.upper().lstrip()
+
+    agents_types_online = [
+        a.type
+        for a in _AGENTS_ONLINE.values()
+    ]
+
+    if type in _AGENTS_TYPES and type not in agents_types_online:
+        _AGENTS_TYPES.remove(type)
