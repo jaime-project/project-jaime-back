@@ -23,11 +23,7 @@ def get(name: str, repo: str) -> str:
         return filesystem_service.get_file_content(path).decode('utf-8')
 
     except Exception as e:
-        raise AppException(
-            code=ModulesError.MODULE_NO_EXIST_ERROR,
-            exception=e,
-            msj=f'El modulo {name} no existe o tiene un formato invalido'
-        )
+        return None
 
 
 def list_all(repo_name: str) -> List[str]:
@@ -35,7 +31,7 @@ def list_all(repo_name: str) -> List[str]:
     return [
         nf.replace('.py', '')
         for nf in filesystem_service.name_files_from_path(f'{get_path()}/{repo_name}')
-        if nf.endswith('.py') 
+        if nf.endswith('.py')
     ]
 
 
