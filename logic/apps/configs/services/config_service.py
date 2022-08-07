@@ -6,6 +6,7 @@ import requests
 from logic.apps.agents.services import agent_service
 from logic.apps.clusters.models.cluster_model import Cluster
 from logic.apps.clusters.services import cluster_service
+from logic.apps.configs.errors.config_error import ObjectError
 from logic.apps.docs.services import doc_service
 from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.services import module_service
@@ -13,6 +14,7 @@ from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
 from logic.apps.repos.services import repo_service
 from logic.apps.servers.models.server_model import Server
 from logic.apps.servers.services import server_service
+from logic.libs.exception.exception import AppException
 
 _REQUIREMENTS_FILE_PATH = f'{Path.home()}/.jaime/requirements.txt'
 
@@ -44,8 +46,14 @@ def get_requirements_path() -> str:
 
 def update_objects(objects: Dict[str, str], replace: bool = False):
 
-    if not _objects_are_valid(objects):
-        return
+    try:
+        _create_and_update_objects(objects, replace)
+
+    except Exception as e:
+        raise AppException(ObjectError.CREATION_OBJECTS_ERROR, str(e), e)
+
+
+def _create_and_update_objects(objects: Dict[str, str], replace: bool):
 
     if 'clusters' in objects:
 
@@ -139,8 +147,3 @@ def update_objects(objects: Dict[str, str], replace: bool = False):
 
             if not doc_service.get(name, repo):
                 doc_service.add(name, content, repo)
-
-
-# TODO: hacer este metodo
-def _objects_are_valid(objects: Dict[str, str]) -> bool:
-    return True
