@@ -65,22 +65,22 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
 
     objects['modules'] = []
     for repo in objects['repos']:
-        for module_name in module_service.list_all(repo):
+        for module_name in module_service.list_all(repo['name']):
 
             objects['modules'].append({
-                'repo': repo,
+                'repo': repo['name'],
                 'name': module_name,
-                'content': module_service.get(module_name, repo)
+                'content': module_service.get(module_name, repo['name'])
             })
 
     objects['docs'] = []
     for repo in objects['repos']:
-        for doc_name in doc_service.list_all(repo):
+        for doc_name in doc_service.list_all(repo['name']):
 
             objects['docs'].append({
-                'repo': repo,
+                'repo': repo['name'],
                 'name': doc_name,
-                'content': doc_service.get(doc_name, repo)
+                'content': doc_service.get(doc_name, repo['name'])
             })
 
     return objects
