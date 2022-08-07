@@ -1,5 +1,8 @@
+from datetime import datetime
+from io import BytesIO
+import ntpath
 import yaml
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, request, send_file
 from logic.apps.configs.services import config_service
 
 blue_print = Blueprint('configs', __name__, url_prefix='/api/v1/configs')
@@ -25,3 +28,17 @@ def post_objects():
     config_service.update_objects(dict_yaml, replace)
 
     return '', 200
+
+
+@blue_print.route('/objects/file', methods=['GET'])
+def get_objects():
+
+    dict_objects = config_service.get_all_objects()
+    dict_yaml = str(yaml.dump(dict_objects))
+
+    name_yaml = datetime.now().isoformat() + '.yaml'
+
+    return send_file(BytesIO(dict_yaml.encode()),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=ntpath.basename(name_yaml))

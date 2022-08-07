@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict
+from typing import Dict, List
 
 import requests
 from logic.apps.agents.services import agent_service
@@ -42,6 +42,48 @@ def get_requirements_path() -> str:
 
     global _REQUIREMENTS_FILE_PATH
     return _REQUIREMENTS_FILE_PATH
+
+
+def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
+
+    objects = {}
+
+    objects['servers'] = [
+        o.__dict__()
+        for o in server_service.get_all()
+    ]
+
+    objects['clusters'] = [
+        o.__dict__()
+        for o in cluster_service.get_all()
+    ]
+
+    objects['repos'] = [
+        o.__dict__()
+        for o in repo_service.get_all()
+    ]
+
+    objects['modules'] = []
+    for repo in objects['repos']:
+        for module_name in module_service.list_all(repo):
+
+            objects['modules'].append({
+                'repo': repo,
+                'name': module_name,
+                'content': module_service.get(module_name, repo)
+            })
+
+    objects['docs'] = []
+    for repo in objects['repos']:
+        for doc_name in doc_service.list_all(repo):
+
+            objects['docs'].append({
+                'repo': repo,
+                'name': doc_name,
+                'content': doc_service.get(doc_name, repo)
+            })
+
+    return objects
 
 
 def update_objects(objects: Dict[str, str], replace: bool = False):
