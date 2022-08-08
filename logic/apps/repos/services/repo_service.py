@@ -44,7 +44,7 @@ def list_all_by_type(type: RepoType) -> List[str]:
     ]
 
 
-def get_all() -> List[str]:
+def get_all() -> List[Repo]:
     return repo_repository.get_all()
 
 

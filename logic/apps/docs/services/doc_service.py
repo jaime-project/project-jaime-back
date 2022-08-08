@@ -21,11 +21,7 @@ def get(name: str, repo: str) -> str:
         return filesystem_service.get_file_content(path).decode('utf-8')
 
     except Exception as e:
-        raise AppException(
-            code=DocsError.DOC_NO_EXIST_ERROR,
-            exception=e,
-            msj=f'La documentacion {name} no existe'
-        )
+        return None
 
 
 def delete(name: str, repo: str):

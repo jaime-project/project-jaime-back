@@ -10,13 +10,13 @@ from logic.apps.clusters.repositories import cluster_repository
 from logic.libs.exception.exception import AppException
 
 
-def add(server: Cluster):
+def add(cluster: Cluster):
 
-    if cluster_repository.exist(server.name):
-        msj = f"El server con nombre {server.name} ya existe"
+    if cluster_repository.exist(cluster.name):
+        msj = f"El cluster con nombre {cluster.name} ya existe"
         raise AppException(ClusterError.CLUSTER_ALREADY_EXISTS_ERROR, msj)
 
-    cluster_repository.add(server)
+    cluster_repository.add(cluster)
 
 
 def get(name: str) -> Cluster:
