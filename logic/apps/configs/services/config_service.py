@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import requests
+from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.clusters.models.cluster_model import Cluster
 from logic.apps.clusters.services import cluster_service
@@ -17,6 +18,7 @@ from logic.apps.servers.services import server_service
 from logic.libs.exception.exception import AppException
 
 _REQUIREMENTS_FILE_PATH = f'{Path.home()}/.jaime/requirements.txt'
+_LOGS_FILE_PATH = f'{Path.home()}/.jaime/logs/app.log'
 
 
 def update_requirements(content: str):
@@ -194,3 +196,20 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
 
     if 'requirements' in objects:
         update_requirements(objects['requirements'])
+
+
+def get_jaime_logs() -> str:
+    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
+
+
+def get_agent_logs(agent_id: str) -> str:
+
+    agent = agent_service.get(agent_id)
+    if not agent:
+        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
+                           f'El agente con id {agent_id} no existe')
+
+    url = agent.get_url() + f'/api/v1/configs/logs'
+    response = requests.get(url, verify=False)
+
+    return response.text
