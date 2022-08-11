@@ -20,7 +20,7 @@ def get(name: str, repo: str) -> str:
     path = f'{get_path()}/{repo}/{name}.py'
 
     try:
-        return filesystem_service.get_file_content(path).decode('utf-8')
+        return filesystem_service.get_file_content(path)
 
     except Exception as e:
         return None

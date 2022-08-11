@@ -67,12 +67,18 @@ def test_server(name: str) -> Dict[str, str]:
 
     try:
         ssh = paramiko.SSHClient()
-        ssh.connect(hostname=server.host, username=server.user,
-                    password=server.password, port=server.port)
-        ssh.exec_command('ls')
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(
+            hostname=server.host,
+            username=server.user,
+            password=server.password,
+            port=int(server.port)
+        )
+        out = None
+        _, out, _ = ssh.exec_command('ls')
 
         return {
-            'success': True,
+            'success': out != None,
             'text': ''
         }
     except Exception as e:

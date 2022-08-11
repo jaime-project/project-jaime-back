@@ -7,7 +7,7 @@ from sqlalchemy import true
 
 def get_file_content(path: str) -> str:
     with open(path, 'rb') as file:
-        return file.read()
+        return file.read().decode()
 
 
 def create_file(path: str, content: str):
