@@ -10,7 +10,7 @@ from logic.apps.configs.errors.config_error import ObjectError
 from logic.apps.docs.services import doc_service
 from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.services import module_service
-from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
+from logic.apps.repos.models.repo_model import Repo, RepoGit
 from logic.apps.repos.services import repo_service
 from logic.apps.servers.models.server_model import Server
 from logic.apps.servers.services import server_service
@@ -82,6 +82,8 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
                 'name': doc_name,
                 'content': doc_service.get(doc_name, repo['name'])
             })
+
+    objects['requirements'] = get_requirements()
 
     return objects
 
@@ -189,3 +191,6 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
 
             if not doc_service.get(name, repo):
                 doc_service.add(name, content, repo)
+
+    if 'requirements' in objects:
+        update_requirements(objects['requirements'])
