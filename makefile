@@ -1,3 +1,5 @@
+VERSION := 1.5.0
+
 install i:
 	virtualenv -p python3.9 env
 	. env/bin/activate
@@ -5,7 +7,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/jaime:1.4.0
+	docker build . -t brianwolf94/jaime:$(VERSION)
 
 compile c:
 	python -m compile -b -f -o dist/ .

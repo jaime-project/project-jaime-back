@@ -42,3 +42,13 @@ def get_objects():
                      mimetype='application/octet-stream',
                      as_attachment=True,
                      attachment_filename=ntpath.basename(name_yaml))
+
+
+@blue_print.route('/logs/jaime', methods=['GET'])
+def get_jaime_logs():
+    return config_service.get_jaime_logs(), 200
+
+
+@blue_print.route('/logs/agents/<agent_id>', methods=['GET'])
+def get_agent_logs(agent_id: str):
+    return config_service.get_agent_logs(agent_id), 200
