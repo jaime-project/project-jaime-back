@@ -1,8 +1,10 @@
 import ntpath
+from datetime import datetime
 from io import BytesIO
 
 import yaml
 from flask import Blueprint, jsonify, request, send_file
+from logic.apps.agents.models.agent_model import Agent
 from logic.apps.works.models.work_model import Status, WorkStatus
 from logic.apps.works.services import work_service
 
@@ -128,3 +130,21 @@ def _is_yaml(text: str) -> bool:
 
     except Exception:
         return False
+
+
+@blue_print.route('/', methods=['PUT'])
+def modify():
+
+    params_dict = {}
+    if request.data:
+        params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
+            request.data) else request.json
+
+    work = WorkStatus(
+        id=params_dict['id'],
+        params=params_dict['params']
+    )
+
+    work_service.modify(work)
+
+    return '', 200

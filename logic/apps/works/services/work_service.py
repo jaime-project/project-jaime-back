@@ -1,6 +1,6 @@
 import os
 import shutil
-from datetime import date, datetime
+from datetime import datetime
 from typing import Dict, List
 from uuid import uuid4
 
