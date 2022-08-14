@@ -15,7 +15,7 @@ class Agent():
     type: str
     host: str
     port: int
-    id: str
+    id: UUID
     status: AgentStatus
 
     def __init__(self, id: UUID, type: str, host: str, port: int, status: AgentStatus = AgentStatus.READY) -> None:

@@ -23,7 +23,7 @@ def add(agent: Agent):
 
     add_agent_type(agent.type)
 
-    logger().info(f'Nuevo agente conectado -> id: {id}')
+    logger().info(f'Nuevo agente conectado -> id: {str(agent.id)}')
 
 
 def delete(id: str):
