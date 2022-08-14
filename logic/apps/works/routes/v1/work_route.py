@@ -1,5 +1,4 @@
 import ntpath
-from datetime import datetime
 from io import BytesIO
 
 import yaml

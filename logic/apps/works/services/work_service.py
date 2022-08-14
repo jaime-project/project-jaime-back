@@ -26,11 +26,16 @@ def start(params: Dict[str, object]) -> str:
 
     _valid_params(params)
 
-    id = _generate_id()
+    work = WorkStatus(params=params)
+    work_repository.add(work)
 
-    work_repository.add(WorkStatus(id, params))
+    return work.id
 
-    return id
+
+def add(work: WorkStatus) -> str:
+
+    work_repository.add(work)
+    return work.id
 
 
 def exec_into_agent(work_status: WorkStatus):
@@ -189,10 +194,6 @@ def download_workspace(id) -> bytes:
     shutil.move(zip_result_path, final_zip_path)
 
     return open(final_zip_path, 'rb').read()
-
-
-def _generate_id() -> str:
-    return str(uuid4()).split('-')[4]
 
 
 def _valid_params(params: Dict[str, object]):

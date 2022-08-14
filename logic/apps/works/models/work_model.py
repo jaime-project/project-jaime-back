@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
 from typing import Dict
+from uuid import uuid4
 
 from logic.apps.agents.models.agent_model import Agent
 
@@ -12,6 +13,10 @@ class Status(Enum):
     ERROR = 'ERROR'
     SUCCESS = 'SUCCESS'
     CANCEL = 'CANCEL'
+
+
+def _generate_id() -> str:
+    return str(uuid4()).split('-')[4]
 
 
 @dataclass
@@ -29,7 +34,7 @@ class WorkStatus():
     running_date: datetime
     terminated_date: datetime
 
-    def __init__(self, id: str, params: Dict[str, object]) -> "WorkStatus":
+    def __init__(self, id: str = _generate_id(), params: Dict[str, object] = {}) -> "WorkStatus":
         self.id = id
         self.name = params['name']
         self.module_name = params['module']['name']
