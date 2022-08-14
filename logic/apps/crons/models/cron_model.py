@@ -8,7 +8,7 @@ from logic.apps.works.models.work_model import WorkStatus
 
 class CronStatus(Enum):
     ACTIVE = 'ACTIVE'
-    NO_ACTIVE = 'NO_ACTIVE'
+    DESACTIVE = 'DESACTIVE'
 
 
 def _generate_id() -> str:
