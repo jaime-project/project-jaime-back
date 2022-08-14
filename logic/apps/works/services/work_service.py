@@ -2,7 +2,6 @@ import os
 import shutil
 from datetime import datetime
 from typing import Dict, List
-from uuid import uuid4
 
 import requests
 import yaml
@@ -40,10 +39,11 @@ def add(work: WorkStatus) -> str:
 
 def exec_into_agent(work_status: WorkStatus):
 
-    module_name = work_status.params['module']['name']
-    module_repo = work_status.params['module']['repo']
+    module_name = work_status.module_name
+    module_repo = work_status.module_repo
     module_path = os.path.join(
         module_service.get_path(), f'{module_repo}/{module_name}.py')
+    
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
 

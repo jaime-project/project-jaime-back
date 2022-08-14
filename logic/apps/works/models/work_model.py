@@ -39,13 +39,19 @@ class WorkStatus():
         self.name = params['name']
         self.module_name = params['module']['name']
         self.module_repo = params['module']['repo']
-        self.params = params
         self.agent = None
         self.agent_type = params['agent']['type']
         self.status = Status.READY
         self.start_date = datetime.now()
         self.running_date = None
         self.terminated_date = None
+
+        final_params = params.copy()
+        final_params.pop('name')
+        final_params.pop('module')
+        final_params.pop('agent')
+
+        self.params = final_params
 
     def finish(self):
         self.terminated_date = datetime.now()
