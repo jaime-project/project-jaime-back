@@ -103,10 +103,10 @@ def modify():
     cron = CronWork(
         name=params_dict['name'],
         cron_expression=params_dict['cron_expression'],
-        cron_module_repo=params_dict['cron_module_repo'],
-        cron_module_name=params_dict['cron_module_name'],
-        cron_agent_type=params_dict['cron_agent_type'],
-        cron_params=params_dict['params'],
+        work_module_repo=params_dict['work_module_repo'],
+        work_module_name=params_dict['work_module_name'],
+        work_agent_type=params_dict['work_agent_type'],
+        work_params=params_dict['work_params'],
         creation_date=datetime.fromisoformat(params_dict['creation_date']),
         status=CronStatus(params_dict['status']),
         id=params_dict['id']
