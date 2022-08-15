@@ -6,8 +6,6 @@ from logic.apps.crons.repositories import cron_repository
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
 
-from ..models.cron_model import CronWork
-
 
 def exec(cron: CronWork) -> str:
 
@@ -19,13 +17,12 @@ def exec(cron: CronWork) -> str:
 
 def add(cron_work: CronWork) -> str:
 
-    if not cron_repository.get(id):
+    if cron_repository.get(cron_work.id):
         raise AppException(CronError.CRON_ALREDY_EXIST_ERROR,
                            f'Ya existe el cron con id {id}')
 
-    id = cron_work.id
     cron_repository.add(cron_work)
-    return id
+    return cron_work.id
 
 
 def get(id: str) -> CronWork:
@@ -68,7 +65,8 @@ def get_all_short() -> List[Dict[str, str]]:
             "name": c.name,
             "cron_expression": c.cron_expression,
             "status": c.status.value,
-            "start_date": c.creation_date.isoformat()
+            "creation_date": c.creation_date.isoformat(),
+            "id": c.id
         }
         for c in cron_repository.get_all()
     ]

@@ -6,8 +6,6 @@ from flask import Blueprint, jsonify, request
 from logic.apps.crons.models.cron_model import CronStatus, CronWork
 from logic.apps.crons.services import cron_service
 
-from ...models.cron_model import CronWork
-
 blue_print = Blueprint('crons', __name__, url_prefix='/api/v1/crons')
 
 
@@ -20,10 +18,11 @@ def add():
     cron = CronWork(
         name=params_dict['name'],
         cron_expression=params_dict['cron_expression'],
-        cron_module_repo=params_dict['cron_module_repo'],
-        cron_module_name=params_dict['cron_module_name'],
-        cron_agent_type=params_dict['cron_agent_type'],
-        cron_params=params_dict['params']
+        work_module_repo=params_dict['work_module_repo'],
+        work_module_name=params_dict['work_module_name'],
+        work_agent_type=params_dict['work_agent_type'],
+        work_params=params_dict['work_params'] if params_dict['work_params'] else {
+        }
     )
 
     id = cron_service.add(cron)
@@ -63,7 +62,7 @@ def get(id: str):
         'id': cron.id,
         'creation_date': cron.creation_date.isoformat(),
         'status': cron.status.value,
-        'work_params': json.dumps(cron.work_params)
+        'work_params': cron.work_params
     }
 
     return jsonify(result_dict), 200

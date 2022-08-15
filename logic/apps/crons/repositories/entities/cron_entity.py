@@ -1,9 +1,10 @@
 
 import json
+from datetime import datetime
 
 from logic.apps.crons.models.cron_model import CronStatus, CronWork
 from logic.libs.sqliteAlchemy import sqliteAlchemy
-from sqlalchemy import Column, String
+from sqlalchemy import Column, DateTime, String
 
 Entity = sqliteAlchemy.get_entity_class()
 
@@ -15,7 +16,7 @@ class CronEntity(Entity):
     name = Column(String)
     cron_expression = Column(String)
     status = Column(String)
-    creation_date = Column(String)
+    creation_date = Column(DateTime)
     work_module_repo = Column(String)
     work_module_name = Column(String)
     work_agent_type = Column(String)
