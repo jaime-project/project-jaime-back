@@ -1,10 +1,18 @@
 import ntpath
+from datetime import datetime
 from io import BytesIO
+from typing import Dict
 
 import yaml
 from flask import Blueprint, jsonify, request, send_file
-from logic.apps.works.models.work_model import Status, WorkStatus
+from logic.apps.agents.errors.agent_error import AgentError
+from logic.apps.agents.models.agent_model import Agent
+from logic.apps.agents.services import agent_service
+from logic.apps.modules.errors.module_error import ModulesError
+from logic.apps.modules.services import module_service
+from logic.apps.works.models.work_model import Status, Work
 from logic.apps.works.services import work_service
+from logic.libs.exception.exception import AppException
 
 blue_print = Blueprint('works', __name__, url_prefix='/api/v1/works')
 
@@ -17,7 +25,17 @@ def exec():
         params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
             request.data) else request.json
 
-    id = work_service.start(params_dict)
+    _valid_params(params_dict)
+
+    work = Work(
+        name=params_dict['name'],
+        module_name=params_dict['module_name'],
+        module_repo=params_dict['module_repo'],
+        agent_type=params_dict['agent_type'],
+        params=params_dict['params']
+    )
+
+    id = work_service.add(work)
 
     return jsonify(id=id), 201
 
@@ -60,6 +78,7 @@ def get(id: str):
         "module_repo": result.module_repo,
         "module_name": result.module_name,
         "params": result.params,
+        "agent_type": result.agent_type,
         'agent': {
             "type": result.agent.type,
             "host": result.agent.host,
@@ -128,3 +147,63 @@ def _is_yaml(text: str) -> bool:
 
     except Exception:
         return False
+
+
+@blue_print.route('/', methods=['PUT'])
+def modify():
+
+    params_dict = {}
+    if request.data:
+        params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
+            request.data) else request.json
+
+    _valid_params(params_dict)
+
+    work = Work(
+        id=params_dict['id'],
+        name=params_dict['name'],
+        module_name=params_dict['module_name'],
+        module_repo=params_dict['module_repo'],
+        agent_type=params_dict['agent_type'],
+        params=params_dict['params'],
+        status=Status(params_dict['status'])
+    )
+
+    if 'agent' in params_dict:
+        work.agent = Agent(
+            id=params_dict['agent']['id'],
+            host=params_dict['agent']['host'],
+            port=params_dict['agent']['port'],
+            type=params_dict['agent']['type']
+        )
+
+    if 'running_date' in params_dict:
+        work.running_date = datetime.fromisoformat(params_dict['running_date'])
+
+    if 'terminated_date' in params_dict:
+        work.terminated_date = datetime.fromisoformat(
+            params_dict['terminated_date'])
+
+    if 'start_date' in params_dict:
+        work.start_date = datetime.fromisoformat(params_dict['start_date'])
+
+    work_service.modify(work)
+
+    return '', 200
+
+
+def _valid_params(params: Dict[str, object]):
+
+    if not 'agent_type' in params:
+        msj = f'El tipo de agente es requerido'
+        raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
+
+    agent_type = params['agent_type']
+    if not agent_service.get_by_type(agent_type):
+        msj = f'No existen agentes activos de tipo {agent_type}'
+        raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
+
+    if not 'module_name' in params or not 'module_repo' in params or not params['module_name'] in module_service.list_all(params['module_repo']):
+        name = params['module_name']
+        msj = f'No existe modulo de nombre {name}'
+        raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)

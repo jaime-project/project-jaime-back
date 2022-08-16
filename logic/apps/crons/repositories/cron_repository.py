@@ -1,34 +1,33 @@
 from typing import List
 
-from logic.apps.works.models.work_model import Work, Status
-from logic.apps.agents.services import agent_service
+from logic.apps.crons.models.cron_model import CronStatus, CronWork
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
-from .entities.work_entity import WorkEntity
+from .entities.cron_entity import CronEntity
 
 
-def get_all() -> List[Work]:
+def get_all() -> List[CronWork]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(WorkEntity).all()
+    result = s.query(CronEntity).all()
     s.close()
 
     return [r.to_model() for r in result]
 
 
-def get_all_by_status(status: Status) -> List[Work]:
+def get_all_by_status(status: CronStatus) -> List[CronWork]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(WorkEntity).filter_by(status=status.value).all()
+    result = s.query(CronEntity).filter_by(status=status.value).all()
     s.close()
 
     return [r.to_model() for r in result]
 
 
-def get(id: str) -> Work:
+def get(id: str) -> CronWork:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(WorkEntity).get({'id': id})
+    result = s.query(CronEntity).get({'id': id})
     s.close()
 
     if result:
@@ -37,25 +36,27 @@ def get(id: str) -> Work:
     return None
 
 
-def add(m: Work):
+def add(m: CronWork):
 
     s = sqliteAlchemy.make_session()
 
-    e = WorkEntity.from_model(m)
+    e = CronEntity.from_model(m)
     s.add(e)
 
     s.commit()
     s.flush()
+    s.close()
 
 
 def delete(id: str):
 
     s = sqliteAlchemy.make_session()
-    e = s.query(WorkEntity).get({'id': id})
+    e = s.query(CronEntity).get({'id': id})
     s.delete(e)
 
     s.commit()
     s.flush()
+    s.close()
 
 
 def exist(id: str) -> bool:
@@ -63,7 +64,7 @@ def exist(id: str) -> bool:
     result = True
 
     s = sqliteAlchemy.make_session()
-    if s.query(WorkEntity).filter_by(id=id).count() == 0:
+    if s.query(CronEntity).filter_by(id=id).count() == 0:
         result = False
 
     s.close()

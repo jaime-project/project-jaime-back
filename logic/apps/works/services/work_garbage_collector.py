@@ -25,7 +25,7 @@ def garbage_collector():
 
             if work.terminated_date + timedelta(hours=48) < datetime.now():
                 work_service.delete(id)
-                logger().info(f'Borrando proceso TERMINATED -> id: {id}')
+                logger().info(f'Borrando work por garbage_collector -> id: {id}')
 
     except Exception as e:
         logger().error(str(e))

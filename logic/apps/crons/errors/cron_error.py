@@ -1,0 +1,6 @@
+from enum import Enum
+
+
+class CronError(Enum):
+    CRON_NOT_EXIST_ERROR = 'CRON_NOT_EXIST_ERROR'
+    CRON_ALREDY_EXIST_ERROR = 'CRON_ALREDY_EXIST_ERROR'

@@ -1,7 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from typing import Dict
+from uuid import uuid4
 
 from logic.apps.agents.models.agent_model import Agent
 
@@ -14,33 +15,24 @@ class Status(Enum):
     CANCEL = 'CANCEL'
 
 
-@dataclass
-class WorkStatus():
+def _generate_id() -> str:
+    return str(uuid4()).split('-')[4]
 
-    id: str
+
+@dataclass
+class Work():
+
     name: str
     module_name: str
     module_repo: str
-    params: Dict[str, object]
-    agent: Agent
     agent_type: str
-    status: Status
-    start_date: datetime
-    running_date: datetime
-    terminated_date: datetime
-
-    def __init__(self, id: str, params: Dict[str, object]) -> "WorkStatus":
-        self.id = id
-        self.name = params['name']
-        self.module_name = params['module']['name']
-        self.module_repo = params['module']['repo']
-        self.params = params
-        self.agent = None
-        self.agent_type = params['agent']['type']
-        self.status = Status.READY
-        self.start_date = datetime.now()
-        self.running_date = None
-        self.terminated_date = None
+    agent: Agent = None
+    id: str = field(default_factory=_generate_id)
+    status: Status = Status.READY
+    params: Dict[str, object] = field(default_factory={})
+    start_date: datetime = datetime.now()
+    running_date: datetime = None
+    terminated_date: datetime = None
 
     def finish(self):
         self.terminated_date = datetime.now()
