@@ -78,7 +78,7 @@ def get(id: str):
         "module_repo": result.module_repo,
         "module_name": result.module_name,
         "params": result.params,
-        "agennt_type": result.agent_type,
+        "agent_type": result.agent_type,
         'agent': {
             "type": result.agent.type,
             "host": result.agent.host,
@@ -162,20 +162,19 @@ def modify():
     work = Work(
         id=params_dict['id'],
         name=params_dict['name'],
-        module_name=params_dict['module']['name'],
-        module_repo=params_dict['module']['repo'],
-        agent_type=params_dict['agent']['type'],
+        module_name=params_dict['module_name'],
+        module_repo=params_dict['module_repo'],
+        agent_type=params_dict['agent_type'],
         params=params_dict['params'],
         status=Status(params_dict['status'])
     )
 
     if 'agent' in params_dict:
         work.agent = Agent(
-            id=params_dict['id'],
-            host=params_dict['host'],
-            port=params_dict['port'],
-            status=AgentStatus(params_dict['status']),
-            type=params_dict['type']
+            id=params_dict['agent']['id'],
+            host=params_dict['agent']['host'],
+            port=params_dict['agent']['port'],
+            type=params_dict['agent']['type']
         )
 
     if 'running_date' in params_dict:
