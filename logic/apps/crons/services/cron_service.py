@@ -5,12 +5,15 @@ from logic.apps.crons.models.cron_model import CronStatus, CronWork
 from logic.apps.crons.repositories import cron_repository
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
+from logic.libs.logger.logger import logger
 
 
 def exec(cron: CronWork) -> str:
 
     work = cron.to_workStatus()
     work_service.add(work)
+
+    logger().info(f'Cron {cron.name} -> Creando nuevo work con id {work.id}')
 
     return work.id
 
@@ -70,12 +73,6 @@ def get_all_short() -> List[Dict[str, str]]:
         }
         for c in cron_repository.get_all()
     ]
-
-
-def change_status(id: str, status: CronStatus):
-    work = cron_repository.get(id)
-    work.status = status
-    modify(work)
 
 
 def modify(cron: CronWork):

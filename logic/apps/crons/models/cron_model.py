@@ -3,6 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Dict
 from uuid import uuid4
+
 from logic.apps.works.models.work_model import Work
 
 
@@ -22,22 +23,17 @@ class CronWork():
     work_module_repo: str
     work_module_name: str
     work_agent_type: str
-    id: str = _generate_id()
+    id: str = field(default_factory=_generate_id)
     creation_date: datetime = datetime.now()
     status: CronStatus = CronStatus.ACTIVE
     work_params: Dict[str, object] = field(default_factory={})
 
     def to_workStatus(self) -> Work:
 
-        params = self.work_params.copy()
-
-        params['agent'] = {}
-        params['agent']['type'] = self.work_agent_type
-
-        params['module'] = {}
-        params['module']['repo'] = self.work_module_repo
-        params['module']['name'] = self.work_module_name
-
-        params['name'] = f'cronjob_{self.name}_{_generate_id()}'
-
-        return Work(params=params)
+        return Work(
+            name=f'cronjob_{self.name}_{_generate_id()}',
+            module_name=self.work_module_name,
+            module_repo=self.work_module_repo,
+            agent_type=self.work_agent_type,
+            params=self.work_params
+        )

@@ -27,31 +27,12 @@ class Work():
     module_repo: str
     agent_type: str
     agent: Agent = None
-    id: str = _generate_id()
+    id: str = field(default_factory=_generate_id)
     status: Status = Status.READY
     params: Dict[str, object] = field(default_factory={})
     start_date: datetime = datetime.now()
     running_date: datetime = None
     terminated_date: datetime = None
-
-    # def __init__(self, id: str = _generate_id(), params: Dict[str, object] = {}) -> "WorkStatus":
-    #     self.id = id
-    #     self.name = params['name']
-    #     self.module_name = params['module']['name']
-    #     self.module_repo = params['module']['repo']
-    #     self.agent = None
-    #     self.agent_type = params['agent']['type']
-    #     self.status = Status.READY
-    #     self.start_date = datetime.now()
-    #     self.running_date = None
-    #     self.terminated_date = None
-
-    #     final_params = params.copy()
-    #     final_params.pop('name')
-    #     final_params.pop('module')
-    #     final_params.pop('agent')
-
-    #     self.params = final_params
 
     def finish(self):
         self.terminated_date = datetime.now()

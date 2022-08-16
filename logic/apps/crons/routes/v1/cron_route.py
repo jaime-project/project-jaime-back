@@ -4,7 +4,7 @@ from datetime import datetime
 import yaml
 from flask import Blueprint, jsonify, request
 from logic.apps.crons.models.cron_model import CronStatus, CronWork
-from logic.apps.crons.services import cron_service
+from logic.apps.crons.services import cron_runner, cron_service
 
 blue_print = Blueprint('crons', __name__, url_prefix='/api/v1/crons')
 
@@ -71,7 +71,11 @@ def get(id: str):
 @blue_print.route('/<id>/status/<status>', methods=['PATCH'])
 def change_status(id: str, status: str):
 
-    cron_service.change_status(id, CronStatus(status))
+    if CronStatus(status) == CronStatus.ACTIVE:
+        cron_runner.activate_cron(id)
+    else:
+        cron_runner.desactivate_cron(id)
+
     return '', 200
 
 
@@ -84,6 +88,7 @@ def list():
 
 @blue_print.route('/status', methods=['GET'])
 def get_status_crons():
+
     return jsonify(cron_service.list_status()), 200
 
 

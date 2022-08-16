@@ -5,7 +5,6 @@ from typing import Dict, List
 
 import requests
 import yaml
-from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
 from logic.apps.clusters.services import cluster_service
@@ -19,14 +18,6 @@ from logic.apps.works.repositories import work_repository
 from logic.apps.zip.service import zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
-
-
-# def start(params: Dict[str, object]) -> str:
-
-#     _valid_params(params)
-
-#     work = WorkStatus(params=params)
-#     return add
 
 
 def add(work: Work) -> str:
@@ -192,23 +183,6 @@ def download_workspace(id) -> bytes:
     shutil.move(zip_result_path, final_zip_path)
 
     return open(final_zip_path, 'rb').read()
-
-
-# def _valid_params(params: Dict[str, object]):
-
-#     if not 'agent' in params or not 'type' in params['agent']:
-#         msj = f'El tipo de agente es requerido'
-#         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
-
-#     agent_type = params['agent']['type']
-#     if not agent_service.get_by_type(agent_type):
-#         msj = f'No existen agentes activos de tipo {agent_type}'
-#         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
-
-#     if not 'module' in params or not 'repo' in params['module'] or not 'name' in params['module'] or not params['module']['name'] in module_service.list_all(params['module']['repo']):
-#         name = params['module']['name']
-#         msj = f'No existe modulo de nombre {name}'
-#         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
 
 def _valid_work_running(id: str):
