@@ -204,6 +204,6 @@ def _valid_params(params: Dict[str, object]):
         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
     if not 'module_name' in params or not 'module_repo' in params or not params['module_name'] in module_service.list_all(params['module_repo']):
-        name = params['module']['name']
+        name = params['module_name']
         msj = f'No existe modulo de nombre {name}'
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
