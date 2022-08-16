@@ -45,6 +45,7 @@ def add(m: CronWork):
 
     s.commit()
     s.flush()
+    s.close()
 
 
 def delete(id: str):
@@ -55,6 +56,7 @@ def delete(id: str):
 
     s.commit()
     s.flush()
+    s.close()
 
 
 def exist(id: str) -> bool:

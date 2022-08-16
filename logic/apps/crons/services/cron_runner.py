@@ -1,3 +1,4 @@
+from pickle import FALSE, TRUE
 import threading
 import time
 
@@ -13,19 +14,30 @@ _SCHEDULER = BlockingScheduler()
 
 
 def add_new_jobs():
-    try:
+    # try:
+        global _SCHEDULER
+
+        must_run = True
+        for job in _SCHEDULER.get_jobs():
+            if job.id == id:
+                must_run = False
+
         for id in cron_service.list_by_status(CronStatus.ACTIVE):
+
+            if not must_run:
+                continue
 
             cron = cron_service.get(id)
 
-            global _SCHEDULER
             _SCHEDULER.add_job(
-                func=cron_service.exec(cron),
+                id=id,
+                func=cron_service.exec,
+                args=[cron],
                 trigger=CronTrigger.from_crontab(cron.cron_expression)
             )
 
-    except Exception as e:
-        logger().error(e)
+    # except Exception as e:
+    #     logger().error(e)
 
 
 def start_threads():
@@ -46,7 +58,7 @@ def start_threads():
         global _THREAD_ACTIVE
         while _THREAD_ACTIVE:
             add_new_jobs()
-            time.sleep(2)
+            time.sleep(10)
 
     thread_add_jobs = threading.Thread(target=thread_add_job_method)
     thread_add_jobs.start()

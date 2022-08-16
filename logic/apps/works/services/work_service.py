@@ -14,36 +14,34 @@ from logic.apps.modules.errors.module_error import ModulesError
 from logic.apps.modules.services import module_service
 from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
-from logic.apps.works.models.work_model import Status, WorkStatus
+from logic.apps.works.models.work_model import Status, Work
 from logic.apps.works.repositories import work_repository
 from logic.apps.zip.service import zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
 
-def start(params: Dict[str, object]) -> str:
+# def start(params: Dict[str, object]) -> str:
 
-    _valid_params(params)
+#     _valid_params(params)
 
-    work = WorkStatus(params=params)
-    work_repository.add(work)
-
-    return work.id
+#     work = WorkStatus(params=params)
+#     return add
 
 
-def add(work: WorkStatus) -> str:
+def add(work: Work) -> str:
 
     work_repository.add(work)
     return work.id
 
 
-def exec_into_agent(work_status: WorkStatus):
+def exec_into_agent(work_status: Work):
 
     module_name = work_status.module_name
     module_repo = work_status.module_repo
     module_path = os.path.join(
         module_service.get_path(), f'{module_repo}/{module_name}.py')
-    
+
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
 
@@ -76,7 +74,7 @@ def exec_into_agent(work_status: WorkStatus):
     logger().info(f'Work con id: {work_status.id} enviado')
 
 
-def get(id: str) -> WorkStatus:
+def get(id: str) -> Work:
     return work_repository.get(id)
 
 
@@ -116,7 +114,7 @@ def list_all() -> List[str]:
     ]
 
 
-def list_by_status(status: WorkStatus) -> List[str]:
+def list_by_status(status: Work) -> List[str]:
     return [
         work.id
         for work
@@ -196,21 +194,21 @@ def download_workspace(id) -> bytes:
     return open(final_zip_path, 'rb').read()
 
 
-def _valid_params(params: Dict[str, object]):
+# def _valid_params(params: Dict[str, object]):
 
-    if not 'agent' in params or not 'type' in params['agent']:
-        msj = f'El tipo de agente es requerido'
-        raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
+#     if not 'agent' in params or not 'type' in params['agent']:
+#         msj = f'El tipo de agente es requerido'
+#         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
-    agent_type = params['agent']['type']
-    if not agent_service.get_by_type(agent_type):
-        msj = f'No existen agentes activos de tipo {agent_type}'
-        raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
+#     agent_type = params['agent']['type']
+#     if not agent_service.get_by_type(agent_type):
+#         msj = f'No existen agentes activos de tipo {agent_type}'
+#         raise AppException(AgentError.AGENT_PARAM_ERROR, msj)
 
-    if not 'module' in params or not 'repo' in params['module'] or not 'name' in params['module'] or not params['module']['name'] in module_service.list_all(params['module']['repo']):
-        name = params['module']['name']
-        msj = f'No existe modulo de nombre {name}'
-        raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
+#     if not 'module' in params or not 'repo' in params['module'] or not 'name' in params['module'] or not params['module']['name'] in module_service.list_all(params['module']['repo']):
+#         name = params['module']['name']
+#         msj = f'No existe modulo de nombre {name}'
+#         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
 
 def _valid_work_running(id: str):
@@ -234,7 +232,7 @@ def finish_work(id: str, status: Status):
     agent_service.change_status(agent.id, AgentStatus.READY)
 
 
-def modify(work: WorkStatus):
+def modify(work: Work):
     work_repository.delete(work.id)
     work_repository.add(work)
 

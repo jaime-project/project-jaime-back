@@ -3,7 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Dict
 from uuid import uuid4
-from logic.apps.works.models.work_model import WorkStatus
+from logic.apps.works.models.work_model import Work
 
 
 class CronStatus(Enum):
@@ -27,7 +27,7 @@ class CronWork():
     status: CronStatus = CronStatus.ACTIVE
     work_params: Dict[str, object] = field(default_factory={})
 
-    def to_workStatus(self) -> WorkStatus:
+    def to_workStatus(self) -> Work:
 
         params = self.work_params.copy()
 
@@ -40,4 +40,4 @@ class CronWork():
 
         params['name'] = f'cronjob_{self.name}_{_generate_id()}'
 
-        return WorkStatus(params=params)
+        return Work(params=params)

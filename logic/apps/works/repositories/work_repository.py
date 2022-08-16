@@ -1,13 +1,13 @@
 from typing import List
 
-from logic.apps.works.models.work_model import WorkStatus, Status
+from logic.apps.works.models.work_model import Work, Status
 from logic.apps.agents.services import agent_service
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 from .entities.work_entity import WorkEntity
 
 
-def get_all() -> List[WorkStatus]:
+def get_all() -> List[Work]:
 
     s = sqliteAlchemy.make_session()
     result = s.query(WorkEntity).all()
@@ -16,7 +16,7 @@ def get_all() -> List[WorkStatus]:
     return [r.to_model() for r in result]
 
 
-def get_all_by_status(status: Status) -> List[WorkStatus]:
+def get_all_by_status(status: Status) -> List[Work]:
 
     s = sqliteAlchemy.make_session()
     result = s.query(WorkEntity).filter_by(status=status.value).all()
@@ -25,7 +25,7 @@ def get_all_by_status(status: Status) -> List[WorkStatus]:
     return [r.to_model() for r in result]
 
 
-def get(id: str) -> WorkStatus:
+def get(id: str) -> Work:
 
     s = sqliteAlchemy.make_session()
     result = s.query(WorkEntity).get({'id': id})
@@ -37,7 +37,7 @@ def get(id: str) -> WorkStatus:
     return None
 
 
-def add(m: WorkStatus):
+def add(m: Work):
 
     s = sqliteAlchemy.make_session()
 
