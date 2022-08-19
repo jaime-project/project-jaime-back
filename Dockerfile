@@ -5,36 +5,38 @@ FROM python:3.9-slim as compiler
 WORKDIR /home/src
 COPY . .
 
-RUN pip3 install compile --upgrade pip
+RUN pip install compile --upgrade pip
 
-RUN	python -m compile -b -f -o dist/ .
-
+RUN python -m compile -b -f -o dist/ .
+RUN rm -fr dist/repo_modules_default
 
 # EXECUTION
 # ---------------------------------------------
 FROM python:3.9-slim
 
-WORKDIR /home/src
+WORKDIR /home/jaime
+ENV HOME=/home/jaime
 
 RUN apt-get update
-RUN apt-get install iputils-ping curl git -y
+RUN apt-get install iputils-ping curl git wget -y
+
+RUN useradd -ms /bin/bash jaime
+RUN chown -R jaime .
+USER jaime
 
 ARG ARG_VERSION=local
 
-ENV TZ America/Argentina/Buenos_Aires
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=5000
 ENV WORKINGDIR_PATH=/data/workingdir
+ENV TZ America/Argentina/Buenos_Aires
 
-CMD gunicorn \
-    -b ${PYTHON_HOST}:${PYTHON_PORT} \
-    --workers=1 \
-    --threads=6 \
-    app:app
+ENV EXTRA_CMD="cd ."
+CMD ${EXTRA_CMD} & python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=6 app:app
 
 COPY requirements.txt ./
-RUN pip3 install -r requirements.txt --upgrade pip
+RUN pip install -r requirements.txt --upgrade pip
 RUN rm -fr requirements.txt
 
 COPY --from=compiler /home/src/dist/ ./
