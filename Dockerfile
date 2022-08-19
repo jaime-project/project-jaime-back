@@ -20,8 +20,15 @@ ENV HOME=/home/jaime
 RUN apt-get update
 RUN apt-get install iputils-ping curl git wget -y
 
-RUN useradd -ms /bin/bash jaime
-RUN chown -R jaime .
+COPY requirements.txt ./
+RUN pip install -r requirements.txt --upgrade pip
+RUN rm -fr requirements.txt
+
+COPY --from=compiler /home/src/dist/ ./
+COPY logic/resources logic/resources
+
+RUN useradd -m -d /home/jaime jaime
+RUN chmod 777 -R .
 USER jaime
 
 ARG ARG_VERSION=local
@@ -34,12 +41,5 @@ ENV TZ America/Argentina/Buenos_Aires
 
 ENV EXTRA_CMD="cd ."
 CMD ${EXTRA_CMD} & python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=6 app:app
-
-COPY requirements.txt ./
-RUN pip install -r requirements.txt --upgrade pip
-RUN rm -fr requirements.txt
-
-COPY --from=compiler /home/src/dist/ ./
-COPY logic/resources logic/resources
 
 EXPOSE 5000
