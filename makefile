@@ -1,4 +1,4 @@
-VERSION := 1.6.2
+VERSION := 1.6.26
 
 install i:
 	virtualenv -p python3.9 env
@@ -7,7 +7,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	podman build . -t brianwolf94/jaime:$(VERSION)
+	podman build . -t ghcr.io/jaime-project/jaime:$(VERSION)
 
 compile c:
 	python -m compile -b -f -o dist/ .
