@@ -1,4 +1,4 @@
-VERSION := 1.6.0
+VERSION := 1.6.2
 
 install i:
 	virtualenv -p python3.9 env
@@ -7,7 +7,7 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	docker build . -t brianwolf94/jaime:$(VERSION)
+	podman build . -t brianwolf94/jaime:$(VERSION)
 
 compile c:
 	python -m compile -b -f -o dist/ .
