@@ -24,7 +24,7 @@ class CronWork():
     work_module_name: str
     work_agent_type: str
     id: str = field(default_factory=_generate_id)
-    creation_date: datetime = datetime.now()
+    creation_date: datetime = field(default_factory=datetime.now)
     status: CronStatus = CronStatus.ACTIVE
     work_params: Dict[str, object] = field(default_factory={})
 

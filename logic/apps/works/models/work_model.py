@@ -30,7 +30,7 @@ class Work():
     id: str = field(default_factory=_generate_id)
     status: Status = Status.READY
     params: Dict[str, object] = field(default_factory={})
-    start_date: datetime = datetime.now()
+    start_date: datetime = field(default_factory=datetime.now)
     running_date: datetime = None
     terminated_date: datetime = None
 
