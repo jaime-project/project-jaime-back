@@ -1,10 +1,13 @@
 from logic.apps.agents.services import agent_checker
 from logic.apps.crons.services import cron_runner
+from logic.apps.modules.services import module_service
+from logic.apps.docs.services import doc_service
 from logic.apps.repos.models.repo_model import Repo
 from logic.apps.repos.services import repo_service
 from logic.apps.works.services import work_runner
 
 _REPO_DEFAULT_NAME = 'local'
+_MODULE_DEFAULT_NAME = 'test'
 
 
 def setup_repos():
@@ -17,6 +20,15 @@ def setup_repos():
     for repo_name in repos_list:
         if not repo_service.is_loaded(repo_name):
             repo_service.load_repo(repo_service.get(repo_name))
+
+    module_default_exist = module_service.get(
+        _MODULE_DEFAULT_NAME, _REPO_DEFAULT_NAME) != None
+
+    if not module_default_exist:
+        module_service.add(_MODULE_DEFAULT_NAME,
+                           "print('Hellow world')", _REPO_DEFAULT_NAME)
+        doc_service.add(_MODULE_DEFAULT_NAME,
+                        "Module Example", _REPO_DEFAULT_NAME)
 
 
 def start_threads():
