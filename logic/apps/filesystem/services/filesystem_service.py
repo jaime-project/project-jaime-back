@@ -2,8 +2,6 @@ import os
 import shutil
 from typing import List
 
-from sqlalchemy import true
-
 
 def get_file_content(path: str) -> str:
     with open(path, 'rb') as file:
