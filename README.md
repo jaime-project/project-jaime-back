@@ -28,9 +28,4 @@ python app.py
 
 - [Iconos](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
 
-## :grin: Autor
 
-> **Brian Lobo**
-
-- Github: [brianwolf](https://github.com/brianwolf)
-- Docker Hub:  [brianwolf94](https://hub.docker.com/u/brianwolf94)
