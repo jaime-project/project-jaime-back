@@ -9,8 +9,7 @@ from logic.apps.repos.errors.repo_error import RepoError
 from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
 from logic.apps.repos.repositories import repo_repository
 from logic.libs.exception.exception import AppException
-
-_REPOS_PATH = f'{Path.home()}/.jaime/modules'
+from logic.libs.logger.logger import logger
 
 
 def add(repo: Repo):
@@ -98,18 +97,23 @@ def load_repo(repo: Repo):
         return
 
     repo_name = _get_git_repo_name(repo.git_url)
-    repo_git_without_https = repo.git_url.replace("https://", "")
-
     url = repo.git_url
+
     if repo.git_user and repo.git_pass:
+        repo_git_without_https = repo.git_url.replace("https://", "")
         url = f'https://{repo.git_user}:{repo.git_pass}@{repo_git_without_https}'
 
+    logger().info(f'Creating directories for git clone')
     tmp_path = '/tmp'
     os.system(f'rm -fr {tmp_path}/{repo_name}')
+
+    logger().info(
+        f'Cloning repository -> {repo.git_url} -b {repo.git_branch} -u {repo.git_user}')
     os.system(f'git clone {url} {tmp_path}/{repo_name} -b {repo.git_branch}')
 
     in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'.replace('//', '/')
 
+    os.system(f'rm -rf {out_path}/*')
     os.system(f'mv {in_path}/* {out_path}')
 
 
