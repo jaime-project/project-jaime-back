@@ -39,6 +39,7 @@ def delete(id: str):
                            f'No existe el cron con id {id}')
 
     cron_repository.delete(id)
+    cron_runner.delete_cron_from_scheduler(id)
 
 
 def delete_by_status(status: CronStatus):
