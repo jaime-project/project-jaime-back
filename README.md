@@ -9,6 +9,7 @@
 
 ![alt](img/logo-negro.png)
 
+
 ## :gear: Requisitos
 
 - python 3.9
