@@ -3,6 +3,7 @@ from typing import Dict, List
 import requests
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.models.agent_model import Agent, AgentStatus
+from logic.apps.configs.services import config_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
@@ -23,6 +24,7 @@ def add(agent: Agent):
 
     add_agent_type(agent.type)
 
+    config_service.update_requirements(config_service.get_requirements())
     logger().info(f'Nuevo agente conectado -> id: {str(agent.id)}')
 
 
