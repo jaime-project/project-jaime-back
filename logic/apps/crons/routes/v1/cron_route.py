@@ -46,6 +46,16 @@ def delete(id: str):
     return '', 200
 
 
+@blue_print.route('/', methods=['DELETE'])
+def delete_by_filters():
+
+    status = request.args.get('status', None)
+    if status:
+        cron_service.delete_by_status(CronStatus(status))
+
+    return '', 200
+
+
 @blue_print.route('/<id>', methods=['GET'])
 def get(id: str):
 
