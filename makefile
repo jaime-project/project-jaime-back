@@ -1,4 +1,4 @@
-VERSION := 1.6.26
+VERSION := 1.7.0
 
 install i:
 	virtualenv -p python3.9 env
@@ -9,11 +9,14 @@ install i:
 build b:
 	podman build . -t ghcr.io/jaime-project/jaime:$(VERSION)
 
+push p:
+	podman push ghcr.io/jaime-project/jaime:$(VERSION)
+
 compile c:
 	python -m compile -b -f -o dist/ .
 	cp -rf variables.yaml dist/
 
-package p:
+package:
 	rm -fr build dist *.spec
 	pyinstaller --add-binary logic:logic -n jaime --onefile app.py 
 	mv dist/jaime jaime

@@ -6,6 +6,7 @@ from logic.apps.crons.repositories import cron_repository
 from logic.apps.works.services import work_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
+from logic.apps.crons.services import cron_runner
 
 
 def exec(cron: CronWork) -> str:
@@ -78,6 +79,8 @@ def get_all_short() -> List[Dict[str, str]]:
 def modify(cron: CronWork):
     cron_repository.delete(cron.id)
     cron_repository.add(cron)
+
+    cron_runner.delete_cron_from_scheduler(cron.id)
 
 
 def list_status() -> str:

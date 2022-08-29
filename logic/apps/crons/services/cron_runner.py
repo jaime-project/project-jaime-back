@@ -17,15 +17,14 @@ def add_new_jobs():
         for id in cron_service.list_by_status(CronStatus.ACTIVE):
 
             cron = cron_service.get(id)
+            must_be_created = True
 
             global _SCHEDULER
-            must_run = True
-
             for job in _SCHEDULER.get_jobs():
                 if job.id == cron.id:
-                    must_run = False
+                    must_be_created = False
 
-            if not must_run:
+            if not must_be_created:
                 continue
 
             logger().info(f'Agregando nuevo job al scheduler -> {cron.id}')
@@ -80,12 +79,14 @@ def desactivate_cron(id: str):
 
     cron_service.modify(cron)
 
-    global _SCHEDULER
-    _SCHEDULER.remove_job(cron.id)
-
 
 def activate_cron(id: str):
     cron = cron_service.get(id)
     cron.status = CronStatus.ACTIVE
 
     cron_service.modify(cron)
+
+
+def delete_cron_from_scheduler(id: str):
+    global _SCHEDULER
+    _SCHEDULER.remove_job(id)

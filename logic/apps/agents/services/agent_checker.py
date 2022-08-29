@@ -35,7 +35,7 @@ def start_agent_thread():
         global _THREAD_AGENT_ACTIVE
         while _THREAD_AGENT_ACTIVE:
             check_node_alive()
-            time.sleep(10)
+            time.sleep(5)
 
     thread = threading.Thread(target=thread_method)
     thread.start()
