@@ -7,7 +7,7 @@
 - El OCS necesita CI/CD y no hay Jenkins
 - Por eso siempre traigo scripts
 
-![alt](img/logo-negro.png)
+![alt](img/logo.png)
 
 
 ## :gear: Requisitos
