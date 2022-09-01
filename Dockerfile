@@ -2,10 +2,14 @@
 # ---------------------------------------------
 FROM python:3.9-slim as compiler
 
-WORKDIR /home/src
-COPY . .
+WORKDIR /home/jaime
+COPY . . 
 
-RUN pip install compile --upgrade pip
+RUN useradd -m -d /home/jaime jaime
+RUN chmod 777 -R .
+USER jaime
+
+RUN pip install compile
 
 RUN python -m compile -b -f -o dist/ .
 RUN rm -fr dist/repo_modules_default
@@ -21,10 +25,10 @@ RUN apt-get update
 RUN apt-get install iputils-ping curl git wget -y
 
 COPY requirements.txt ./
-RUN pip install -r requirements.txt --upgrade pip
+RUN pip install -r requirements.txt
 RUN rm -fr requirements.txt
 
-COPY --from=compiler /home/src/dist/ ./
+COPY --from=compiler /home/jaime/dist/ ./
 COPY logic/resources logic/resources
 
 RUN useradd -m -d /home/jaime jaime
