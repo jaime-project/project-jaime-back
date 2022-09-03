@@ -36,24 +36,10 @@ def exec_into_agent(work_status: Work):
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
 
-    clusters_dict = [
-        c.__dict__()
-        for c in cluster_service.get_all()
-    ]
-    clusters_file_bytes = str(yaml.dump(clusters_dict)).encode()
-
-    servers_dict = [
-        s.__dict__()
-        for s in server_service.get_all()
-    ]
-    servers_file_bytes = str(yaml.dump(servers_dict)).encode()
-
     params_file_bytes = str(yaml.dump(work_status.params)).encode()
 
     url = work_status.agent.get_url() + f'/api/v1/works'
     files = {
-        'clusters.yaml': clusters_file_bytes,
-        'servers.yaml': servers_file_bytes,
         'module.py': module_file_bytes,
         'params.yaml': params_file_bytes
     }
