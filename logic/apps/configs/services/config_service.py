@@ -8,6 +8,7 @@ from logic.apps.agents.services import agent_service
 from logic.apps.clusters.models.cluster_model import Cluster
 from logic.apps.clusters.services import cluster_service
 from logic.apps.configs.errors.config_error import ObjectError
+from logic.apps.configs.repositories import config_repository
 from logic.apps.docs.services import doc_service
 from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.services import module_service
@@ -213,3 +214,25 @@ def get_agent_logs(agent_id: str) -> str:
     response = requests.get(url, verify=False)
 
     return response.text
+
+
+def get_configs_vars() -> Dict[str, str]:
+    return config_repository.get_all()
+
+
+def update_configs_vars(dict: Dict[str, str]):
+    for k, v in dict.items():
+        config_repository.delete(k)
+        config_repository.add(k, v)
+
+
+def get_config_var(var: str) -> str:
+    return get_configs_vars().get(var, None)
+
+
+def update_config_var(var: str, value: str):
+    update_configs_vars({var: value})
+
+
+def exist_config_var(var: str) -> bool:
+    return config_repository.exist(var)
