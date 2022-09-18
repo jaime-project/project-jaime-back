@@ -7,11 +7,8 @@ import requests
 import yaml
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
-from logic.apps.clusters.services import cluster_service
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.errors.module_error import ModulesError
-from logic.apps.modules.services import module_service
-from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, Work
 from logic.apps.works.repositories import work_repository
@@ -28,10 +25,7 @@ def add(work: Work) -> str:
 
 def exec_into_agent(work_status: Work):
 
-    module_name = work_status.module_name
-    module_repo = work_status.module_repo
-    module_path = os.path.join(
-        module_service.get_path(), f'{module_repo}/{module_name}.py')
+    module_path = work_status.get_module_file_path()
 
     with open(module_path, 'r') as f:
         module_file_bytes = f.read().encode()
