@@ -7,7 +7,7 @@ def setup_sqlite():
 
     setup(
         Config(
-            url=f'{Path.home()}/.jaime/db/sqlite.db',
+            url=f'sqlite:///{Path.home()}/.jaime/db/sqlite.db?check_same_thread=False',
             echo=False,
             path='logic/apps/*/repositories/entities'
         )
