@@ -34,11 +34,11 @@ def exec_into_agent(job: Work):
     workingdir_path = workingdir_service.fullpath(job.id)
 
     runner_script = 'runner.pyc' if os.path.exists(
-        f'{workingdir_path}/runner.pyc') else 'runner.py'
+        f'{_PATH_AGENT_RESOURCES}/runner.pyc') else 'runner.py'
     shutil.copy(f'{_PATH_AGENT_RESOURCES}/{runner_script}', workingdir_path)
 
     tools_script = 'tools.pyc' if os.path.exists(
-        f'{workingdir_path}/tools.pyc') else 'tools.py'
+        f'{_PATH_AGENT_RESOURCES}/tools.pyc') else 'tools.py'
     shutil.copy(f'{_PATH_AGENT_RESOURCES}/{tools_script}', workingdir_path)
 
     shutil.copy(job.get_module_file_path(), f'{workingdir_path}/module.py')
