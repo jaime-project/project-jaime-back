@@ -17,32 +17,39 @@ from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
 
+_PATH_AGENT_RESOURCES = 'logic/apps/agent_resources'
+
+
 def add(work: Work) -> str:
 
     work_repository.add(work)
     return work.id
 
 
-def exec_into_agent(work_status: Work):
+def exec_into_agent(job: Work):
 
-    module_path = work_status.get_module_file_path()
+    logger().info(f'Generando workingdir -> {job.id}')
+    workingdir_service.create_by_id(job.id)
 
-    with open(module_path, 'r') as f:
-        module_file_bytes = f.read().encode()
+    workingdir_path = workingdir_service.fullpath(job.id)
 
-    params_file_bytes = str(yaml.dump(work_status.params)).encode()
+    runner_script = 'runner.pyc' if os.path.exists(
+        f'{workingdir_path}/runner.pyc') else 'runner.py'
+    shutil.copy(f'{_PATH_AGENT_RESOURCES}/{runner_script}', workingdir_path)
 
-    url = work_status.agent.get_url() + f'/api/v1/works'
-    files = {
-        'module.py': module_file_bytes,
-        'params.yaml': params_file_bytes
-    }
-    payload = {
-        'id': work_status.id
-    }
+    tools_script = 'tools.pyc' if os.path.exists(
+        f'{workingdir_path}/tools.pyc') else 'tools.py'
+    shutil.copy(f'{_PATH_AGENT_RESOURCES}/{tools_script}', workingdir_path)
 
-    requests.post(url, files=files, data=payload, verify=False)
-    logger().info(f'Work con id: {work_status.id} enviado')
+    shutil.copy(job.get_module_file_path(), f'{workingdir_path}/module.py')
+
+    with open(f'{workingdir_path}/params.yaml', 'w') as f:
+        f.write(yaml.dump(job.params))
+
+    url = job.agent.get_url() + f'/api/v1/works/{job.id}'
+
+    requests.post(url, verify=False)
+    logger().info(f'Job enviado a agente -> {job.id}')
 
 
 def get(id: str) -> Work:

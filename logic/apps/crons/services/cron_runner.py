@@ -89,4 +89,6 @@ def activate_cron(id: str):
 
 def delete_cron_from_scheduler(id: str):
     global _SCHEDULER
-    _SCHEDULER.remove_job(id)
+
+    if _SCHEDULER.get_job(id):
+        _SCHEDULER.remove_job(id)
