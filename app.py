@@ -3,7 +3,7 @@ from flask.app import Flask
 
 from logic.apps.admin.config.app import setup_repos, start_threads, setup_configs_vars
 from logic.apps.admin.config.logger import setup_loggers
-from logic.apps.admin.config.rest import setup_rest
+from logic.apps.admin.config.rest import setup_rest, setup_token
 from logic.apps.admin.config.sqlite import setup_sqlite
 from logic.apps.admin.config.variables import Vars, setup_vars
 from logic.libs.logger.logger import logger
@@ -14,6 +14,7 @@ app = Flask(__name__)
 setup_vars()
 setup_loggers()
 setup_rest(app)
+setup_token(app)
 
 setup_sqlite()
 setup_repos()

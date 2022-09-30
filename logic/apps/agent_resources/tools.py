@@ -180,16 +180,16 @@ current-context: jaime
     return 'jaime' in result
 
 
-def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
+def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
 
-    work_dict = {}
-    work_dict['name'] = name
-    work_dict['module_repo'] = repo_name
-    work_dict['module_name'] = module_name
-    work_dict['agent_type'] = agent_type
-    work_dict['params'] = params
+    job_dict = {}
+    job_dict['name'] = name
+    job_dict['module_repo'] = repo_name
+    job_dict['module_name'] = module_name
+    job_dict['agent_type'] = agent_type
+    job_dict['params'] = params
 
-    yaml_str = str(yaml.dump(work_dict))
+    yaml_str = str(yaml.dump(job_dict))
 
     JAIME_URL = os.getenv('JAIME_URL')
 
@@ -198,3 +198,9 @@ def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Di
         data=yaml_str,
         headers={'Content-Type': 'text/plain; charset=utf-8'}
     ).text
+
+
+def get_job_path(id: str) -> str:
+
+    WORKINGDIR_PATH = os.getenv('WORKINGDIR_PATH')
+    return f'{WORKINGDIR_PATH}/{id}'
