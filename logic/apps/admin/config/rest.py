@@ -1,7 +1,6 @@
 from flask import Flask, request
 from logic.apps.login.services import login_service
 from logic.libs.rest.rest import setup
-from flask_cors import CORS
 
 
 def setup_rest(app: Flask) -> Flask:
