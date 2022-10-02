@@ -52,7 +52,7 @@ def is_a_valid_token(token: str) -> bool:
 
 def get_token() -> str:
 
-    token = str(uuid4())
+    token = str(uuid4()).replace('-', '')
 
     global _CURRENTS_LOGINS
     _CURRENTS_LOGINS[token] = datetime.now()
