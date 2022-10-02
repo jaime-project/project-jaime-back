@@ -1,7 +1,8 @@
 #!env/bin/python
 from flask.app import Flask
 
-from logic.apps.admin.config.app import setup_repos, start_threads, setup_configs_vars
+from logic.apps.admin.config.app import (setup_configs_vars, setup_repos,
+                                         start_threads)
 from logic.apps.admin.config.logger import setup_loggers
 from logic.apps.admin.config.rest import setup_rest, setup_token
 from logic.apps.admin.config.sqlite import setup_sqlite

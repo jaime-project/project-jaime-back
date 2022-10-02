@@ -23,10 +23,7 @@ def login(user: str, password: str) -> str:
         raise AppException(LoginError.USER_OR_PASS_ERROR,
                            'User or pass is invalid')
 
-    token = str(uuid4())
-    _CURRENTS_LOGINS[token] = datetime.now()
-
-    return token
+    return get_token()
 
 
 def _update_currents_logins():
@@ -35,7 +32,7 @@ def _update_currents_logins():
 
     global _CURRENTS_LOGINS
     for token, date in _CURRENTS_LOGINS.items():
-        if date + timedelta.seconds(15*60) >= datetime.now():
+        if date + timedelta(minutes=15) >= datetime.now():
             tokens_to_delete.append(token)
 
     for token in tokens_to_delete:
@@ -51,3 +48,13 @@ def is_a_valid_token(token: str) -> bool:
 
     _CURRENTS_LOGINS[token] = datetime.now()
     return True
+
+
+def get_token() -> str:
+
+    token = str(uuid4())
+
+    global _CURRENTS_LOGINS
+    _CURRENTS_LOGINS[token] = datetime.now()
+
+    return token

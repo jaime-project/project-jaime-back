@@ -2,6 +2,7 @@ import yaml
 from flask import Blueprint, jsonify, request
 from logic.apps.agents.models.agent_model import Agent
 from logic.apps.agents.services import agent_service
+from logic.apps.login.services import login_service
 
 blue_print = Blueprint('agent', __name__, url_prefix='/api/v1/agents')
 
@@ -17,8 +18,9 @@ def post():
     )
 
     agent_service.add(n)
+    token = login_service.get_token()
 
-    return jsonify(id=n.id), 201
+    return token, 201
 
 
 @blue_print.route('/<id>', methods=['DELETE'])

@@ -17,3 +17,8 @@ def login():
 
     except AppException as app:
         return jsonify(app.to_json()), 403
+
+
+@blue_print.route('/refresh', methods=['GET'])
+def refresh():
+    return '', 200

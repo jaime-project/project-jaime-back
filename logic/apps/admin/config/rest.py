@@ -1,6 +1,7 @@
 from flask import Flask, request
 from logic.apps.login.services import login_service
 from logic.libs.rest.rest import setup
+from flask_cors import CORS
 
 
 def setup_rest(app: Flask) -> Flask:
@@ -12,9 +13,15 @@ def setup_token(app: Flask):
     @app.before_request
     def before_request():
 
-        if 'api/v1/login' not in request.path:
+        no_login_paths = [
+            '/api/v1/login/',
+            '/',
+            '/api/v1/agents/'
+        ]
 
-            if not 'Authorization' in request.headers:
+        if request.method != 'OPTIONS' and request.path not in no_login_paths:
+
+            if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
                 return '', 403
 
             token = request.headers['Authorization'].replace('Bearer ', '')
