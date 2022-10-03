@@ -21,7 +21,7 @@ def setup_token(app: Flask):
         if request.method != 'OPTIONS' and request.path not in no_login_paths:
 
             if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
-                return '', 403
+                return '', 401
 
             token = request.headers['Authorization'].replace('Bearer ', '')
 

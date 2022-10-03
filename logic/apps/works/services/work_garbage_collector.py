@@ -24,7 +24,7 @@ def garbage_collector():
             work = work_service.get(id)
             minutes = int(config_service.get_config_var(_MINUTES_VAR))
 
-            if work.terminated_date + timedelta(minutes=minutes) < datetime.now():
+            if work.start_date + timedelta(minutes=minutes) < datetime.now():
                 work_service.delete(id)
                 logger().info(
                     f'Borrando Job por garbage_collector -> id: {id}')

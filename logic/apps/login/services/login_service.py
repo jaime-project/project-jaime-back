@@ -14,8 +14,6 @@ _JAIME_PASS_CONFIG = 'JAIME_PASS'
 
 def login(user: str, password: str) -> str:
 
-    _update_currents_logins()
-
     config_user = config_service.get_config_var(_JAIME_USER_CONFIG)
     config_pass = config_service.get_config_var(_JAIME_PASS_CONFIG)
 
@@ -26,13 +24,13 @@ def login(user: str, password: str) -> str:
     return get_token()
 
 
-def _update_currents_logins():
+def _update_currents_tokens():
 
     tokens_to_delete = []
 
     global _CURRENTS_LOGINS
     for token, date in _CURRENTS_LOGINS.items():
-        if date + timedelta(minutes=15) >= datetime.now():
+        if date + timedelta(minutes=15) <= datetime.now():
             tokens_to_delete.append(token)
 
     for token in tokens_to_delete:
@@ -40,6 +38,8 @@ def _update_currents_logins():
 
 
 def is_a_valid_token(token: str) -> bool:
+
+    _update_currents_tokens()
 
     global _CURRENTS_LOGINS
 
