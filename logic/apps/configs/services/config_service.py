@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Dict, List
 
 import requests
+from logic.apps.admin.config.app import setup_configs_vars
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.clusters.models.cluster_model import Cluster
@@ -47,6 +48,45 @@ def get_requirements_path() -> str:
     return _REQUIREMENTS_FILE_PATH
 
 
+def get_jaime_logs() -> str:
+    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
+
+
+def get_agent_logs(agent_id: str) -> str:
+
+    agent = agent_service.get(agent_id)
+    if not agent:
+        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
+                           f'El agente con id {agent_id} no existe')
+
+    url = agent.get_url() + f'/api/v1/configs/logs'
+    response = requests.get(url, verify=False)
+
+    return response.text
+
+
+def get_configs_vars() -> Dict[str, str]:
+    return config_repository.get_all()
+
+
+def update_configs_vars(dict: Dict[str, str]):
+    for k, v in dict.items():
+        config_repository.delete(k)
+        config_repository.add(k, v)
+
+
+def get_config_var(var: str) -> str:
+    return get_configs_vars().get(var, None)
+
+
+def update_config_var(var: str, value: str):
+    update_configs_vars({var: value})
+
+
+def exist_config_var(var: str) -> bool:
+    return config_repository.exist(var)
+
+
 def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
 
     objects = {}
@@ -87,6 +127,8 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
             })
 
     objects['requirements'] = get_requirements()
+
+    objects['configs'] = get_configs_vars()
 
     return objects
 
@@ -198,41 +240,5 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
     if 'requirements' in objects:
         update_requirements(objects['requirements'])
 
-
-def get_jaime_logs() -> str:
-    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
-
-
-def get_agent_logs(agent_id: str) -> str:
-
-    agent = agent_service.get(agent_id)
-    if not agent:
-        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
-                           f'El agente con id {agent_id} no existe')
-
-    url = agent.get_url() + f'/api/v1/configs/logs'
-    response = requests.get(url, verify=False)
-
-    return response.text
-
-
-def get_configs_vars() -> Dict[str, str]:
-    return config_repository.get_all()
-
-
-def update_configs_vars(dict: Dict[str, str]):
-    for k, v in dict.items():
-        config_repository.delete(k)
-        config_repository.add(k, v)
-
-
-def get_config_var(var: str) -> str:
-    return get_configs_vars().get(var, None)
-
-
-def update_config_var(var: str, value: str):
-    update_configs_vars({var: value})
-
-
-def exist_config_var(var: str) -> bool:
-    return config_repository.exist(var)
+    if 'configs' in objects:
+        update_configs_vars(objects['configs'])
