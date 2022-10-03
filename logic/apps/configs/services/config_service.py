@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import Dict, List
 
 import requests
-from logic.apps.admin.config.app import setup_configs_vars
 from logic.apps.agents.errors.agent_error import AgentError
 from logic.apps.agents.services import agent_service
 from logic.apps.clusters.models.cluster_model import Cluster
