@@ -17,8 +17,7 @@ def add(agent: Agent):
     global _AGENTS_ONLINE
 
     if agent in list_all():
-        msj = f'Ya existe un agente con el id {agent.id}'
-        raise AppException(AgentError.AGENT_ALREADY_EXIST_ERROR, msj)
+        logger().warning(f'Ya existe un agente con el id {agent.id}')
 
     _AGENTS_ONLINE[agent.id] = agent
 
