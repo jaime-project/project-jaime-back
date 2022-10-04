@@ -122,10 +122,6 @@ def change_status(id: str, status: Status):
         msj = f"El estado del work ya es {status.value}"
         raise AppException(WorkError.WORK_SAME_STATUS_ERROR, msj)
 
-    if status == Status.CANCEL and work.status == Status.SUCCESS and work.status == Status.ERROR:
-        msj = f"No se puede cancelar un work ya ejecutado"
-        raise AppException(WorkError.WORK_INVALID_STATUS_ERROR, msj)
-
     if status == Status.READY and work.status == Status.RUNNING:
         msj = f"No se puede poner en READY cuando el work esta siendo ejecutado"
         raise AppException(WorkError.WORK_INVALID_STATUS_ERROR, msj)

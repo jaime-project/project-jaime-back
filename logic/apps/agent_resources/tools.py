@@ -35,8 +35,10 @@ class ServerClient():
 def _get_cluster_client(cluster_name: str) -> "ClusterClient":
     try:
         JAIME_URL = os.getenv('JAIME_URL')
+        token = os.getenv('JAIME_TOKEN')
+        headers = {'Authorization': f'Bearer {token}'}
         cluster_dict = requests.get(
-            f'{JAIME_URL}/api/v1/clusters/{cluster_name}').json()
+            f'{JAIME_URL}/api/v1/clusters/{cluster_name}', headers=headers).json()
 
     except Exception:
         raise Exception('Error on get clusters')
@@ -51,8 +53,10 @@ def _get_cluster_client(cluster_name: str) -> "ClusterClient":
 def _get_server_client(server_name: str) -> "ServerClient":
     try:
         JAIME_URL = os.getenv('JAIME_URL')
+        token = os.getenv('JAIME_TOKEN')
+        headers = {'Authorization': f'Bearer {token}'}
         server_dict = requests.get(
-            f'{JAIME_URL}/api/v1/servers/{server_name}').json()
+            f'{JAIME_URL}/api/v1/servers/{server_name}', headers=headers).json()
 
     except Exception:
         raise Exception('Error on get clusters')
@@ -117,7 +121,9 @@ def sh(cmd: str, echo: bool = False) -> str:
 def get_clusters_name() -> List[str]:
     try:
         JAIME_URL = os.getenv('JAIME_URL')
-        return requests.get(f'{JAIME_URL}/api/v1/clusters/').json()
+        token = os.getenv('JAIME_TOKEN')
+        headers = {'Authorization': f'Bearer {token}'}
+        return requests.get(f'{JAIME_URL}/api/v1/clusters/', headers=headers).json()
 
     except Exception as e:
         raise Exception('Error on get clusters')
@@ -126,7 +132,9 @@ def get_clusters_name() -> List[str]:
 def get_servers_name() -> List[str]:
     try:
         JAIME_URL = os.getenv('JAIME_URL')
-        return requests.get(f'{JAIME_URL}/api/v1/servers/').json()
+        token = os.getenv('JAIME_TOKEN')
+        headers = {'Authorization': f'Bearer {token}'}
+        return requests.get(f'{JAIME_URL}/api/v1/servers/', headers=headers).json()
 
     except Exception as e:
         raise Exception('Error on get clusters')
@@ -180,21 +188,32 @@ current-context: jaime
     return 'jaime' in result
 
 
-def new_jaime_work(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
+def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
 
-    work_dict = {}
-    work_dict['name'] = name
-    work_dict['module_repo'] = repo_name
-    work_dict['module_name'] = module_name
-    work_dict['agent_type'] = agent_type
-    work_dict['params'] = params
+    job_dict = {}
+    job_dict['name'] = name
+    job_dict['module_repo'] = repo_name
+    job_dict['module_name'] = module_name
+    job_dict['agent_type'] = agent_type
+    job_dict['params'] = params
 
-    yaml_str = str(yaml.dump(work_dict))
+    yaml_str = str(yaml.dump(job_dict))
 
     JAIME_URL = os.getenv('JAIME_URL')
+    token = os.getenv('JAIME_TOKEN')
+    headers = {
+        'Authorization': f'Bearer {token}',
+        'Content-Type': 'text/plain; charset=utf-8'
+    }
 
     return requests.post(
         url=f'{JAIME_URL}/api/v1/works/',
         data=yaml_str,
-        headers={'Content-Type': 'text/plain; charset=utf-8'}
+        headers=headers
     ).text
+
+
+def get_job_path(id: str) -> str:
+
+    WORKINGDIR_PATH = os.getenv('WORKINGDIR_PATH')
+    return f'{WORKINGDIR_PATH}/{id}'
