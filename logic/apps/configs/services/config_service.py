@@ -17,6 +17,7 @@ from logic.apps.repos.services import repo_service
 from logic.apps.servers.models.server_model import Server
 from logic.apps.servers.services import server_service
 from logic.libs.exception.exception import AppException
+from logic.libs.logger.logger import logger
 
 _REQUIREMENTS_FILE_PATH = f'{Path.home()}/.jaime/requirements.txt'
 _LOGS_FILE_PATH = f'{Path.home()}/.jaime/logs/app.log'
@@ -29,8 +30,12 @@ def update_requirements(content: str):
 
     for agent in agent_service.list_all():
 
-        url = f'{agent.get_url()}/api/v1/configs/requirements'
-        requests.post(url, data=content, verify=False)
+        try:
+            url = f'{agent.get_url()}/api/v1/configs/requirements'
+            requests.post(url, data=content, verify=False)
+
+        except Exception:
+            logger().error(f'Error al conectarse al agente para actualizar las dependencias de pip')
 
 
 def get_requirements() -> str:
