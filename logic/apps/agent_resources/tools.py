@@ -15,6 +15,7 @@ import yaml
 # ==========================================================
 
 _PARAMS_FILE_NAME = 'params.yaml'
+_LOG_FILE_NAME = 'logs.log'
 
 
 @dataclass
@@ -77,9 +78,9 @@ def _get_server_client(server_name: str) -> "ServerClient":
 formatter = logging.Formatter(
     '%(asctime)s - %(name)s (%(process)d) - %(levelname)s - %(message)s')
 log = logging.getLogger()
-log.setLevel('DEBUG')
-fh = WatchedFileHandler('logs.log')
-fh.setLevel('DEBUG')
+log.setLevel('INFO')
+fh = WatchedFileHandler(_LOG_FILE_NAME)
+fh.setLevel('INFO')
 fh.setFormatter(formatter)
 log.addHandler(fh)
 
