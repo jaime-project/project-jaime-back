@@ -1,4 +1,5 @@
 
+import os
 from pathlib import Path
 from typing import List
 
@@ -12,6 +13,11 @@ _MODULES_PATH = f'{Path.home()}/.jaime/modules'
 def add(name: str, content: str, repo: str):
 
     path = f'{get_path()}/{repo}/{name}.py'
+
+    if os.path.exists(path):
+        msj = f"Module with name {name} already exist"
+        raise AppException(ModulesError.MODULE_ALREADY_EXIST_ERROR, msj)
+
     filesystem_service.create_file(path, content)
 
 
