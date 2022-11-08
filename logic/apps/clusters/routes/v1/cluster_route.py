@@ -1,4 +1,10 @@
-from flask import Blueprint, jsonify, request
+import ntpath
+from datetime import datetime
+from io import BytesIO
+
+import yaml
+from flask import Blueprint, jsonify, request, send_file
+
 from logic.apps.clusters.models.cluster_model import Cluster
 from logic.apps.clusters.services import cluster_service
 
@@ -63,3 +69,17 @@ def modify_server(name):
     cluster_service.modify(name, server)
 
     return '', 200
+
+
+@blue_print.route('/<name>/yamls', methods=['GET'])
+def export_cluster(name: str):
+
+    dict_objects = cluster_service.export_cluster(name)
+    dict_yaml = str(yaml.dump(dict_objects))
+
+    name_yaml = datetime.now().isoformat() + '.yaml'
+
+    return send_file(BytesIO(dict_yaml.encode()),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=ntpath.basename(name_yaml))

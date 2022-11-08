@@ -135,7 +135,11 @@ def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
 
     objects = {}
 
-    objects['repos'] = [repo_name]
+    objects['repos'] = [
+        o.__dict__()
+        for o in get_all()
+        if o.name == repo_name
+    ]
 
     objects['modules'] = []
     for module_name in module_service.list_all(repo_name):

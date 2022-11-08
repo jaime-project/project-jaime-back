@@ -80,3 +80,16 @@ def test_cluster(name: str) -> Dict[str, str]:
 def modify(name: str, server: Cluster):
     delete(name)
     add(server)
+
+
+def export_cluster(cluster_name: str) -> Dict[str, List[Dict[str, str]]]:
+
+    objects = {}
+
+    objects['clusters'] = [
+        o.__dict__()
+        for o in get_all()
+        if o.name == cluster_name
+    ]
+
+    return objects

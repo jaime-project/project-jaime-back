@@ -94,7 +94,7 @@ def _request_body_to_repo(s: Dict[str, Any]) -> Repo:
     return repo
 
 
-@blue_print.route('/<name>/objects', methods=['GET'])
+@blue_print.route('/<name>/yamls', methods=['GET'])
 def export_modules_and_docs(name: str):
 
     dict_objects = repo_service.export_modules_and_docs(name)
