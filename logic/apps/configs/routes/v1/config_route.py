@@ -21,8 +21,8 @@ def post():
     return '', 200
 
 
-@blue_print.route('/objects', methods=['POST'])
-def post_objects():
+@blue_print.route('/yamls', methods=['POST'])
+def post_yamls():
 
     dict_yaml = yaml.load(request.data, Loader=yaml.FullLoader)
     replace = request.args.get('replace', False)
@@ -32,8 +32,8 @@ def post_objects():
     return '', 200
 
 
-@blue_print.route('/objects/file', methods=['GET'])
-def get_objects():
+@blue_print.route('/yamls/file', methods=['GET'])
+def get_yamls():
 
     dict_objects = config_service.get_all_objects()
     dict_yaml = str(yaml.dump(dict_objects))

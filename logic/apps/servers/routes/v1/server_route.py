@@ -1,6 +1,10 @@
-from os import name
+import ntpath
+from datetime import datetime
+from io import BytesIO
 
-from flask import Blueprint, jsonify, request
+import yaml
+from flask import Blueprint, jsonify, request, send_file
+
 from logic.apps.servers.models.server_model import Server
 from logic.apps.servers.services import server_service
 
@@ -65,3 +69,17 @@ def put(name):
     server_service.modify(name, server)
 
     return '', 200
+
+
+@blue_print.route('/<name>/yamls', methods=['GET'])
+def export_server(name: str):
+
+    dict_objects = server_service.export_server(name)
+    dict_yaml = str(yaml.dump(dict_objects))
+
+    name_yaml = datetime.now().isoformat() + '.yaml'
+
+    return send_file(BytesIO(dict_yaml.encode()),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=ntpath.basename(name_yaml))

@@ -1,6 +1,11 @@
+import ntpath
+from datetime import datetime
+from io import BytesIO
 from typing import Any, Dict
 
-from flask import Blueprint, jsonify, request
+import yaml
+from flask import Blueprint, jsonify, request, send_file
+
 from logic.apps.repos.models.repo_model import Repo, RepoGit, RepoType
 from logic.apps.repos.services import repo_service
 
@@ -87,3 +92,17 @@ def _request_body_to_repo(s: Dict[str, Any]) -> Repo:
         )
 
     return repo
+
+
+@blue_print.route('/<name>/yamls', methods=['GET'])
+def export_modules_and_docs(name: str):
+
+    dict_objects = repo_service.export_modules_and_docs(name)
+    dict_yaml = str(yaml.dump(dict_objects))
+
+    name_yaml = datetime.now().isoformat() + '.yaml'
+
+    return send_file(BytesIO(dict_yaml.encode()),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=ntpath.basename(name_yaml))

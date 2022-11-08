@@ -91,3 +91,16 @@ def test_server(name: str) -> Dict[str, str]:
 def modify(name: str, server: Server):
     delete(name)
     add(server)
+
+
+def export_server(server_name: str) -> Dict[str, List[Dict[str, str]]]:
+
+    objects = {}
+
+    objects['servers'] = [
+        o.__dict__()
+        for o in get_all()
+        if o.name == server_name
+    ]
+
+    return objects
