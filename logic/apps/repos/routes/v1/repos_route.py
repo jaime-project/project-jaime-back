@@ -106,3 +106,16 @@ def export_modules_and_docs(name: str):
                      mimetype='application/octet-stream',
                      as_attachment=True,
                      attachment_filename=ntpath.basename(name_yaml))
+
+
+@blue_print.route('/<name>/zips', methods=['GET'])
+def export_modules_and_docs_zip(name: str):
+
+    repo_zip = repo_service.export_modules_and_docs_zip(name)
+
+    tar_name = datetime.now().isoformat() + '.tar.gz'
+
+    return send_file(BytesIO(repo_zip),
+                     mimetype='application/octet-stream',
+                     as_attachment=True,
+                     attachment_filename=ntpath.basename(tar_name))

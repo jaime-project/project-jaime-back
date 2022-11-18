@@ -160,3 +160,13 @@ def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
         })
 
     return objects
+
+
+def export_modules_and_docs_zip(repo_name: str) -> bytes:
+
+    tar_path = f'/tmp/{repo_name}.tar.gz'
+
+    os.system(
+        f"cd {module_service.get_path()} && tar -zcvf {tar_path} {repo_name}")
+
+    return open(tar_path, 'rb').read()

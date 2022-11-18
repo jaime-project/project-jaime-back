@@ -7,7 +7,7 @@ from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.errors.module_error import ModulesError
 from logic.libs.exception.exception import AppException
 
-_MODULES_PATH = f'{Path.home()}/.jaime/modules'
+_REPOS_PATH = f'{Path.home()}/.jaime/repos'
 
 
 def add(name: str, content: str, repo: str):
@@ -58,8 +58,8 @@ def delete(name: str, repo: str):
 
 def get_path() -> str:
 
-    global _MODULES_PATH
-    return _MODULES_PATH
+    global _REPOS_PATH
+    return _REPOS_PATH
 
 
 def modify(name: str, content: str, repo: str):

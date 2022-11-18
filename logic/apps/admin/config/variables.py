@@ -10,6 +10,7 @@ class Vars(Enum):
     LOGS_LEVEL = 'LOGS_LEVEL'
     LOGS_BACKUPS = 'LOGS_BACKUPS'
     WORKINGDIR_PATH = 'WORKINGDIR_PATH'
+    AGENTS_HTTPS = 'AGENTS_HTTPS'
 
 
 def setup_vars():
