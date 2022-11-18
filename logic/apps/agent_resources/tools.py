@@ -213,8 +213,3 @@ def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dic
         headers=headers
     ).text
 
-
-def get_job_path(id: str) -> str:
-
-    WORKINGDIR_PATH = os.getenv('WORKINGDIR_PATH')
-    return f'{WORKINGDIR_PATH}/{id}'
