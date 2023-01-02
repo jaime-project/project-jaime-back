@@ -16,7 +16,13 @@ def create() -> UUID:
 
 
 def create_by_id(id: Any):
+
+    if Path.exists(Path(fullpath(id))):
+        delete(id)
+
     Path(fullpath(id)).mkdir(parents=True, exist_ok=True)
+    with open(f'{fullpath(id)}/{_NAME_FILE_LOGS}', 'w'):
+        pass
 
 
 def delete(id: Any):

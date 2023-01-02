@@ -7,19 +7,21 @@
 - El OCS necesita CI/CD y no hay Jenkins
 - Por eso siempre traigo scripts
 
-![alt](img/logo-negro.png)
+![alt](img/logo.png)
 
 
 ## :gear: Requisitos
 
-- python 3.9
+- python 3.10
 - virtualenv
 
 ## :tada: Uso
 
 ```bash
 # Levantar el ambiente
-make i
+virtualenv -p python3.10 env
+. env/bin/activate
+pip install -r requirements.txt
 
 # Ejecutar
 python app.py

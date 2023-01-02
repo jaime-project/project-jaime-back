@@ -8,6 +8,7 @@ from logic.apps.agents.services import agent_service
 from logic.apps.clusters.models.cluster_model import Cluster
 from logic.apps.clusters.services import cluster_service
 from logic.apps.configs.errors.config_error import ObjectError
+from logic.apps.configs.repositories import config_repository
 from logic.apps.docs.services import doc_service
 from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.services import module_service
@@ -16,6 +17,7 @@ from logic.apps.repos.services import repo_service
 from logic.apps.servers.models.server_model import Server
 from logic.apps.servers.services import server_service
 from logic.libs.exception.exception import AppException
+from logic.libs.logger.logger import logger
 
 _REQUIREMENTS_FILE_PATH = f'{Path.home()}/.jaime/requirements.txt'
 _LOGS_FILE_PATH = f'{Path.home()}/.jaime/logs/app.log'
@@ -28,8 +30,12 @@ def update_requirements(content: str):
 
     for agent in agent_service.list_all():
 
-        url = f'{agent.get_url()}/api/v1/configs/requirements'
-        requests.post(url, data=content, verify=False)
+        try:
+            url = f'{agent.get_url()}/api/v1/configs/requirements'
+            requests.post(url, data=content, verify=False)
+
+        except Exception:
+            logger().error(f'Error al conectarse al agente para actualizar las dependencias de pip')
 
 
 def get_requirements() -> str:
@@ -44,6 +50,45 @@ def get_requirements_path() -> str:
 
     global _REQUIREMENTS_FILE_PATH
     return _REQUIREMENTS_FILE_PATH
+
+
+def get_jaime_logs() -> str:
+    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
+
+
+def get_agent_logs(agent_id: str) -> str:
+
+    agent = agent_service.get(agent_id)
+    if not agent:
+        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
+                           f'El agente con id {agent_id} no existe')
+
+    url = agent.get_url() + f'/api/v1/configs/logs'
+    response = requests.get(url, verify=False)
+
+    return response.text
+
+
+def get_configs_vars() -> Dict[str, str]:
+    return config_repository.get_all()
+
+
+def update_configs_vars(dict: Dict[str, str]):
+    for k, v in dict.items():
+        config_repository.delete(k)
+        config_repository.add(k, v)
+
+
+def get_config_var(var: str) -> str:
+    return get_configs_vars().get(var, None)
+
+
+def update_config_var(var: str, value: str):
+    update_configs_vars({var: value})
+
+
+def exist_config_var(var: str) -> bool:
+    return config_repository.exist(var)
 
 
 def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
@@ -86,6 +131,8 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
             })
 
     objects['requirements'] = get_requirements()
+
+    objects['configs'] = get_configs_vars()
 
     return objects
 
@@ -197,19 +244,5 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
     if 'requirements' in objects:
         update_requirements(objects['requirements'])
 
-
-def get_jaime_logs() -> str:
-    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
-
-
-def get_agent_logs(agent_id: str) -> str:
-
-    agent = agent_service.get(agent_id)
-    if not agent:
-        raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
-                           f'El agente con id {agent_id} no existe')
-
-    url = agent.get_url() + f'/api/v1/configs/logs'
-    response = requests.get(url, verify=False)
-
-    return response.text
+    if 'configs' in objects:
+        update_configs_vars(objects['configs'])

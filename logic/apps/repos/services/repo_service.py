@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 from typing import Dict, List
 
+from logic.apps.docs.services import doc_service
 from logic.apps.filesystem.services import filesystem_service
 from logic.apps.modules.services import module_service
 from logic.apps.repos.errors.repo_error import RepoError
@@ -128,3 +129,44 @@ def _get_git_repo_name(repo_url: str) -> str:
 
 def list_types() -> List[str]:
     return [e.value for e in RepoType]
+
+
+def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
+
+    objects = {}
+
+    objects['repos'] = [
+        o.__dict__()
+        for o in get_all()
+        if o.name == repo_name
+    ]
+
+    objects['modules'] = []
+    for module_name in module_service.list_all(repo_name):
+
+        objects['modules'].append({
+            'repo': repo_name,
+            'name': module_name,
+            'content': module_service.get(module_name, repo_name)
+        })
+
+    objects['docs'] = []
+    for doc_name in doc_service.list_all(repo_name):
+
+        objects['docs'].append({
+            'repo': repo_name,
+            'name': doc_name,
+            'content': doc_service.get(doc_name, repo_name)
+        })
+
+    return objects
+
+
+def export_modules_and_docs_zip(repo_name: str) -> bytes:
+
+    tar_path = f'/tmp/{repo_name}.tar.gz'
+
+    os.system(
+        f"cd {module_service.get_path()} && tar -zcvf {tar_path} {repo_name}")
+
+    return open(tar_path, 'rb').read()

@@ -7,11 +7,8 @@ import requests
 import yaml
 from logic.apps.agents.models.agent_model import AgentStatus
 from logic.apps.agents.services import agent_service
-from logic.apps.clusters.services import cluster_service
 from logic.apps.filesystem.services import workingdir_service
 from logic.apps.modules.errors.module_error import ModulesError
-from logic.apps.modules.services import module_service
-from logic.apps.servers.services import server_service
 from logic.apps.works.errors.work_error import WorkError
 from logic.apps.works.models.work_model import Status, Work
 from logic.apps.works.repositories import work_repository
@@ -20,49 +17,39 @@ from logic.libs.exception.exception import AppException
 from logic.libs.logger.logger import logger
 
 
+_PATH_AGENT_RESOURCES = 'logic/apps/agent_resources'
+
+
 def add(work: Work) -> str:
 
     work_repository.add(work)
     return work.id
 
 
-def exec_into_agent(work_status: Work):
+def exec_into_agent(job: Work):
 
-    module_name = work_status.module_name
-    module_repo = work_status.module_repo
-    module_path = os.path.join(
-        module_service.get_path(), f'{module_repo}/{module_name}.py')
+    logger().info(f'Generando workingdir -> {job.id}')
+    workingdir_service.create_by_id(job.id)
 
-    with open(module_path, 'r') as f:
-        module_file_bytes = f.read().encode()
+    workingdir_path = workingdir_service.fullpath(job.id)
 
-    clusters_dict = [
-        c.__dict__()
-        for c in cluster_service.get_all()
-    ]
-    clusters_file_bytes = str(yaml.dump(clusters_dict)).encode()
+    runner_script = 'runner.pyc' if os.path.exists(
+        f'{_PATH_AGENT_RESOURCES}/runner.pyc') else 'runner.py'
+    shutil.copy(f'{_PATH_AGENT_RESOURCES}/{runner_script}', workingdir_path)
 
-    servers_dict = [
-        s.__dict__()
-        for s in server_service.get_all()
-    ]
-    servers_file_bytes = str(yaml.dump(servers_dict)).encode()
+    tools_script = 'tools.pyc' if os.path.exists(
+        f'{_PATH_AGENT_RESOURCES}/tools.pyc') else 'tools.py'
+    shutil.copy(f'{_PATH_AGENT_RESOURCES}/{tools_script}', workingdir_path)
 
-    params_file_bytes = str(yaml.dump(work_status.params)).encode()
+    shutil.copy(job.get_module_file_path(), f'{workingdir_path}/module.py')
 
-    url = work_status.agent.get_url() + f'/api/v1/works'
-    files = {
-        'clusters.yaml': clusters_file_bytes,
-        'servers.yaml': servers_file_bytes,
-        'module.py': module_file_bytes,
-        'params.yaml': params_file_bytes
-    }
-    payload = {
-        'id': work_status.id
-    }
+    with open(f'{workingdir_path}/params.yaml', 'w') as f:
+        f.write(yaml.dump(job.params))
 
-    requests.post(url, files=files, data=payload, verify=False)
-    logger().info(f'Work con id: {work_status.id} enviado')
+    url = job.agent.get_url() + f'/api/v1/works/{job.id}'
+
+    requests.post(url, verify=False)
+    logger().info(f'Job enviado a agente -> {job.id}')
 
 
 def get(id: str) -> Work:
@@ -134,10 +121,6 @@ def change_status(id: str, status: Status):
     if status == work.status:
         msj = f"El estado del work ya es {status.value}"
         raise AppException(WorkError.WORK_SAME_STATUS_ERROR, msj)
-
-    if status == Status.CANCEL and work.status == Status.SUCCESS and work.status == Status.ERROR:
-        msj = f"No se puede cancelar un work ya ejecutado"
-        raise AppException(WorkError.WORK_INVALID_STATUS_ERROR, msj)
 
     if status == Status.READY and work.status == Status.RUNNING:
         msj = f"No se puede poner en READY cuando el work esta siendo ejecutado"

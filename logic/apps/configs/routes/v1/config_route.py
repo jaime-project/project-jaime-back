@@ -1,6 +1,8 @@
+import json
+import ntpath
 from datetime import datetime
 from io import BytesIO
-import ntpath
+
 import yaml
 from flask import Blueprint, request, send_file
 from logic.apps.configs.services import config_service
@@ -19,8 +21,8 @@ def post():
     return '', 200
 
 
-@blue_print.route('/objects', methods=['POST'])
-def post_objects():
+@blue_print.route('/yamls', methods=['POST'])
+def post_yamls():
 
     dict_yaml = yaml.load(request.data, Loader=yaml.FullLoader)
     replace = request.args.get('replace', False)
@@ -30,8 +32,8 @@ def post_objects():
     return '', 200
 
 
-@blue_print.route('/objects/file', methods=['GET'])
-def get_objects():
+@blue_print.route('/yamls/file', methods=['GET'])
+def get_yamls():
 
     dict_objects = config_service.get_all_objects()
     dict_yaml = str(yaml.dump(dict_objects))
@@ -52,3 +54,17 @@ def get_jaime_logs():
 @blue_print.route('/logs/agents/<agent_id>', methods=['GET'])
 def get_agent_logs(agent_id: str):
     return config_service.get_agent_logs(agent_id), 200
+
+
+@blue_print.route('/vars', methods=['GET'])
+def get_configs_vars():
+    return json.dumps(config_service.get_configs_vars()), 200
+
+
+@blue_print.route('/vars', methods=['PUT'])
+def update_configs_vars():
+
+    dict = request.json
+    config_service.update_configs_vars(dict)
+
+    return '', 200
