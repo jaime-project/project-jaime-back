@@ -12,15 +12,15 @@ Entity = sqliteAlchemy.get_entity_class()
 class CronEntity(Entity):
     __tablename__ = 'CRONS'
 
-    id = Column(String, primary_key=True, nullable=False)
-    name = Column(String)
-    cron_expression = Column(String)
-    status = Column(String)
+    id = Column(String(255), primary_key=True, nullable=False)
+    name = Column(String(255))
+    cron_expression = Column(String(255))
+    status = Column(String(255))
     creation_date = Column(DateTime)
-    work_module_repo = Column(String)
-    work_module_name = Column(String)
-    work_agent_type = Column(String)
-    work_params = Column(String)
+    work_module_repo = Column(String(255))
+    work_module_name = Column(String(255))
+    work_agent_type = Column(String(255))
+    work_params = Column(String(255))
 
     def to_model(self) -> CronWork:
         return CronWork(

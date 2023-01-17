@@ -12,7 +12,7 @@
 
 ## :gear: Requisitos
 
-- python 3.10
+- python 3
 - virtualenv
 
 ## :tada: Uso
@@ -25,6 +25,22 @@ pip install -r requirements.txt
 
 # Ejecutar
 python app.py
+```
+
+## :hammer: Configuraciones
+
+Se puede usar una **base de datos externa** agregando una variable de ambiente o agregandola en el **variables.yaml**
+
+```yaml
+# mysql
+DB_URL: mysql+pymysql://user:pass@host:port/database
+
+# postgresql
+DB_URL: postgresql+pg8000://user:pass@host:port/database
+
+# sqlserver
+DB_URL: mssql+pymssql://user:pass@host:port/database
+
 ```
 
 ## :books: Referencias
