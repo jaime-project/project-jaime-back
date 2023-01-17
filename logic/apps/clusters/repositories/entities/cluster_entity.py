@@ -8,11 +8,11 @@ Entity = sqliteAlchemy.get_entity_class()
 class ClusterEntity(Entity):
     __tablename__ = 'CLUSTERS'
 
-    name = Column(String, primary_key=True, nullable=False)
-    url = Column(String)
-    token = Column(String)
-    type = Column(String)
-    version = Column(String)
+    name = Column(String(255), primary_key=True, nullable=False)
+    url = Column(String(255))
+    token = Column(String(255))
+    type = Column(String(255))
+    version = Column(String(255))
 
     def to_model(self) -> Cluster:
         return Cluster(
