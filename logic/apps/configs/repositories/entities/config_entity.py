@@ -10,8 +10,8 @@ Entity = sqliteAlchemy.get_entity_class()
 class ConfigEntity(Entity):
     __tablename__ = 'CONFIGS'
 
-    key = Column(String, primary_key=True, nullable=False)
-    value = Column(String)
+    key = Column(String(255), primary_key=True, nullable=False)
+    value = Column(String(255))
 
     def to_model(self) -> Dict[str, str]:
         return {

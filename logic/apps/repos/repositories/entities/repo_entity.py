@@ -8,12 +8,12 @@ Entity = sqliteAlchemy.get_entity_class()
 class RepoGitEntity(Entity):
     __tablename__ = 'REPOSITORIES_GIT'
 
-    name = Column(String, primary_key=True, nullable=False)
-    git_path = Column(String)
-    git_user = Column(String)
-    git_pass = Column(String)
-    git_branch = Column(String)
-    git_url = Column(String)
+    name = Column(String(255), primary_key=True, nullable=False)
+    git_path = Column(String(255))
+    git_user = Column(String(255))
+    git_pass = Column(String(255))
+    git_branch = Column(String(255))
+    git_url = Column(String(255))
 
     def to_model(self) -> RepoGit:
         return RepoGit(
@@ -41,7 +41,7 @@ class RepoGitEntity(Entity):
 class RepoLocalEntity(Entity):
     __tablename__ = 'REPOSITORIES_LOCAL'
 
-    name = Column(String, primary_key=True, nullable=False)
+    name = Column(String(255), primary_key=True, nullable=False)
 
     def to_model(self) -> Repo:
         return Repo(
