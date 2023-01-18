@@ -19,14 +19,12 @@ jobs:
     outputs:
       version: ${{ steps.create-version.outputs.version }}
   
-
   build-and-push:
     needs: get-version
     runs-on: ubuntu-latest
     steps:
     - name: Check Out Repo 
       uses: actions/checkout@v3 
-      # setup Docker buld action
     - name: Set up Docker Buildx
       id: buildx
       uses: docker/setup-buildx-action@v2  
@@ -43,7 +41,7 @@ jobs:
         push: true
         context: ./
         file: ./Dockerfile
-        tags: ghcr.io/jaime-project/${{ secrets.APP_NAME }}:${{ needs.get-version.outputs.version }} 
+        tags: ghcr.io/jaime-project/jaime-back:${{ needs.get-version.outputs.version }} 
         platforms: linux/amd64
         build-args: ARG_VERSION=${{ needs.get-version.outputs.version }}
     outputs:
