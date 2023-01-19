@@ -1,70 +1,72 @@
 import json
-import ntpath
 from datetime import datetime
-from io import BytesIO
+from typing import Dict
 
 import yaml
-from flask import Blueprint, request, send_file
+from fastapi import APIRouter
+from starlette.responses import Response
+
 from logic.apps.configs import service
 
-blue_print = Blueprint('configs', __name__, url_prefix='/api/v1/configs')
+apirouter = APIRouter(prefix='/api/v1/configs', tags=['Configs'])
 
 
-@blue_print.route('/requirements', methods=['GET'])
+@apirouter.route('/requirements', methods=['GET'])
 def get():
     return service.get_requirements(), 200
 
 
-@blue_print.route('/requirements', methods=['POST'])
-def post():
-    service.update_requirements(request.data.decode())
+@apirouter.route('/requirements', methods=['POST'])
+def post(data: bytes):
+    service.update_requirements(data.decode())
     return '', 200
 
 
-@blue_print.route('/yamls', methods=['POST'])
-def post_yamls():
+@apirouter.route('/yamls', methods=['POST'])
+def post_yamls(data: Dict[str, object], replace: bool = False):
 
-    dict_yaml = yaml.load(request.data, Loader=yaml.FullLoader)
-    replace = request.args.get('replace', False)
+    dict_yaml = yaml.load(data, Loader=yaml.FullLoader)
 
     service.update_objects(dict_yaml, replace)
 
     return '', 200
 
 
-@blue_print.route('/yamls/file', methods=['GET'])
+@apirouter.route('/yamls/file', methods=['GET'])
 def get_yamls():
 
     dict_objects = service.get_all_objects()
     dict_yaml = str(yaml.dump(dict_objects))
 
     name_yaml = datetime.now().isoformat() + '.yaml'
+    headers = {
+        'Content-Disposition': f'attachment; filename="{name_yaml}"'}
 
-    return send_file(BytesIO(dict_yaml.encode()),
-                     mimetype='application/octet-stream',
-                     as_attachment=True,
-                     attachment_filename=ntpath.basename(name_yaml))
+    return Response(
+        open(dict_yaml, 'rb').read(),
+        media_type='application/octet-stream',
+        headers=headers
+    )
 
 
-@blue_print.route('/logs/jaime', methods=['GET'])
+@apirouter.route('/logs/jaime', methods=['GET'])
 def get_jaime_logs():
     return service.get_jaime_logs(), 200
 
 
-@blue_print.route('/logs/agents/<agent_id>', methods=['GET'])
+@apirouter.route('/logs/agents/<agent_id>', methods=['GET'])
 def get_agent_logs(agent_id: str):
     return service.get_agent_logs(agent_id), 200
 
 
-@blue_print.route('/vars', methods=['GET'])
+@apirouter.route('/vars', methods=['GET'])
 def get_configs_vars():
     return json.dumps(service.get_configs_vars()), 200
 
 
-@blue_print.route('/vars', methods=['PUT'])
-def update_configs_vars():
+@apirouter.route('/vars', methods=['PUT'])
+def update_configs_vars(dict: Dict[str, object]):
 
-    dict = request.json
     service.update_configs_vars(dict)
 
     return '', 200

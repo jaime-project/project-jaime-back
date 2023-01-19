@@ -2,7 +2,7 @@ import threading
 import time
 
 from logic.apps.agents import service
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 _THREAD_AGENT_ACTIVE = True
 
@@ -21,12 +21,12 @@ def check_node_alive():
 
             if tries == 3:
                 service.delete(n.id)
-                logger().info(f'Borrando agente por fuera de linea -> {n.id}')
+                logger.log.info(f'Borrando agente por fuera de linea -> {n.id}')
 
 
 def start_agent_thread():
 
-    logger().info('Iniciando hilo -> Agent')
+    logger.log.info('Iniciando hilo -> Agent')
 
     global _THREAD_AGENT_ACTIVE
     _THREAD_AGENT_ACTIVE = True

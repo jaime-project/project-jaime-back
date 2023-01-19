@@ -18,7 +18,7 @@ from logic.apps.repos.model import Repo, RepoGit
 from logic.apps.servers import service as server_service
 from logic.apps.servers.model import Server
 from logic.libs.exception.exception import AppException
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 _REQUIREMENTS_FILE_PATH = f'{Path.home()}/.jaime/requirements.txt'
 _LOGS_FILE_PATH = f'{Path.home()}/.jaime/logs/app.log'
@@ -36,7 +36,7 @@ def update_requirements(content: str):
             requests.post(url, data=content, verify=False)
 
         except Exception:
-            logger().error(f'Error al conectarse al agente para actualizar las dependencias de pip')
+            logger.log.error(f'Error al conectarse al agente para actualizar las dependencias de pip')
 
 
 def get_requirements() -> str:

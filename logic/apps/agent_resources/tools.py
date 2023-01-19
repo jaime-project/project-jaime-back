@@ -88,7 +88,7 @@ log.addHandler(fh)
 def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
 
     if echo:
-        log.info(cmd)
+        logger.log.info(cmd)
 
     server = _get_server_client(server_name)
 
@@ -98,10 +98,10 @@ def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
     _, ssh_stdout, ssh_stderr = ssh.exec_command(cmd)
 
     if echo and ssh_stdout:
-        log.info(ssh_stdout)
+        logger.log.info(ssh_stdout)
 
     if echo and ssh_stderr:
-        log.info(ssh_stderr)
+        logger.log.info(ssh_stderr)
 
     return ssh_stdout if ssh_stdout else ""
 
@@ -109,12 +109,12 @@ def ssh(server_name: str, cmd: str, echo: bool = False) -> str:
 def sh(cmd: str, echo: bool = False) -> str:
 
     if echo:
-        log.info(cmd)
+        logger.log.info(cmd)
 
     result = subprocess.getoutput(cmd)
 
     if echo and result:
-        log.info(result)
+        logger.log.info(result)
 
     return result if result else ""
 

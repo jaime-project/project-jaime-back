@@ -6,7 +6,7 @@ from logic.apps.agents import service as agent_service
 from logic.apps.agents.model import AgentStatus
 from logic.apps.jobs import service as jobs_service
 from logic.apps.jobs.model import Status
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 _THREAD_RUNNER_ACTIVE = True
 
@@ -34,12 +34,12 @@ def runner():
             jobs_service.exec_into_agent(job)
 
     except Exception as e:
-        logger().error(e)
+        logger.log.error(e)
 
 
 def start_runner_thread():
 
-    logger().info('Iniciando hilo -> runner')
+    logger.log.info('Iniciando hilo -> runner')
 
     global _THREAD_RUNNER_ACTIVE
     _THREAD_RUNNER_ACTIVE = True

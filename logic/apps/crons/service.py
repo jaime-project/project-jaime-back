@@ -5,7 +5,7 @@ from logic.apps.crons.error import CronError
 from logic.apps.crons.model import CronStatus, CronWork
 from logic.apps.jobs import service as job_service
 from logic.libs.exception.exception import AppException
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 
 def exec(cron: CronWork) -> str:
@@ -13,7 +13,7 @@ def exec(cron: CronWork) -> str:
     job = cron.to_workStatus()
     job_service.add(job)
 
-    logger().info(f'Cron {cron.name} -> Creando nuevo job con id {job.id}')
+    logger.log.info(f'Cron {cron.name} -> Creando nuevo job con id {job.id}')
 
     return job.id
 

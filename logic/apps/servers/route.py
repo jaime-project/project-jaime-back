@@ -1,4 +1,3 @@
-import ntpath
 from datetime import datetime
 from typing import Dict
 
@@ -7,27 +6,28 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from starlette.responses import Response
 
-from logic.apps.clusters import service
-from logic.apps.clusters.model import Cluster
+from logic.apps.servers import service as server_service
+from logic.apps.servers.model import Server
 
-apirouter = APIRouter(prefix='/api/v1/clusters', tags=['Clusters'])
+apirouter = APIRouter(prefix='/api/v1/servers', tags=['Servers'])
 
 
 @apirouter.route('/', methods=['POST'])
 def post(s: Dict[str, object]):
-    service.add(Cluster(
-        name=s['name'],
-        url=s['url'],
-        token=s['token'],
-        version=s['version'],
-        type=s['type']
-    ))
+    server_service.add(
+        Server(
+            name=s['name'],
+            host=s['host'],
+            port=s['port'],
+            user=s['user'],
+            password=s['password']
+        ))
     return '', 201
 
 
 @apirouter.route('/<name>', methods=['GET'])
 def get(name: str):
-    s = service.get(name)
+    s = server_service.get(name)
     if not s:
         return '', 204
 
@@ -36,50 +36,49 @@ def get(name: str):
 
 @apirouter.route('/', methods=['GET'])
 def list_all():
-
-    return JSONResponse(service.list_all()), 200
+    return JSONResponse(server_service.list_all()), 200
 
 
 @apirouter.route('/<name>', methods=['DELETE'])
 def delete(name: str):
-    service.delete(name)
+    server_service.delete(name)
     return '', 200
 
 
 @apirouter.route('/all/short', methods=['GET'])
 def get_all_short():
-    return JSONResponse(service.get_all_short()), 200
+    return JSONResponse(server_service.get_all_short()), 200
 
 
 @apirouter.route('/<name>/test', methods=['GET'])
-def test_cluster(name):
-    return JSONResponse(service.test_cluster(name)), 200
+def test_server(name):
+    return JSONResponse(server_service.test_server(name)), 200
 
 
 @apirouter.route('/<name>', methods=['PUT'])
-def modify_server(name: str, s: Dict[str, object]):
+def put(name: str, s: Dict[str, object]):
 
-    server = Cluster(
+    server = Server(
         name=s['name'],
-        url=s['url'],
-        token=s['token'],
-        version=s['version'],
-        type=s['type']
+        host=s['host'],
+        port=s['port'],
+        user=s['user'],
+        password=s['password']
     )
-    service.modify(name, server)
+    server_service.modify(name, server)
 
     return '', 200
 
 
 @apirouter.route('/<name>/yamls', methods=['GET'])
-def export_cluster(name: str):
+def export_server(name: str):
 
-    dict_objects = service.export_cluster(name)
+    dict_objects = server_service.export_server(name)
     dict_yaml = str(yaml.dump(dict_objects))
 
     name_yaml = datetime.now().isoformat() + '.yaml'
     headers = {
-        'Content-Disposition': f'attachment; filename="{ntpath.basename(name_yaml)}"'}
+        'Content-Disposition': f'attachment; filename="{name_yaml}"'}
 
     return Response(
         open(dict_yaml, 'rb').read(),

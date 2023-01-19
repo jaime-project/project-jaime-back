@@ -1,4 +1,3 @@
-
 import json
 
 from sqlalchemy import Column, DateTime, String
@@ -10,8 +9,8 @@ from logic.libs.sqliteAlchemy import sqliteAlchemy
 Entity = sqliteAlchemy.get_entity_class()
 
 
-class WorkEntity(Entity):
-    __tablename__ = 'WORKS'
+class JobEntity(Entity):
+    __tablename__ = 'JOBS'
 
     id = Column(String(255), primary_key=True, nullable=False)
     name = Column(String(255))
@@ -52,8 +51,8 @@ class WorkEntity(Entity):
         )
 
     @staticmethod
-    def from_model(m: Job) -> 'WorkEntity':
-        return WorkEntity(
+    def from_model(m: Job) -> 'JobEntity':
+        return JobEntity(
             id=m.id,
             name=m.name,
             module_name=m.module_name,

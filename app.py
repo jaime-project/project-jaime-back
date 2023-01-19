@@ -8,13 +8,14 @@ from logic.apps.admin.configs.logger import setup_loggers
 from logic.apps.admin.configs.rest import setup_rest
 from logic.apps.admin.configs.sqlite import setup_sqlite
 from logic.apps.admin.configs.variables import Vars, setup_vars
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
 
 app = FastAPI(title='Jaime API', description='Jaime REST API')
 
 setup_vars()
 setup_loggers()
+logger.log.info("asd")
 setup_sqlite()
 setup_rest(app)
 # setup_token(app)
@@ -23,7 +24,7 @@ setup_repos()
 setup_configs_vars()
 start_threads()
 
-logger().info("""
+logger.log.info("""
 
                         ^Y?:    7J!.                                                                                                                                                
                         7##BPJ!^P#BGY!:                                                                                                                                             
@@ -60,8 +61,8 @@ logger().info("""
               !J????????JYYYB&&&&&&&&#5YYJJ???JJ7!!!.                                                                                                               
                                                                                                                                                                         
 """)
-logger().info("> Jaimeeehhhh...!!!")
-logger().info("> ¿Si, señora?")
+logger.log.info("> Jaimeeehhhh...!!!")
+logger.log.info("> ¿Si, señora?")
 
 if __name__ == '__main__':
     uvicorn.run(
@@ -69,4 +70,3 @@ if __name__ == '__main__':
         port=int(get_var(Vars.PYTHON_PORT)),
         host=get_var(Vars.PYTHON_HOST)
     )
-

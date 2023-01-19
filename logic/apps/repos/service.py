@@ -10,7 +10,7 @@ from logic.apps.repos import repository
 from logic.apps.repos.error import RepoError
 from logic.apps.repos.model import Repo, RepoGit, RepoType
 from logic.libs.exception.exception import AppException
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 
 def add(repo: Repo):
@@ -104,11 +104,11 @@ def load_repo(repo: Repo):
         repo_git_without_https = repo.git_url.replace("https://", "")
         url = f'https://{repo.git_user}:{repo.git_pass}@{repo_git_without_https}'
 
-    logger().info(f'Creating directories for git clone')
+    logger.log.info(f'Creating directories for git clone')
     tmp_path = '/tmp'
     os.system(f'rm -fr {tmp_path}/{repo_name}')
 
-    logger().info(
+    logger.log.info(
         f'Cloning repository -> {repo.git_url} -b {repo.git_branch} -u {repo.git_user}')
     os.system(f'git clone {url} {tmp_path}/{repo_name} -b {repo.git_branch}')
 

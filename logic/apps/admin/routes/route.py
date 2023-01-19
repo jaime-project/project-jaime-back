@@ -1,26 +1,28 @@
 import ntpath
 import os
-from io import BytesIO
 
-from flask import Blueprint, jsonify, send_file
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
+from starlette.responses import Response
+
 from logic.apps.admin.configs.variables import Vars
 from logic.libs.variables.variables import all_vars, get_var
 
-blue_print = Blueprint('admin', __name__, url_prefix='/')
+apirouter = APIRouter(prefix='', tags=['Admin'])
 
 
-@blue_print.route('/vars')
+@apirouter.route('/vars')
 def get_vars():
-    return jsonify(all_vars())
+    return JSONResponse(all_vars())
 
 
-@blue_print.route('/')
+@apirouter.route('/')
 def alive():
     version = get_var(Vars.VERSION)
-    return jsonify(version=version)
+    return JSONResponse(version=version)
 
 
-@blue_print.route('/postman')
+@apirouter.route('/postman')
 def get_postman():
     postman_files = sorted([
         f for f in os.listdir('logic/resources/')
@@ -28,8 +30,11 @@ def get_postman():
     ], reverse=True)
 
     collection_dir = next(iter(postman_files), None)
+    headers = {
+        'Content-Disposition': f'attachment; filename="{ntpath.basename(collection_dir)}"'}
 
-    return send_file(BytesIO(open(collection_dir, 'rb').read()),
-                     mimetype='application/octet-stream',
-                     as_attachment=True,
-                     attachment_filename=ntpath.basename(collection_dir))
+    return Response(
+        open(collection_dir, 'rb').read(),
+        media_type='application/octet-stream',
+        headers=headers
+    )

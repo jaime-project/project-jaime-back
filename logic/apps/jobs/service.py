@@ -15,7 +15,7 @@ from logic.apps.jobs.model import Job, Status
 from logic.apps.modules.error import ModulesError
 from logic.apps.zip import service as zip_service
 from logic.libs.exception.exception import AppException
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 _PATH_AGENT_RESOURCES = 'logic/apps/agent_resources'
 
@@ -28,7 +28,7 @@ def add(job: Job) -> str:
 
 def exec_into_agent(job: Job):
 
-    logger().info(f'Generando workingdir -> {job.id}')
+    logger.log.info(f'Generando workingdir -> {job.id}')
     workingdir_service.create_by_id(job.id)
 
     workingdir_path = workingdir_service.fullpath(job.id)
@@ -49,7 +49,7 @@ def exec_into_agent(job: Job):
     url = job.agent.get_url() + f'/api/v1/works/{job.id}'
 
     requests.post(url, verify=False)
-    logger().info(f'Job enviado a agente -> {job.id}')
+    logger.log.info(f'Job enviado a agente -> {job.id}')
 
 
 def get(id: str) -> Job:

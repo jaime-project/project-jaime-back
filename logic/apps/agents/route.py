@@ -1,15 +1,17 @@
-from flask import Blueprint, jsonify, request
+from typing import Dict
+
+from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 
 from logic.apps.agents import service
 from logic.apps.agents.model import Agent
 from logic.apps.login import service as login_service
 
-blue_print = Blueprint('agent', __name__, url_prefix='/api/v1/agents')
+apirouter = APIRouter(prefix='/api/v1/agents', tags=['Agents'])
 
 
-@blue_print.route('/', methods=['POST'])
-def post():
-    j = request.json
+@apirouter.route('/', methods=['POST'])
+def post(j: Dict[str, object]):
     n = Agent(
         id=j['id'],
         host=j['host'],
@@ -23,14 +25,14 @@ def post():
     return token, 201
 
 
-@blue_print.route('/<id>', methods=['DELETE'])
+@apirouter.route('/<id>', methods=['DELETE'])
 def delete(id: str):
 
     service.delete(id)
     return '', 200
 
 
-@blue_print.route('/', methods=['GET'])
+@apirouter.route('/', methods=['GET'])
 def list_all():
 
     agents = service.list_all()
@@ -45,17 +47,17 @@ def list_all():
         for a in agents
     ]
 
-    return jsonify(result), 200
+    return JSONResponse(result), 200
 
 
-@blue_print.route('/all/short', methods=['GET'])
+@apirouter.route('/all/short', methods=['GET'])
 def get_all_short():
 
     result = service.get_all_short()
-    return jsonify(result), 200
+    return JSONResponse(result), 200
 
 
-@blue_print.route('/<id>', methods=['GET'])
+@apirouter.route('/<id>', methods=['GET'])
 def get(id: str):
 
     n = service.get(id)
@@ -70,9 +72,9 @@ def get(id: str):
         'status': n.status.value,
     }
 
-    return jsonify(result), 200
+    return JSONResponse(result), 200
 
 
-@blue_print.route('/types', methods=['GET'])
+@apirouter.route('/types', methods=['GET'])
 def list_types():
-    return jsonify(service.list_types()), 200
+    return JSONResponse(service.list_types()), 200

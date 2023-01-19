@@ -4,7 +4,7 @@ from logic.apps.agents.error import AgentError
 from logic.apps.agents.model import Agent, AgentStatus
 from logic.apps.configs import service
 from logic.libs.exception.exception import AppException
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 _AGENTS_ONLINE: Dict[str, Agent] = {}
 
@@ -16,14 +16,14 @@ def add(agent: Agent):
     global _AGENTS_ONLINE
 
     if agent in list_all():
-        logger().warning(f'Ya existe un agente con el id {agent.id}')
+        logger.log.warning(f'Ya existe un agente con el id {agent.id}')
 
     _AGENTS_ONLINE[agent.id] = agent
 
     add_agent_type(agent.type)
 
     service.update_requirements(service.get_requirements())
-    logger().info(f'Nuevo agente conectado -> id: {str(agent.id)}')
+    logger.log.info(f'Nuevo agente conectado -> id: {str(agent.id)}')
 
 
 def delete(id: str):
@@ -31,7 +31,7 @@ def delete(id: str):
     try:
         disconnec_agent(id)
     except Exception as e:
-        logger().error(e)
+        logger.log.error(e)
 
     agent_type = get(id).type
 

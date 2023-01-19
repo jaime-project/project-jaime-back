@@ -5,7 +5,7 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 from apscheduler.triggers.cron import CronTrigger
 from logic.apps.crons.model import CronStatus
 from logic.apps.crons import service
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 _THREAD_ACTIVE = True
 
@@ -27,7 +27,7 @@ def add_new_jobs():
             if not must_be_created:
                 continue
 
-            logger().info(f'Agregando nuevo job al scheduler -> {cron.id}')
+            logger.log.info(f'Agregando nuevo job al scheduler -> {cron.id}')
 
             _SCHEDULER.add_job(
                 id=cron.id,
@@ -37,12 +37,12 @@ def add_new_jobs():
             )
 
     except Exception as e:
-        logger().error(e)
+        logger.log.error(e)
 
 
 def start_threads():
 
-    logger().info('Iniciando hilo -> crons')
+    logger.log.info('Iniciando hilo -> crons')
 
     def thread_scheduler_method():
         global _SCHEDULER

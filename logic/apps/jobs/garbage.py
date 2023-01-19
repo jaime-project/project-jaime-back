@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from logic.apps.configs import service
 from logic.apps.jobs import service
 from logic.apps.jobs.model import Status
-from logic.libs.logger.logger import logger
+from logic.libs.logger import logger
 
 _THREAD_GARBAGE_COLLECTOR_ACTIVE = True
 _MINUTES_VAR = 'GARBAGE_COLLECTOR_RUN_MINUTES'
@@ -26,16 +26,16 @@ def garbage_collector():
 
             if job.start_date + timedelta(minutes=minutes) < datetime.now():
                 service.delete(id)
-                logger().info(
+                logger.log.info(
                     f'Borrando Job por garbage_collector -> id: {id}')
 
     except Exception as e:
-        logger().error(str(e))
+        logger.log.error(str(e))
 
 
 def start_garbage_collector_thread():
 
-    logger().info('Iniciando hilo -> Garbage Collector')
+    logger.log.info('Iniciando hilo -> Garbage Collector')
 
     global _THREAD_GARBAGE_COLLECTOR_ACTIVE
     _THREAD_GARBAGE_COLLECTOR_ACTIVE = True

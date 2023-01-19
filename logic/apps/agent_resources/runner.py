@@ -9,5 +9,5 @@ try:
     import module
 
 except Exception as e:
-    tools.log.error(e.with_traceback())
+    tools.logger.log.error(e.with_traceback())
     exit(1)
