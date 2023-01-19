@@ -21,7 +21,7 @@ class Config():
     file_backup_count: int = 3
 
 
-logger: logging.Logger = None
+log: logging.Logger = None
 
 
 def setup(con: Config):
@@ -29,5 +29,5 @@ def setup(con: Config):
     Configura las opciones PREDEFINIDAS del logger para el proyecto, en caso del handler, 
     el que viene rota los logs con un archivo por dia hasta hasta un maximo de 7 archivos.
     """
-    global logger
-    logger = make_logger(con)
+    global log
+    log = make_logger(con)
