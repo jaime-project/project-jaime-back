@@ -21,15 +21,19 @@ def get_modules_paths(base_path: str) -> List[str]:
     """
     blueprints_routes = []
 
-    for root, _, files in os.walk(base_path):
+    if os.path.isfile(base_path):
+        blueprints_routes.append(base_path)
 
-        if '__pycache__' in root or not files:
-            continue
+    else:
+        for root, _, files in os.walk(base_path):
 
-        blueprints_routes.extend([
-            os.path.join(root, file)
-            for file in files
-        ])
+            if '__pycache__' in root or not files:
+                continue
+
+            blueprints_routes.extend([
+                os.path.join(root, file)
+                for file in files
+            ])
 
     return blueprints_routes
 
@@ -40,7 +44,6 @@ def get_modules_paths_by_regex(regex_path: str) -> List[str]:
     es recursivo por lo que si hay carpetas dentro tambien busca ahi
     """
     paths = []
-
     for base_path in glob.glob(regex_path):
         paths.extend(get_modules_paths(base_path))
 

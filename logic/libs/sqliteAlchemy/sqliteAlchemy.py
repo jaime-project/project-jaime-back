@@ -23,7 +23,7 @@ class Config():
     """
     url: str = ':memory:'
     echo: bool = False
-    path: str = ''
+    entities_path: str = ''
 
 
 def setup(conf: Config):
@@ -34,7 +34,7 @@ def setup(conf: Config):
     config.ECHO = conf.echo
     config.ENGINE = create_engine(conf.url)
 
-    for module_type in reflection.load_modules_by_regex_path(conf.path):
+    for module_type in reflection.load_modules_by_regex_path(conf.entities_path):
         module_type.Entity.metadata.create_all(config.ENGINE)
 
 

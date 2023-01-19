@@ -1,23 +1,24 @@
 #!env/bin/python
-from flask.app import Flask
+import uvicorn
+from fastapi import FastAPI
 
-from logic.apps.admin.config.app import (setup_configs_vars, setup_repos,
-                                         start_threads)
-from logic.apps.admin.config.logger import setup_loggers
-from logic.apps.admin.config.rest import setup_rest, setup_token
-from logic.apps.admin.config.sqlite import setup_sqlite
-from logic.apps.admin.config.variables import Vars, setup_vars
+from logic.apps.admin.configs.app import (setup_configs_vars, setup_repos,
+                                          start_threads)
+from logic.apps.admin.configs.logger import setup_loggers
+from logic.apps.admin.configs.rest import setup_rest
+from logic.apps.admin.configs.sqlite import setup_sqlite
+from logic.apps.admin.configs.variables import Vars, setup_vars
 from logic.libs.logger.logger import logger
 from logic.libs.variables.variables import get_var
 
-app = Flask(__name__)
+app = FastAPI(title='Jaime API', description='Jaime REST API')
 
 setup_vars()
 setup_loggers()
-setup_rest(app)
-setup_token(app)
-
 setup_sqlite()
+setup_rest(app)
+# setup_token(app)
+
 setup_repos()
 setup_configs_vars()
 start_threads()
@@ -62,8 +63,10 @@ logger().info("""
 logger().info("> Jaimeeehhhh...!!!")
 logger().info("> ¿Si, señora?")
 
-if __name__ == "__main__":
-    flask_host = get_var(Vars.PYTHON_HOST)
-    flask_port = int(get_var(Vars.PYTHON_PORT))
+if __name__ == '__main__':
+    uvicorn.run(
+        app,
+        port=int(get_var(Vars.PYTHON_PORT)),
+        host=get_var(Vars.PYTHON_HOST)
+    )
 
-    app.run(host=flask_host, port=flask_port, debug=False)

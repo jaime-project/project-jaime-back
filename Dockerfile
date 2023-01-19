@@ -25,7 +25,6 @@ RUN mkdir -m 777 /home/jaime
 WORKDIR /home/jaime
 ENV HOME=/home/jaime
 
-
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 RUN rm -fr requirements.txt
@@ -39,9 +38,8 @@ ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=5000
 ENV WORKINGDIR_PATH=/data/workingdir
-ENV TZ America/Argentina/Buenos_Aires
+ENV TZ=America/Argentina/Buenos_Aires
 
-ENV EXTRA_CMD="cd ."
-CMD ${EXTRA_CMD} & python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=6 app:app
+CMD python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=6 app:app
 
 EXPOSE 5000
