@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from logic.apps.admin.configs.app import (setup_configs_vars, setup_repos,
                                           start_threads)
 from logic.apps.admin.configs.logger import setup_loggers
-from logic.apps.admin.configs.rest import setup_rest
+from logic.apps.admin.configs.rest import setup_rest, setup_token
 from logic.apps.admin.configs.sqlite import setup_sqlite
 from logic.apps.admin.configs.variables import Vars, setup_vars
 from logic.libs.logger import logger
@@ -17,7 +17,7 @@ setup_vars()
 setup_loggers()
 setup_sqlite()
 setup_rest(app)
-# setup_token(app)
+setup_token(app)
 
 setup_repos()
 setup_configs_vars()

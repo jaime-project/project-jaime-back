@@ -17,7 +17,7 @@ def add_decorators(app: FastAPI):
 
     @app.exception_handler(Exception)
     def handle_exception(request, e: Exception):
-        log.exception(e)
+        logger.log.exception(e)
         return JSONResponse(UnknownException(e).to_json(), 500)
 
     app.add_middleware(
