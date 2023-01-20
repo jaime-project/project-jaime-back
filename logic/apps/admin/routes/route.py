@@ -4,6 +4,7 @@ import os
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from starlette.responses import Response
+from starlette.requests import Request
 
 from logic.apps.admin.configs.variables import Vars
 from logic.libs.variables.variables import all_vars, get_var
@@ -17,9 +18,9 @@ def get_vars():
 
 
 @apirouter.route('/')
-def alive():
+def alive(request: Request):
     version = get_var(Vars.VERSION)
-    return JSONResponse(version=version)
+    return JSONResponse({'version': version})
 
 
 @apirouter.route('/postman')
