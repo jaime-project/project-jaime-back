@@ -1,6 +1,6 @@
 from typing import List
 
-from logic.apps.jobs import entity
+from logic.apps.jobs.entity import JobEntity
 from logic.apps.jobs.model import Job, Status
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
@@ -8,7 +8,7 @@ from logic.libs.sqliteAlchemy import sqliteAlchemy
 def get_all() -> List[Job]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(entity).all()
+    result = s.query(JobEntity).all()
     s.close()
 
     return [r.to_model() for r in result]
@@ -17,7 +17,7 @@ def get_all() -> List[Job]:
 def get_all_by_status(status: Status) -> List[Job]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(entity).filter_by(status=status.value).all()
+    result = s.query(JobEntity).filter_by(status=status.value).all()
     s.close()
 
     return [r.to_model() for r in result]
@@ -26,7 +26,7 @@ def get_all_by_status(status: Status) -> List[Job]:
 def get(id: str) -> Job:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(entity).get({'id': id})
+    result = s.query(JobEntity).get({'id': id})
     s.close()
 
     if result:
@@ -39,7 +39,7 @@ def add(m: Job):
 
     s = sqliteAlchemy.make_session()
 
-    e = entity.from_model(m)
+    e = JobEntity.from_model(m)
     s.add(e)
 
     s.commit()
@@ -49,7 +49,7 @@ def add(m: Job):
 def delete(id: str):
 
     s = sqliteAlchemy.make_session()
-    e = s.query(entity).get({'id': id})
+    e = s.query(JobEntity).get({'id': id})
     s.delete(e)
 
     s.commit()
@@ -61,7 +61,7 @@ def exist(id: str) -> bool:
     result = True
 
     s = sqliteAlchemy.make_session()
-    if s.query(entity).filter_by(id=id).count() == 0:
+    if s.query(JobEntity).filter_by(id=id).count() == 0:
         result = False
 
     s.close()

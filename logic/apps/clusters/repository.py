@@ -1,9 +1,8 @@
 from typing import List
 
+from logic.apps.clusters.entity import ClusterEntity
 from logic.apps.clusters.model import Cluster
 from logic.libs.sqliteAlchemy import sqliteAlchemy
-
-from .entity import ClusterEntity
 
 
 def get_all() -> List[Cluster]:

@@ -92,7 +92,7 @@ def list_all() -> List[str]:
     ]
 
 
-def list_by_status(status: Job) -> List[str]:
+def list_by_status(status: Status) -> List[str]:
     return [
         job.id
         for job

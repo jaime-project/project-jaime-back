@@ -15,7 +15,6 @@ app = FastAPI(title='Jaime API', description='Jaime REST API')
 
 setup_vars()
 setup_loggers()
-logger.log.info("asd")
 setup_sqlite()
 setup_rest(app)
 # setup_token(app)

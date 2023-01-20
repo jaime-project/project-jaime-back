@@ -1,8 +1,7 @@
 from typing import Dict, List
 
+from logic.apps.configs.entity import ConfigEntity
 from logic.libs.sqliteAlchemy import sqliteAlchemy
-
-from .entity import ConfigEntity
 
 
 def get_all() -> List[Dict[str, str]]:
