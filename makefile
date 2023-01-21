@@ -1,11 +1,5 @@
 VERSION := 1.10.0
 
-install i:
-	virtualenv -p python3.9 env
-	. env/bin/activate
-	pip install -r requirements.txt
-	. env/bin/deactivate
-
 build b:
 	podman build . -t ghcr.io/jaime-project/jaime-back:$(VERSION)
 
@@ -22,3 +16,5 @@ package:
 	mv dist/jaime jaime
 	rm -fr build dist *.spec
 	
+python py:
+	uvicorn app:app --reload

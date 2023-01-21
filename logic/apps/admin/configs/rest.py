@@ -16,29 +16,29 @@ def setup_rest(app: FastAPI):
 
 
 def setup_token(app: FastAPI):
-    return 0
 
-    # @app.middleware("http")
-    # async def before_request(request: Request, call_next: Callable):
-    #     no_login_paths = [
-    #         'api/v1/login/',
-    #         '',
-    #         'docs',
-    #         'vars',
-    #         'api/v1/agents/',
-    #     ]
+    @app.middleware("http")
+    async def before_request(request: Request, call_next: Callable):
+        no_login_paths = [
+            'api/v1/login/',
+            '',
+            'docs',
+            'vars',
+            'api/v1/agents/',
+            'openapi.json'
+        ]
 
-    #     path = str(request.url).replace(str(request.base_url), '')
-    #     print(path)
-    #     if request.method != 'OPTIONS' and path not in no_login_paths:
+        path = str(request.url).replace(str(request.base_url), '')
+        print(path)
+        if request.method != 'OPTIONS' and path not in no_login_paths:
 
-    #         if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
-    #             return JSONResponse('', 401)
+            if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
+                return JSONResponse('', 401)
 
-    #         token = request.headers['Authorization'].replace('Bearer ', '')
+            token = request.headers['Authorization'].replace('Bearer ', '')
 
-    #         if not login_service.is_a_valid_token(token):
-    #             return JSONResponse('', 403)
+            if not login_service.is_a_valid_token(token):
+                return JSONResponse('', 403)
 
-    #     response = await call_next(request)
-    #     return response
+        response = await call_next(request)
+        return response
