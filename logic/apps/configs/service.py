@@ -36,7 +36,8 @@ def update_requirements(content: str):
             requests.post(url, data=content, verify=False)
 
         except Exception:
-            logger.log.error(f'Error al conectarse al agente para actualizar las dependencias de pip')
+            logger.log.error(
+                f'Error al conectarse al agente para actualizar las dependencias de pip')
 
 
 def get_requirements() -> str:

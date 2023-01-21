@@ -59,7 +59,7 @@ def get_agent_logs(agent_id: str):
     return service.get_agent_logs(agent_id), 200
 
 
-@apirouter.route('/vars', methods=['GET'])
+@apirouter.get('/vars')
 def get_configs_vars():
     return json.dumps(service.get_configs_vars()), 200
 

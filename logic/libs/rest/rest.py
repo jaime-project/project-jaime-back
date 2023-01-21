@@ -17,12 +17,14 @@ from logic.libs.reflection import reflection
 from logic.libs.rest.src.decorators import add_decorators
 
 
-def setup(app, path) -> FastAPI:
+def setup(app: FastAPI, paths: list[str]) -> FastAPI:
     '''
     Configura la app de FastAPI
     '''
     add_decorators(app)
-    load_routes_by_regex_path(app, path)
+    
+    for path in paths:
+        load_routes_by_regex_path(app, path)
 
     return app
 

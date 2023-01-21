@@ -3,8 +3,8 @@ import os
 
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-from starlette.responses import Response
 from starlette.requests import Request
+from starlette.responses import Response
 
 from logic.apps.admin.configs.variables import Vars
 from logic.libs.variables.variables import all_vars, get_var
@@ -12,18 +12,18 @@ from logic.libs.variables.variables import all_vars, get_var
 apirouter = APIRouter(prefix='', tags=['Admin'])
 
 
-@apirouter.route('/vars')
+@apirouter.get('/vars')
 def get_vars():
     return JSONResponse(all_vars())
 
 
-@apirouter.route('/')
-def alive(request: Request):
+@apirouter.get('/')
+def alive():
     version = get_var(Vars.VERSION)
     return JSONResponse({'version': version})
 
 
-@apirouter.route('/postman')
+@apirouter.get('/postman')
 def get_postman():
     postman_files = sorted([
         f for f in os.listdir('logic/resources/')

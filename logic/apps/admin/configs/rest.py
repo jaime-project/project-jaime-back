@@ -1,43 +1,44 @@
-from typing import Any, Callable
+from typing import Callable
 
 from fastapi import FastAPI
+from fastapi.responses import JSONResponse
 from starlette.requests import Request
-from starlette.responses import Response
 
 from logic.apps.login import service as login_service
 from logic.libs.rest.rest import setup
 
 
 def setup_rest(app: FastAPI):
-    setup(app, 'logic/apps/admin/routes')
-    setup(app, 'logic/apps/*/route.*')
+    setup(app, [
+        'logic/apps/admin/routes/route.*',
+        # 'logic/apps/*/route.*'
+    ])
 
 
 def setup_token(app: FastAPI):
+    return 0
 
-    @app.middleware("http")
-    def before_request(request: Request, call_next: Callable):
+    # @app.middleware("http")
+    # async def before_request(request: Request, call_next: Callable):
+    #     no_login_paths = [
+    #         'api/v1/login/',
+    #         '',
+    #         'docs',
+    #         'vars',
+    #         'api/v1/agents/',
+    #     ]
 
-        no_login_paths = [
-            '/api/v1/login/',
-            '/',
-            '/vars',
-            '/api/v1/agents/',
-        ]
+    #     path = str(request.url).replace(str(request.base_url), '')
+    #     print(path)
+    #     if request.method != 'OPTIONS' and path not in no_login_paths:
 
-        response = call_next(request)
+    #         if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
+    #             return JSONResponse('', 401)
 
-        if request.method != 'OPTIONS' and str(request.url).replace(str(request.base_url), '') not in no_login_paths:
+    #         token = request.headers['Authorization'].replace('Bearer ', '')
 
+    #         if not login_service.is_a_valid_token(token):
+    #             return JSONResponse('', 403)
 
-            if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
-                # response.status_code = 401
-                return response
-
-            token = request.headers['Authorization'].replace('Bearer ', '')
-
-            if not login_service.is_a_valid_token(token):
-                # response.status_code = 403
-                return response
-
-        return response
+    #     response = await call_next(request)
+    #     return response
