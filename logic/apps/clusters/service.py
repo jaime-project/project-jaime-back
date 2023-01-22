@@ -36,11 +36,11 @@ def list_all() -> List[str]:
     ]
 
 
-def get_all() -> List[Cluster]:
-    return repository.get_all()
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Cluster]:
+    return repository.get_all(size, page, filter, order)
 
 
-def get_all_short() -> List[Dict[str, str]]:
+def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Dict[str, str]]:
 
     return [
         {
@@ -48,7 +48,7 @@ def get_all_short() -> List[Dict[str, str]]:
             "type": s.type,
             "url": s.url
         }
-        for s in repository.get_all()
+        for s in repository.get_all(size, page, filter, order)
     ]
 
 

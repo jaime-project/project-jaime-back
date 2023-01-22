@@ -3,12 +3,31 @@ from typing import List
 from logic.apps.clusters.entity import ClusterEntity
 from logic.apps.clusters.model import Cluster
 from logic.libs.sqliteAlchemy import sqliteAlchemy
+from sqlalchemy import or_
 
 
-def get_all() -> List[Cluster]:
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Cluster]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(ClusterEntity).all()
+    result = s.query(ClusterEntity)
+
+    if filter:
+        filter = f'%{filter}%'
+        result = result.filter(or_(
+            ClusterEntity.name.like(filter),
+            ClusterEntity.url.like(filter),
+            ClusterEntity.token.like(filter),
+            ClusterEntity.type.like(filter),
+            ClusterEntity.version.like(filter),
+        ))
+
+    if order:
+        result = result.order_by(order)
+
+    if page and size:
+        result = result.limit(size).offset(size * (page-1))
+
+    result = result.all()
     s.close()
 
     return [r.to_model() for r in result]
