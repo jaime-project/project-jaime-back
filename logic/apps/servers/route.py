@@ -22,7 +22,7 @@ def post(s: Dict[str, object]):
             user=s['user'],
             password=s['password']
         ))
-    return '', 201
+    return JSONResponse('', 201)
 
 
 @apirouter.route('/<name>', methods=['GET'])
@@ -42,7 +42,7 @@ def list_all():
 @apirouter.route('/<name>', methods=['DELETE'])
 def delete(name: str):
     server_service.delete(name)
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/all/short', methods=['GET'])
@@ -67,7 +67,7 @@ def put(name: str, s: Dict[str, object]):
     )
     server_service.modify(name, server)
 
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/<name>/yamls', methods=['GET'])

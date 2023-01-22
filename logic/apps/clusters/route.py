@@ -22,7 +22,7 @@ def post(s: Dict[str, object]):
         version=s['version'],
         type=s['type']
     ))
-    return '', 201
+    return JSONResponse('', 201)
 
 
 @apirouter.route('/<name>', methods=['GET'])
@@ -43,7 +43,7 @@ def list_all():
 @apirouter.route('/<name>', methods=['DELETE'])
 def delete(name: str):
     service.delete(name)
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/all/short', methods=['GET'])
@@ -68,7 +68,7 @@ def modify_server(name: str, s: Dict[str, object]):
     )
     service.modify(name, server)
 
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/<name>/yamls', methods=['GET'])

@@ -4,6 +4,7 @@ from typing import Dict
 
 import yaml
 from fastapi import APIRouter
+from fastapi.responses import JSONResponse
 from starlette.responses import Response
 
 from logic.apps.configs import service
@@ -19,7 +20,7 @@ def get():
 @apirouter.route('/requirements', methods=['POST'])
 def post(data: bytes):
     service.update_requirements(data.decode())
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/yamls', methods=['POST'])
@@ -29,7 +30,7 @@ def post_yamls(data: Dict[str, object], replace: bool = False):
 
     service.update_objects(dict_yaml, replace)
 
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/yamls/file', methods=['GET'])
@@ -69,4 +70,4 @@ def update_configs_vars(dict: Dict[str, object]):
 
     service.update_configs_vars(dict)
 
-    return '', 200
+    return JSONResponse('', 200)

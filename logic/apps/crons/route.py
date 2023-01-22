@@ -45,7 +45,7 @@ def _is_yaml(text: str) -> bool:
 def delete(id: str):
 
     service.delete(id)
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/', methods=['DELETE'])
@@ -54,7 +54,7 @@ def delete_by_filters(status: str = None):
     if status:
         service.delete_by_status(CronStatus(status))
 
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/<id>', methods=['GET'])
@@ -87,7 +87,7 @@ def change_status(id: str, status: str):
     else:
         runner.desactivate_cron(id)
 
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/', methods=['GET'])
@@ -130,4 +130,4 @@ def modify(data: Dict[str, object]):
 
     service.modify(cron)
 
-    return '', 200
+    return JSONResponse('', 200)

@@ -11,7 +11,7 @@ apirouter = APIRouter(prefix='/api/v1/repos/<repo>/docs', tags=['Docs'])
 @apirouter.route('/<name>', methods=['POST'])
 def post(name: str, repo: str, content: bytes):
     service.add(name, content.decode('utf8'), repo)
-    return '', 201
+    return JSONResponse('', 201)
 
 
 @apirouter.route('/<name>', methods=['GET'])
@@ -40,10 +40,10 @@ def list_all(repo: str):
 @apirouter.route('/<name>', methods=['DELETE'])
 def delete(name: str, repo: str):
     service.delete(name, repo)
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/<name>', methods=['PUT'])
 def modify(name: str, repo: str, content: bytes):
     service.modify(name, content.decode('utf8'), repo)
-    return '', 200
+    return JSONResponse('', 200)

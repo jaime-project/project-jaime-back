@@ -22,14 +22,14 @@ def post(j: Dict[str, object]):
     service.add(n)
     token = login_service.get_token()
 
-    return token, 201
+    return JSONResponse(token, 201)
 
 
 @apirouter.route('/<id>', methods=['DELETE'])
 def delete(id: str):
 
     service.delete(id)
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/', methods=['GET'])

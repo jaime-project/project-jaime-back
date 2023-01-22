@@ -4,22 +4,23 @@ from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 
 from logic.apps.login import service
+from logic.apps.login.model import Login
 from logic.libs.exception.exception import AppException
 
 apirouter = APIRouter(prefix='/api/v1/login', tags=['Login'])
 
 
-@apirouter.route('/', methods=['POST'])
-def login(j: Dict[str, object]):
+@apirouter.post('/')
+def login(login: Login):
 
     try:
-        token = service.login(j['user'], j['pass'])
-        return token, 200
+        token = service.login(login.user, login.password)
+        return JSONResponse(token, 200)
 
     except AppException as app:
-        return JSONResponse(app.to_json()), 403
+        return JSONResponse(app.to_json(), 403)
 
 
-@apirouter.route('/refresh', methods=['GET'])
+@apirouter.get('/refresh')
 def refresh():
-    return '', 200
+    return JSONResponse('', 200)

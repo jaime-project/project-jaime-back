@@ -53,7 +53,7 @@ def logs(id: str):
 def delete(id: str):
 
     work_service.delete(id)
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/', methods=['DELETE'])
@@ -62,7 +62,7 @@ def delete_by_filters(status: str = None):
     if status:
         work_service.delete_by_status(Status(status))
 
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/<id>', methods=['GET'])
@@ -100,14 +100,14 @@ def finish(id: str, body: Dict[str, object]):
     status = Status(body["status"])
 
     work_service.finish_work(id, status)
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/<id>/status/<status>', methods=['PATCH'])
 def changeStatus(id: str, status: str):
 
     work_service.change_status(id, Status(status))
-    return '', 200
+    return JSONResponse('', 200)
 
 
 @apirouter.route('/', methods=['GET'])
@@ -192,7 +192,7 @@ def modify(data: Dict[str, object]):
 
     work_service.modify(job)
 
-    return '', 200
+    return JSONResponse('', 200)
 
 
 def _valid_params(params: Dict[str, object]):

@@ -18,7 +18,7 @@ def post(s: Dict[str, object]):
     repo = _request_body_to_repo(s)
 
     service.add(repo)
-    return '', 201
+    return JSONResponse('', 201)
 
 
 @apirouter.route('/<name>', methods=['GET'])
@@ -43,7 +43,7 @@ def list_all(type: str = None):
 @apirouter.route('/<name>', methods=['DELETE'])
 def delete(name: str):
     service.delete(name)
-    return JSONResponse('', 200)
+    return JSONResponse(JSONResponse('', 200))
 
 
 @apirouter.route('/types', methods=['GET'])
@@ -58,13 +58,13 @@ def modify(name: str, s: Dict[str, object]):
 
     service.modify(name, repo)
 
-    return JSONResponse('', 200)
+    return JSONResponse(JSONResponse('', 200))
 
 
 @apirouter.route('/<name>/reload', methods=['POST'])
 def reload(name):
     service.reload_repo_git(name)
-    return JSONResponse('', 200)
+    return JSONResponse(JSONResponse('', 200))
 
 
 def _request_body_to_repo(s: Dict[str, Any]) -> Repo:

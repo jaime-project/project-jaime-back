@@ -11,7 +11,7 @@ from logic.libs.rest.rest import setup
 def setup_rest(app: FastAPI):
     setup(app, [
         'logic/apps/admin/routes/route.*',
-        # 'logic/apps/*/route.*'
+        'logic/apps/*/route.*'
     ])
 
 
@@ -29,7 +29,7 @@ def setup_token(app: FastAPI):
         ]
 
         path = str(request.url).replace(str(request.base_url), '')
-        print(path)
+
         if request.method != 'OPTIONS' and path not in no_login_paths:
 
             if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:

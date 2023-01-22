@@ -17,4 +17,4 @@ package:
 	rm -fr build dist *.spec
 	
 python py:
-	uvicorn app:app --reload
+	uvicorn app:app --port 5000 --reload
