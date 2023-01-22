@@ -8,8 +8,18 @@ from logic.apps.modules import service as module_service
 from logic.apps.repos import service as repo_service
 from logic.apps.repos.model import Repo
 
-_REPO_DEFAULT_NAME = 'local'
-_MODULE_DEFAULT_NAME = 'test'
+_REPO_DEFAULT_NAME = 'example'
+
+_MODULE_DEFAULT_NAME = 'example'
+_MODULE_DEFAULT_CONTENT = """import tools
+
+params = tools.get_params()
+who = params['person']['name']
+tools.log.info(f'Hello {who}')
+"""
+_DOCS_DEFAULT_CONTENT = """person:
+    name: Jaime
+"""
 
 
 def setup_repos():
@@ -27,10 +37,11 @@ def setup_repos():
         _MODULE_DEFAULT_NAME, _REPO_DEFAULT_NAME) != None
 
     if not module_default_exist:
+
         module_service.add(_MODULE_DEFAULT_NAME,
-                           "print('Hellow world')", _REPO_DEFAULT_NAME)
+                           _MODULE_DEFAULT_CONTENT, _REPO_DEFAULT_NAME)
         doc_service.add(_MODULE_DEFAULT_NAME,
-                        "Module Example", _REPO_DEFAULT_NAME)
+                        _DOCS_DEFAULT_CONTENT, _REPO_DEFAULT_NAME)
 
 
 def start_threads():
