@@ -46,7 +46,7 @@ def exec_into_agent(job: Job):
     with open(f'{workingdir_path}/params.yaml', 'w') as f:
         f.write(yaml.dump(job.params))
 
-    url = job.agent.get_url() + f'/api/v1/works/{job.id}'
+    url = job.agent.get_url() + f'/api/v1/jobs/{job.id}'
 
     requests.post(url, verify=False)
     logger.log.info(f'Job enviado a agente -> {job.id}')
@@ -72,7 +72,7 @@ def cancel(id: str):
     worker = get(id)
 
     if worker.agent in agent_service.list_all():
-        url = worker.agent.get_url() + f'/api/v1/works/{id}'
+        url = worker.agent.get_url() + f'/api/v1/jobs/{id}'
         requests.delete(url, verify=False)
 
         agent_service.change_status(worker.agent.id, AgentStatus.READY)
