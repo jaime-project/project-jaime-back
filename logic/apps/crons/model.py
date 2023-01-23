@@ -20,20 +20,20 @@ def _generate_id() -> str:
 class CronWork():
     name: str
     cron_expression: str
-    work_module_repo: str
-    work_module_name: str
-    work_agent_type: str
+    job_module_repo: str
+    job_module_name: str
+    job_agent_type: str
     id: str = field(default_factory=_generate_id)
     creation_date: datetime = field(default_factory=datetime.now)
     status: CronStatus = CronStatus.ACTIVE
-    work_params: Dict[str, object] = field(default_factory={})
+    job_params: Dict[str, object] = field(default_factory={})
 
     def to_workStatus(self) -> Job:
 
         return Job(
             name=f'cronjob_{self.name}_{_generate_id()}',
-            module_name=self.work_module_name,
-            module_repo=self.work_module_repo,
-            agent_type=self.work_agent_type,
-            params=self.work_params
+            module_name=self.job_module_name,
+            module_repo=self.job_module_repo,
+            agent_type=self.job_agent_type,
+            params=self.job_params
         )

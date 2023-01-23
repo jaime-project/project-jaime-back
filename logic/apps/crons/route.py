@@ -18,10 +18,10 @@ def add():
     cron = CronWork(
         name=params_dict['name'],
         cron_expression=params_dict['cron_expression'],
-        work_module_repo=params_dict['work_module_repo'],
-        work_module_name=params_dict['work_module_name'],
-        work_agent_type=params_dict['work_agent_type'],
-        work_params=params_dict['work_params'] if params_dict['work_params'] else {
+        job_module_repo=params_dict['job_module_repo'],
+        job_module_name=params_dict['job_module_name'],
+        job_agent_type=params_dict['job_agent_type'],
+        job_params=params_dict['job_params'] if params_dict['job_params'] else {
         }
     )
 
@@ -66,13 +66,13 @@ def get(id: str):
     result_dict = {
         'name': cron.name,
         'cron_expression': cron.cron_expression,
-        'work_module_repo': cron.work_module_repo,
-        'work_module_name': cron.work_module_name,
-        'work_agent_type': cron.work_agent_type,
+        'job_module_repo': cron.job_module_repo,
+        'job_module_name': cron.job_module_name,
+        'job_agent_type': cron.job_agent_type,
         'id': cron.id,
         'creation_date': cron.creation_date.isoformat(),
         'status': cron.status.value,
-        'work_params': cron.work_params
+        'job_params': cron.job_params
     }
 
     return jsonify(result_dict), 200
@@ -123,10 +123,10 @@ def modify():
     cron = CronWork(
         name=params_dict['name'],
         cron_expression=params_dict['cron_expression'],
-        work_module_repo=params_dict['work_module_repo'],
-        work_module_name=params_dict['work_module_name'],
-        work_agent_type=params_dict['work_agent_type'],
-        work_params=params_dict['work_params'],
+        job_module_repo=params_dict['job_module_repo'],
+        job_module_name=params_dict['job_module_name'],
+        job_agent_type=params_dict['job_agent_type'],
+        job_params=params_dict['job_params'],
         creation_date=datetime.fromisoformat(params_dict['creation_date']),
         status=CronStatus(params_dict['status']),
         id=params_dict['id']

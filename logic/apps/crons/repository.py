@@ -19,9 +19,9 @@ def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None
             CronEntity.cron_expression.like(filter),
             CronEntity.status.like(filter),
             CronEntity.creation_date.like(filter),
-            CronEntity.work_module_repo.like(filter),
-            CronEntity.work_module_name.like(filter),
-            CronEntity.work_agent_type.like(filter),
+            CronEntity.job_module_repo.like(filter),
+            CronEntity.job_module_name.like(filter),
+            CronEntity.job_agent_type.like(filter),
         ))
 
     if order:
