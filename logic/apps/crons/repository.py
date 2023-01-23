@@ -1,14 +1,36 @@
 from typing import List
 
+from sqlalchemy import or_
+
 from logic.apps.crons.entity import CronEntity
 from logic.apps.crons.model import CronStatus, CronWork
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 
-def get_all() -> List[CronWork]:
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[CronWork]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(CronEntity).all()
+    result = s.query(CronEntity)
+
+    if filter:
+        filter = f'%{filter}%'
+        result = result.filter(or_(
+            CronEntity.name.like(filter),
+            CronEntity.cron_expression.like(filter),
+            CronEntity.status.like(filter),
+            CronEntity.creation_date.like(filter),
+            CronEntity.work_module_repo.like(filter),
+            CronEntity.work_module_name.like(filter),
+            CronEntity.work_agent_type.like(filter),
+        ))
+
+    if order:
+        result = result.order_by(order)
+
+    if page and size:
+        result = result.limit(size).offset(size * (page-1))
+
+    result = result.all()
     s.close()
 
     return [r.to_model() for r in result]

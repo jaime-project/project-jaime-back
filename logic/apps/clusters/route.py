@@ -62,7 +62,7 @@ def test_cluster(name):
 
 
 @blue_print.route('/<name>', methods=['PUT'])
-def modify_server(name):
+def modify_cluster(name):
 
     s = request.json
     server = Cluster(

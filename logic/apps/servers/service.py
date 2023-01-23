@@ -37,7 +37,7 @@ def get_all() -> List[Server]:
     return repository.get_all()
 
 
-def get_all_short() -> List[Dict[str, str]]:
+def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Dict[str, str]]:
 
     return [
         {
@@ -45,7 +45,7 @@ def get_all_short() -> List[Dict[str, str]]:
             "host": s.host,
             "port": s.port
         }
-        for s in repository.get_all()
+        for s in repository.get_all(size, page, filter, order)
     ]
 
 

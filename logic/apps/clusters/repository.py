@@ -1,9 +1,10 @@
 from typing import List
 
+from sqlalchemy import or_
+
 from logic.apps.clusters.entity import ClusterEntity
 from logic.apps.clusters.model import Cluster
 from logic.libs.sqliteAlchemy import sqliteAlchemy
-from sqlalchemy import or_
 
 
 def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Cluster]:

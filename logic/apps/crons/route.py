@@ -105,7 +105,12 @@ def get_status_crons():
 @blue_print.route('/all/short', methods=['GET'])
 def get_all_short():
 
-    result = service.get_all_short()
+    size = int(request.args.get('size', 10))
+    page = int(request.args.get('page', 1))
+    filter = request.args.get('filter', None)
+    order = request.args.get('order', None)
+
+    result = service.get_all_short(size, page, filter, order)
     return jsonify(result), 200
 
 

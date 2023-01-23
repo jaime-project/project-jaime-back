@@ -63,7 +63,7 @@ def list_by_status(status: CronWork) -> List[str]:
     ]
 
 
-def get_all_short() -> List[Dict[str, str]]:
+def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Dict[str, str]]:
     return [
         {
             "name": c.name,
@@ -72,7 +72,7 @@ def get_all_short() -> List[Dict[str, str]]:
             "creation_date": c.creation_date.isoformat(),
             "id": c.id
         }
-        for c in repository.get_all()
+        for c in repository.get_all(size, page, filter, order)
     ]
 
 
