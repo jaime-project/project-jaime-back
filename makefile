@@ -1,4 +1,4 @@
-VERSION := 1.10.0
+VERSION := 1.11.0
 
 install i:
 	virtualenv -p python3.9 env
@@ -11,6 +11,9 @@ build b:
 
 push p:
 	podman push ghcr.io/jaime-project/jaime-back:$(VERSION)
+
+run r:
+	podman run -it --rm -p 5000:5000 ghcr.io/jaime-project/jaime-back:$(VERSION)
 
 compile c:
 	python -m compile -b -f -o dist/ .
