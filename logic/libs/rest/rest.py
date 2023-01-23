@@ -17,7 +17,7 @@ from logic.libs.rest.src.decorators import add_decorators
 from logic.libs.rest.src.json import config_encoders
 
 
-def setup(app, path) -> Flask:
+def setup(app: Flask, paths: list[str]):
     '''
     Configura la app de Flask
     '''
@@ -25,9 +25,8 @@ def setup(app, path) -> Flask:
     add_decorators(app)
     config_encoders(app)
 
-    load_routes_by_regex_path(app, path)
-
-    return app
+    for path in paths:
+        load_routes_by_regex_path(app, path)
 
 
 def load_routes_by_regex_path(app: Flask, path: str):
