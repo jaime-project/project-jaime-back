@@ -1,14 +1,40 @@
 from typing import List
 
+from sqlalchemy import or_
+
 from logic.apps.jobs.entity import JobEntity
 from logic.apps.jobs.model import Job, Status
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 
-def get_all() -> List[Job]:
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Job]:
 
     s = sqliteAlchemy.make_session()
-    result = s.query(JobEntity).all()
+    result = s.query(JobEntity)
+
+    if filter:
+        filter = f'%{filter}%'
+        result = result.filter(or_(
+            JobEntity.id.like(filter),
+            JobEntity.name.like(filter),
+            JobEntity.module_name.like(filter),
+            JobEntity.module_repo.like(filter),
+            JobEntity.params.like(filter),
+            JobEntity.agent.like(filter),
+            JobEntity.agent_type.like(filter),
+            JobEntity.status.like(filter),
+            JobEntity.start_date.like(filter),
+            JobEntity.running_date.like(filter),
+            JobEntity.terminated_date.like(filter),
+        ))
+
+    if order:
+        result = result.order_by(order)
+
+    if page and size:
+        result = result.limit(size).offset(size * (page-1))
+
+    result = result.all()
     s.close()
 
     return [r.to_model() for r in result]

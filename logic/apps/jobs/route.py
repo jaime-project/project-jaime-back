@@ -127,8 +127,12 @@ def get_status_works():
 @blue_print.route('/all/short', methods=['GET'])
 def get_all_short():
 
-    result = service.get_all_short()
-    return jsonify(result), 200
+    size = int(request.args.get('size', 3))
+    page = int(request.args.get('page', 1))
+    filter = request.args.get('filter', None)
+    order = request.args.get('order', None)
+
+    return jsonify(service.get_all_short(size, page, filter, order)), 200
 
 
 @blue_print.route('/<id>/workspace', methods=['GET'])
