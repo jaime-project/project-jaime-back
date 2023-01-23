@@ -103,8 +103,28 @@ def get_available_agent_by_type(type: str) -> Agent:
     return None
 
 
-def get_all_short() -> List[Dict[str, str]]:
+def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Dict[str, str]]:
     global _AGENTS_ONLINE
+
+    list_agents_filters = []
+
+    if list(_AGENTS_ONLINE.values()):
+
+        list_agents_filters = list(_AGENTS_ONLINE.values())
+
+        if filter:
+            list_agents_filters = [
+                a
+                for a in list(_AGENTS_ONLINE.values())
+                if filter in a.host or filter in str(a.id) or filter in str(a.port) or filter in a.status.value or filter in a.type
+            ]
+
+        if size and page:
+            list_agents_filters = list_agents_filters[(
+                page-1)*size:page*size]
+
+        if order:
+            list_agents_filters.sort(key=lambda a: getattr(a, order))
 
     return [
         {
@@ -113,7 +133,7 @@ def get_all_short() -> List[Dict[str, str]]:
             "port": n.port,
             "type": n.type
         }
-        for _, n in list(_AGENTS_ONLINE.items())
+        for n in list_agents_filters
     ]
 
 
