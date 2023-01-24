@@ -13,7 +13,7 @@ def exec(cron: CronWork) -> str:
     job = cron.to_workStatus()
     job_service.add(job)
 
-    logger.log.info(f'Cron {cron.name} -> Creando nuevo job con id {job.id}')
+    logger.log.info(f'Cron {cron.name} -> Making new job with id {job.id}')
 
     return job.id
 
@@ -22,7 +22,7 @@ def add(cron_work: CronWork) -> str:
 
     if repository.get(cron_work.id):
         raise AppException(CronError.CRON_ALREDY_EXIST_ERROR,
-                           f'Ya existe el cron con id {id}')
+                           f'There are a cron with id {id}')
 
     repository.add(cron_work)
     return cron_work.id
@@ -35,7 +35,7 @@ def get(id: str) -> CronWork:
 def delete(id: str):
     if not repository.exist(id):
         raise AppException(CronError.CRON_NOT_EXIST_ERROR,
-                           f'No existe el cron con id {id}')
+                           f'There are no cron with id {id}')
 
     repository.delete(id)
     runner.delete_cron_from_scheduler(id)

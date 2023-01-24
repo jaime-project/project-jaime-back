@@ -39,7 +39,7 @@ def runner():
 
 def start_runner_thread():
 
-    logger.log.info('Iniciando hilo -> runner')
+    logger.log.info('Start thread -> runner')
 
     global _THREAD_RUNNER_ACTIVE
     _THREAD_RUNNER_ACTIVE = True

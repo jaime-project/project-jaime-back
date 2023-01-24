@@ -18,14 +18,14 @@ def add(agent: Agent):
     global _AGENTS_ONLINE
 
     if agent in list_all():
-        logger.log.warning(f'Ya existe un agente con el id {agent.id}')
+        logger.log.warning(f'There is already an agent with the id {agent.id}')
 
     _AGENTS_ONLINE[agent.id] = agent
 
     add_agent_type(agent.type)
 
     service.update_requirements(service.get_requirements())
-    logger.log.info(f'Nuevo agente conectado -> id: {str(agent.id)}')
+    logger.log.info(f'New agent connected -> id: {str(agent.id)}')
 
 
 def delete(id: str):
@@ -93,7 +93,7 @@ def get_available_agent_by_type(type: str) -> Agent:
 
     agents = get_by_type(type)
     if not agents:
-        msj = f'No hay agentes de tipo {type} desponibles'
+        msj = f'There are no available {type} agent'
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR, msj)
 
     for a in agents:

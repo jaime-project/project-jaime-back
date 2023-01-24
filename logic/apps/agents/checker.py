@@ -21,12 +21,12 @@ def check_node_alive():
 
             if tries == 3:
                 service.delete(n.id)
-                logger.log.info(f'Borrando agente por fuera de linea -> {n.id}')
+                logger.log.info(f'Delete agent by offline -> {n.id}')
 
 
 def start_agent_thread():
 
-    logger.log.info('Iniciando hilo -> Agent')
+    logger.log.info('Start thread -> Agent')
 
     global _THREAD_AGENT_ACTIVE
     _THREAD_AGENT_ACTIVE = True

@@ -28,7 +28,7 @@ def add(job: Job) -> str:
 
 def exec_into_agent(job: Job):
 
-    logger.log.info(f'Generando workingdir -> {job.id}')
+    logger.log.info(f'Making workingdir -> {job.id}')
     workingdir_service.create_by_id(job.id)
 
     workingdir_path = workingdir_service.fullpath(job.id)
@@ -49,7 +49,7 @@ def exec_into_agent(job: Job):
     url = job.agent.get_url() + f'/api/v1/jobs/{job.id}'
 
     requests.post(url, verify=False)
-    logger.log.info(f'Job enviado a agente -> {job.id}')
+    logger.log.info(f'Job sended to agent -> {job.id}')
 
 
 def get(id: str) -> Job:
@@ -66,16 +66,16 @@ def delete(id: str):
 def cancel(id: str):
 
     if not job_repository.exist(id):
-        msj = f"No existe worker con id {id}"
+        msj = f"id job not found -> {id}"
         raise AppException(ModulesError.MODULE_NO_EXIST_ERROR, msj)
 
-    worker = get(id)
+    job = get(id)
 
-    if worker.agent in agent_service.list_all():
-        url = worker.agent.get_url() + f'/api/v1/jobs/{id}'
+    if job.agent in agent_service.list_all():
+        url = job.agent.get_url() + f'/api/v1/jobs/{id}'
         requests.delete(url, verify=False)
 
-        agent_service.change_status(worker.agent.id, AgentStatus.READY)
+        agent_service.change_status(job.agent.id, AgentStatus.READY)
 
 
 def delete_by_status(status: Status):
@@ -118,12 +118,8 @@ def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str 
 def change_status(id: str, status: Status):
     job = job_repository.get(id)
 
-    if status == job.status:
-        msj = f"El estado del job ya es {status.value}"
-        raise AppException(JobError.WORK_SAME_STATUS_ERROR, msj)
-
-    if status == Status.READY and job.status == Status.RUNNING:
-        msj = f"No se puede poner en READY cuando el job esta siendo ejecutado"
+    if status == Status.READY and job.status == Status.RUNNING and job.agent and agent_service.get(job.agent.id):
+        msj = f"You can't change status to READY when job still running"
         raise AppException(JobError.WORK_INVALID_STATUS_ERROR, msj)
 
     if status == Status.READY:
@@ -173,11 +169,11 @@ def _valid_work_running(id: str):
     job = get(id)
 
     if not job:
-        msj = f'el Job con id {id} no existe'
+        msj = f'Job with id {id} not found'
         raise AppException(JobError.WORK_NOT_EXIST_ERROR, msj)
 
     if job.status == Status.READY:
-        msj = f'el Job con id {id} todabia no esta corriendo'
+        msj = f'Job with id {id} yet not running'
         raise AppException(JobError.WORK_NOT_RUNNING_ERROR, msj)
 
 
