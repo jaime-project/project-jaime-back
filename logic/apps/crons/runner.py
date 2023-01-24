@@ -27,7 +27,7 @@ def add_new_jobs():
             if not must_be_created:
                 continue
 
-            logger.log.info(f'Agregando nuevo job al scheduler -> {cron.id}')
+            logger.log.info(f'Add new job to scheduler -> {cron.id}')
 
             _SCHEDULER.add_job(
                 id=cron.id,
@@ -42,7 +42,7 @@ def add_new_jobs():
 
 def start_threads():
 
-    logger.log.info('Iniciando hilo -> crons')
+    logger.log.info('Start thread -> crons')
 
     def thread_scheduler_method():
         global _SCHEDULER

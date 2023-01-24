@@ -27,7 +27,7 @@ def garbage_collector():
             if job.start_date + timedelta(minutes=minutes) < datetime.now():
                 service.delete(id)
                 logger.log.info(
-                    f'Borrando Job por garbage_collector -> id: {id}')
+                    f'Deleting Job by garbage_collector -> id: {id}')
 
     except Exception as e:
         logger.log.error(str(e))
@@ -35,7 +35,7 @@ def garbage_collector():
 
 def start_garbage_collector_thread():
 
-    logger.log.info('Iniciando hilo -> Garbage Collector')
+    logger.log.info('Start thread -> Garbage Collector')
 
     global _THREAD_GARBAGE_COLLECTOR_ACTIVE
     _THREAD_GARBAGE_COLLECTOR_ACTIVE = True

@@ -4,6 +4,7 @@ from logic.apps.crons import runner as cron_runner
 from logic.apps.docs import service as doc_service
 from logic.apps.jobs import garbage_collector as job_garbage
 from logic.apps.jobs import runner as job_runner
+from logic.apps.jobs import running_error_catcher
 from logic.apps.modules import service as module_service
 from logic.apps.repos import service as repo_service
 from logic.apps.repos.model import Repo
@@ -49,6 +50,7 @@ def start_threads():
     agent_checker.start_agent_thread()
     job_runner.start_runner_thread()
     cron_runner.start_threads()
+    running_error_catcher.start_running_error_catcher_thread()
 
 
 def setup_configs_vars():
