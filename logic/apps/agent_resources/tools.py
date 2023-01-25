@@ -208,7 +208,7 @@ def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dic
     }
 
     return requests.post(
-        url=f'{JAIME_URL}/api/v1/works/',
+        url=f'{JAIME_URL}/api/v1/jobs/',
         data=yaml_str,
         headers=headers
     ).text
