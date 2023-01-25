@@ -23,9 +23,6 @@ def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None
             JobEntity.agent.like(filter),
             JobEntity.agent_type.like(filter),
             JobEntity.status.like(filter),
-            JobEntity.start_date.like(filter),
-            JobEntity.running_date.like(filter),
-            JobEntity.terminated_date.like(filter),
         ))
 
     if order:
