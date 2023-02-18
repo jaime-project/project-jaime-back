@@ -1,6 +1,6 @@
 import json
 
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Column, DateTime, String, Text
 
 from logic.apps.agents.model import Agent
 from logic.apps.jobs.model import Job, Status
@@ -12,14 +12,14 @@ Entity = sqliteAlchemy.get_entity_class()
 class JobEntity(Entity):
     __tablename__ = 'JOBS'
 
-    id = Column(String(255), primary_key=True, nullable=False)
-    name = Column(String(255))
-    module_name = Column(String(255))
-    module_repo = Column(String(255))
-    params = Column(String(255))
+    id = Column(String(30), primary_key=True, nullable=False)
+    name = Column(String(60))
+    module_name = Column(String(60))
+    module_repo = Column(String(60))
+    params = Column(Text)
     agent = Column(String(255))
     agent_type = Column(String(255))
-    status = Column(String(255))
+    status = Column(String(30))
     start_date = Column(DateTime)
     running_date = Column(DateTime)
     terminated_date = Column(DateTime)

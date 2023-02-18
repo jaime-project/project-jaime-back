@@ -12,22 +12,23 @@ def setup_rest(app: Flask) -> Flask:
 
 
 def setup_token(app: Flask):
-    @app.before_request
-    def before_request():
+    # @app.before_request
+    # def before_request():
 
-        no_login_paths = [
-            '/api/v1/login/',
-            '/',
-            '/api/v1/agents/',
-            '/vars'
-        ]
+    #     no_login_paths = [
+    #         '/api/v1/login/',
+    #         '/',
+    #         '/api/v1/agents/',
+    #         '/vars'
+    #     ]
 
-        if request.method != 'OPTIONS' and request.path not in no_login_paths:
+    #     if request.method != 'OPTIONS' and request.path not in no_login_paths:
 
-            if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
-                return '', 401
+    #         if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
+    #             return '', 401
 
-            token = request.headers['Authorization'].replace('Bearer ', '')
+    #         token = request.headers['Authorization'].replace('Bearer ', '')
 
-            if not service.is_a_valid_token(token):
-                return '', 403
+    #         if not service.is_a_valid_token(token):
+    #             return '', 403
+    any
