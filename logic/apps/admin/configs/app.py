@@ -57,8 +57,6 @@ def setup_configs_vars():
 
     configs_vars = {
         'GARBAGE_COLLECTOR_RUN_MINUTES': '2880',
-        'JAIME_USER': 'admin',
-        'JAIME_PASS': 'admin',
     }
 
     for k, v in configs_vars.items():

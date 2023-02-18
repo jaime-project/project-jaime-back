@@ -12,6 +12,8 @@ class Vars(Enum):
     WORKINGDIR_PATH = 'WORKINGDIR_PATH'
     AGENTS_HTTPS = 'AGENTS_HTTPS'
     DB_URL = 'DB_URL'
+    JAIME_USER = 'JAIME_USER'
+    JAIME_PASS = 'JAIME_PASS'
 
 
 def setup_vars():

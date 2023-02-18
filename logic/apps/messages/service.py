@@ -54,6 +54,7 @@ def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str 
             "subject": s.subject,
             "date": s.date,
             "status": s.status.value,
+            "job": s.job,
             "id": s.id,
         }
         for s in repository.get_all(size, page, filter, order)
