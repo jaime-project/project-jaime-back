@@ -1,12 +1,11 @@
 import ntpath
-from datetime import datetime
 from io import BytesIO
 
 import yaml
 from flask import Blueprint, jsonify, request, send_file
 
 from logic.apps.messages import service
-from logic.apps.messages.model import Status, Message
+from logic.apps.messages.model import Message, Status
 
 blue_print = Blueprint('messages', __name__, url_prefix='/api/v1/messages')
 

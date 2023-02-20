@@ -1,7 +1,7 @@
 import os
 from pathlib import Path
 from typing import Dict, List
-
+from datetime import datetime
 import requests
 
 from logic.apps.agents import service as agent_service
@@ -12,6 +12,8 @@ from logic.apps.configs import repository
 from logic.apps.configs.error import ObjectError
 from logic.apps.docs import service as doc_service
 from logic.apps.filesystem import filesystem_service
+from logic.apps.messages import service as message_service
+from logic.apps.messages.model import Message, Status
 from logic.apps.modules import service as module_service
 from logic.apps.repos import service as repo_service
 from logic.apps.repos.model import Repo, RepoGit
@@ -136,6 +138,8 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
 
     objects['configs'] = get_configs_vars()
 
+    objects['messages'] = [m.__dict__() for m in message_service.get_all()]
+
     return objects
 
 
@@ -229,7 +233,6 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
                 module_service.add(name, content, repo)
 
     if 'docs' in objects:
-
         for o in objects['docs']:
 
             name = o['name']
@@ -248,3 +251,23 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
 
     if 'configs' in objects:
         update_configs_vars(objects['configs'])
+
+    if 'messages' in objects:
+        for m in objects['messages']:
+
+            message = Message(
+                id=m['id'],
+                title=m['title'],
+                subject=m['subject'],
+                body=m['body'],
+                job=m['job'],
+                status=Status(m['status']),
+                date=datetime.fromisoformat(m['date']),
+                files=m.get('files', []),
+            )
+
+            if replace:
+                if message_service.get(message.id):
+                    message_service.delete(message.id)
+
+            message_service.add(message)
