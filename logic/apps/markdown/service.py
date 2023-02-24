@@ -1,30 +1,27 @@
 
 import os
-from pathlib import Path
 from typing import List
 
 from logic.apps.filesystem import filesystem_service
-from logic.apps.modules.error import ModulesError
+from logic.apps.markdown.error import MarkdownError
 from logic.apps.repos import service as repo_service
 from logic.libs.exception.exception import AppException
-
-_REPOS_PATH = f'{Path.home()}/.jaime/repos'
 
 
 def add(name: str, content: str, repo: str):
 
-    path = f'{repo_service.get_path()}/{repo}/{name}.py'
+    path = f'{repo_service.get_path()}/{repo}/{name}.md'
 
     if os.path.exists(path):
-        msj = f"Module with name {name} already exist"
-        raise AppException(ModulesError.MODULE_ALREADY_EXIST_ERROR, msj)
+        msj = f"Markdown with name {name} already exist"
+        raise AppException(MarkdownError.MARKDOWN_ALREADY_EXIST_ERROR, msj)
 
     filesystem_service.create_file(path, content)
 
 
 def get(name: str, repo: str) -> str:
 
-    path = f'{repo_service.get_path()}/{repo}/{name}.py'
+    path = f'{repo_service.get_path()}/{repo}/{name}.md'
 
     try:
         return filesystem_service.get_file_content(path)
@@ -36,9 +33,9 @@ def get(name: str, repo: str) -> str:
 def list_all(repo_name: str) -> List[str]:
 
     return [
-        nf.replace('.py', '')
+        nf.replace('.md', '')
         for nf in filesystem_service.name_files_from_path(f'{repo_service.get_path()}/{repo_name}')
-        if nf.endswith('.py')
+        if nf.endswith('.md')
     ]
 
 
@@ -49,11 +46,11 @@ def delete(name: str, repo: str):
 
     except Exception:
         raise AppException(
-            code=ModulesError.MODULE_NO_EXIST_ERROR,
-            msj=f'Module with name {name} not exist or this have a invalid format'
+            code=MarkdownError.MARKDOWN_NO_EXIST_ERROR,
+            msj=f'Markdown with name {name} not exist or this have a invalid format'
         )
 
-    path = f'{repo_service.get_path()}/{repo}/{name}.py'
+    path = f'{repo_service.get_path()}/{repo}/{name}.md'
     filesystem_service.delete_file(path)
 
 
