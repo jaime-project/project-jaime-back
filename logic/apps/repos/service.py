@@ -5,12 +5,13 @@ from typing import Dict, List
 
 from logic.apps.docs import service as doc_service
 from logic.apps.filesystem import filesystem_service
-from logic.apps.modules import service as module_service
 from logic.apps.repos import repository
 from logic.apps.repos.error import RepoError
 from logic.apps.repos.model import Repo, RepoGit, RepoType
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
+
+_REPOS_PATH = f'{Path.home()}/.jaime/repos'
 
 
 def add(repo: Repo):
@@ -67,7 +68,7 @@ def delete(name: str):
         raise AppException(RepoError.REPO_NOT_EXISTS_ERROR, msj)
 
     repository.delete(name)
-    filesystem_service.delete_folder(f'{module_service.get_path()}/{name}')
+    filesystem_service.delete_folder(f'{get_path()}/{name}')
 
 
 def modify(name: str, repo: RepoGit):
@@ -89,7 +90,7 @@ def reload_repo_git(repo_name: str):
 
 def load_repo(repo: Repo):
 
-    out_path = f'{module_service.get_path()}/{repo.name}'
+    out_path = f'{get_path()}/{repo.name}'
 
     if not os.path.exists(out_path):
         Path(out_path).mkdir(parents=True)
@@ -119,7 +120,7 @@ def load_repo(repo: Repo):
 
 
 def is_loaded(name: str) -> bool:
-    module_path = f'{module_service.get_path()}/{name}'
+    module_path = f'{get_path()}/{name}'
     return os.path.exists(module_path)
 
 
@@ -142,12 +143,12 @@ def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
     ]
 
     objects['modules'] = []
-    for module_name in module_service.list_all(repo_name):
+    for module_name in list_all(repo_name):
 
         objects['modules'].append({
             'repo': repo_name,
             'name': module_name,
-            'content': module_service.get(module_name, repo_name)
+            'content': get(module_name, repo_name)
         })
 
     objects['docs'] = []
@@ -167,6 +168,11 @@ def export_modules_and_docs_zip(repo_name: str) -> bytes:
     tar_path = f'/tmp/{repo_name}.tar.gz'
 
     os.system(
-        f"cd {module_service.get_path()} && tar -zcvf {tar_path} {repo_name}")
+        f"cd {get_path()} && tar -zcvf {tar_path} {repo_name}")
 
     return open(tar_path, 'rb').read()
+
+
+def get_path() -> str:
+    global _REPOS_PATH
+    return _REPOS_PATH

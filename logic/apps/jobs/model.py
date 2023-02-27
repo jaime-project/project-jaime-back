@@ -6,7 +6,6 @@ from typing import Dict
 from uuid import uuid4
 
 from logic.apps.agents.model import Agent
-from logic.apps.modules import service
 
 
 class Status(Enum):
@@ -38,6 +37,3 @@ class Job():
 
     def finish(self):
         self.terminated_date = datetime.now()
-
-    def get_module_file_path(self) -> str:
-        return os.path.join(service.get_path(), f'{self.module_repo}/{self.module_name}.py')

@@ -1,21 +1,18 @@
 from datetime import datetime, timedelta
 from uuid import uuid4
 
-from logic.apps.configs import service
+from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.login.error import LoginError
 from logic.apps.login.model import Login
 from logic.libs.exception.exception import AppException
 
 _CURRENTS_LOGINS = {}
 
-_JAIME_USER_CONFIG = 'JAIME_USER'
-_JAIME_PASS_CONFIG = 'JAIME_PASS'
-
 
 def login(login: Login) -> str:
 
-    config_user = service.get_config_var(_JAIME_USER_CONFIG)
-    config_pass = service.get_config_var(_JAIME_PASS_CONFIG)
+    config_user = get_var(Vars.JAIME_USER)
+    config_pass = get_var(Vars.JAIME_PASS)
 
     if login.user != config_user or login.password != config_pass:
         raise AppException(LoginError.USER_OR_PASS_ERROR,

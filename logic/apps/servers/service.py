@@ -11,7 +11,7 @@ from logic.libs.exception.exception import AppException
 def add(server: Server):
 
     if repository.exist(server.name):
-        msj = f"El server con nombre {server.name} ya existe"
+        msj = f"Server with name {server.name} already exist"
         raise AppException(ServerError.SERVER_ALREADY_EXISTS_ERROR, msj)
 
     repository.add(server)
@@ -52,7 +52,7 @@ def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str 
 def delete(name: str):
 
     if not repository.exist(name):
-        msj = f"El server con nombre {name} no existe"
+        msj = f"Server with name {name} not exist"
         raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
 
     repository.delete(name)
@@ -62,7 +62,7 @@ def test_server(name: str) -> Dict[str, str]:
 
     server = get(name)
     if not server:
-        msj = f"El server con nombre {name} no existe"
+        msj = f"Server with name {name} not exist"
         raise AppException(ServerError.SERVER_NOT_EXISTS_ERROR, msj)
 
     try:

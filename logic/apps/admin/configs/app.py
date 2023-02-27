@@ -5,6 +5,7 @@ from logic.apps.docs import service as doc_service
 from logic.apps.jobs import garbage_collector as job_garbage
 from logic.apps.jobs import runner as job_runner
 from logic.apps.jobs import running_error_catcher
+from logic.apps.markdown import service as markdown_service
 from logic.apps.modules import service as module_service
 from logic.apps.repos import service as repo_service
 from logic.apps.repos.model import Repo
@@ -22,6 +23,19 @@ _DOCS_DEFAULT_CONTENT = """person:
     name: Jaime
 """
 
+_MD_DEFAULT_NAME = 'example'
+_MD_DEFAULT_CONTENT = """
+# Example markdown doc
+
+## :package: Requeriments
+
+* BASE agent
+
+## :tada: How to use
+
+* execute example by normal execution
+"""
+
 
 def setup_repos():
 
@@ -34,15 +48,17 @@ def setup_repos():
         if not repo_service.is_loaded(repo_name):
             repo_service.load_repo(repo_service.get(repo_name))
 
-    module_default_exist = module_service.get(
-        _MODULE_DEFAULT_NAME, _REPO_DEFAULT_NAME) != None
-
-    if not module_default_exist:
-
+    if not module_service.get(_MODULE_DEFAULT_NAME, _REPO_DEFAULT_NAME):
         module_service.add(_MODULE_DEFAULT_NAME,
                            _MODULE_DEFAULT_CONTENT, _REPO_DEFAULT_NAME)
+
+    if not doc_service.get(_MODULE_DEFAULT_NAME, _REPO_DEFAULT_NAME):
         doc_service.add(_MODULE_DEFAULT_NAME,
                         _DOCS_DEFAULT_CONTENT, _REPO_DEFAULT_NAME)
+
+    if not markdown_service.get(_MODULE_DEFAULT_NAME, _REPO_DEFAULT_NAME):
+        markdown_service.add(_MD_DEFAULT_NAME,
+                             _MD_DEFAULT_CONTENT, _REPO_DEFAULT_NAME)
 
 
 def start_threads():
@@ -57,8 +73,6 @@ def setup_configs_vars():
 
     configs_vars = {
         'GARBAGE_COLLECTOR_RUN_MINUTES': '2880',
-        'JAIME_USER': 'admin',
-        'JAIME_PASS': 'admin',
     }
 
     for k, v in configs_vars.items():

@@ -13,6 +13,7 @@ from logic.apps.jobs import repository as job_repository
 from logic.apps.jobs.error import JobError
 from logic.apps.jobs.model import Job, Status
 from logic.apps.modules.error import ModulesError
+from logic.apps.repos import service as repo_service
 from logic.apps.zip import service as zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
@@ -41,7 +42,10 @@ def exec_into_agent(job: Job):
         f'{_PATH_AGENT_RESOURCES}/tools.pyc') else 'tools.py'
     shutil.copy(f'{_PATH_AGENT_RESOURCES}/{tools_script}', workingdir_path)
 
-    shutil.copy(job.get_module_file_path(), f'{workingdir_path}/module.py')
+    shutil.copy(
+        f'{repo_service.get_path()}/{job.module_repo}/{job.module_name}.py',
+        f'{workingdir_path}/module.py'
+    )
 
     with open(f'{workingdir_path}/params.yaml', 'w') as f:
         f.write(yaml.dump(job.params))

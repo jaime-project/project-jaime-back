@@ -2,6 +2,7 @@ import logging
 import os
 import subprocess
 from dataclasses import dataclass
+from datetime import datetime
 from logging.handlers import WatchedFileHandler
 from typing import Dict, List
 from uuid import uuid4
@@ -213,3 +214,29 @@ def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dic
         headers=headers
     ).text
 
+
+def get_job_id() -> str:
+    return sh('pwd').split('/')[-1]
+
+
+def new_message(title: str, subject: str, body: str, files: list[str] = []) -> str:
+
+    message_dict = {
+        'title': title,
+        'subject': subject,
+        'body': body,
+        'files': files,
+        'job': get_job_id()
+    }
+
+    JAIME_URL = os.getenv('JAIME_URL')
+    token = os.getenv('JAIME_TOKEN')
+    headers = {
+        'Authorization': f'Bearer {token}'
+    }
+
+    return requests.post(
+        url=f'{JAIME_URL}/api/v1/messages/',
+        json=message_dict,
+        headers=headers
+    ).text
