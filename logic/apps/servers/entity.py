@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Text
 
 from logic.apps.servers.model import Server
 from logic.libs.sqliteAlchemy import sqliteAlchemy
@@ -13,7 +13,7 @@ class ServerEntity(Entity):
     host = Column(String(255))
     port = Column(String(255))
     user = Column(String(255))
-    password = Column(String(255))
+    password = Column(Text)
 
     def to_model(self) -> Server:
         return Server(
