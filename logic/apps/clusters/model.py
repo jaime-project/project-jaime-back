@@ -7,14 +7,12 @@ class Cluster():
     url: str
     token: str
     type: str
-    version: str
 
-    def __init__(self, name: str, url: str, token: str, version: str, type: str) -> "Cluster":
+    def __init__(self, name: str, url: str, token: str, type: str) -> "Cluster":
         self.name = name
         self.url = url
         self.token = token
         self.type = type
-        self.version = version
 
     def __eq__(self, o: object) -> bool:
         return self.name == o.name
@@ -25,5 +23,4 @@ class Cluster():
             'url': self.url,
             'token': self.token,
             'type': self.type,
-            'version': self.version
         }

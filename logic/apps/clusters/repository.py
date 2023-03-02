@@ -19,7 +19,6 @@ def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None
             ClusterEntity.url.like(filter),
             ClusterEntity.token.like(filter),
             ClusterEntity.type.like(filter),
-            ClusterEntity.version.like(filter),
         ))
 
     if order:

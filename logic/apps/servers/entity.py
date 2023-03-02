@@ -9,10 +9,10 @@ Entity = sqliteAlchemy.get_entity_class()
 class ServerEntity(Entity):
     __tablename__ = 'SERVERS'
 
-    name = Column(String(255), primary_key=True, nullable=False)
+    name = Column(String(60), primary_key=True, nullable=False)
     host = Column(String(255))
-    port = Column(String(255))
-    user = Column(String(255))
+    port = Column(String(10))
+    user = Column(Text)
     password = Column(Text)
 
     def to_model(self) -> Server:

@@ -24,8 +24,6 @@ RUN apt-get install iputils-ping curl git wget -y
 RUN mkdir -m 777 /home/jaime
 WORKDIR /home/jaime
 
-ENV HOME=/home/jaime
-
 COPY requirements.txt ./
 RUN pip install -r requirements.txt
 RUN rm -fr requirements.txt

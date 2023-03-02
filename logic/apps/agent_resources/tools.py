@@ -2,8 +2,8 @@ import logging
 import os
 import subprocess
 from dataclasses import dataclass
-from datetime import datetime
 from logging.handlers import WatchedFileHandler
+from pathlib import Path
 from typing import Dict, List
 from uuid import uuid4
 
@@ -161,9 +161,9 @@ def login_kubernetes(cluster_name) -> bool:
 
     client = _get_cluster_client(cluster_name)
 
-    sh('mkdir -p /root/.kube', echo=False)
+    sh(f'mkdir -p {Path.home()}/.kube', echo=False)
 
-    with open('/root/.kube/config', 'w') as file:
+    with open(f'{Path.home()}/.kube/config', 'w') as file:
         file.write(f""" 
 apiVersion: v1
 kind: Config

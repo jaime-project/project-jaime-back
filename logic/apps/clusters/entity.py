@@ -9,19 +9,17 @@ Entity = sqliteAlchemy.get_entity_class()
 class ClusterEntity(Entity):
     __tablename__ = 'CLUSTERS'
 
-    name = Column(String(255), primary_key=True, nullable=False)
+    name = Column(String(60), primary_key=True, nullable=False)
     url = Column(Text)
     token = Column(Text)
-    type = Column(String(60))
-    version = Column(String(255))
+    type = Column(String(30))
 
     def to_model(self) -> Cluster:
         return Cluster(
             name=self.name,
             url=self.url,
             token=self.token,
-            type=self.type,
-            version=self.version
+            type=self.type
         )
 
     @staticmethod
@@ -30,6 +28,5 @@ class ClusterEntity(Entity):
             name=m.name,
             url=m.url,
             token=m.token,
-            type=m.type,
-            version=m.version
+            type=m.type
         )
