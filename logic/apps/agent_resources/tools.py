@@ -39,10 +39,8 @@ def _get_cluster_client(cluster_name: str) -> "ClusterClient":
         token = os.getenv('JAIME_TOKEN')
         headers = {'Authorization': f'Bearer {token}'}
         cluster_dict = requests.get(
-            f'{url}/api/v1/clusters/{cluster_name}', headers=headers)
+            f'{url}/api/v1/clusters/{cluster_name}', headers=headers).json()
 
-        log.error(cluster_dict.text)
-        log.error(cluster_dict.status_code)
     except Exception as e:
         log.error(e)
         raise Exception('Error on get clusters')
@@ -167,29 +165,29 @@ def login_kubernetes(cluster_name) -> bool:
 
     with open(f'{Path.home()}/.kube/config', 'w') as file:
         file.write(f""" 
-            apiVersion: v1
-            kind: Config
-            clusters:
-            - name: jaime
-                cluster:
-                insecure-skip-tls-verify: true
-                server: {client.url}
-            users:
-            - name: jaime
-                user:
-                token: {client.token}
-            contexts:
-            - name: jaime
-                context:
-                cluster: jaime
-                user: jaime
-                namespace: default
-            current-context: jaime
-        """)
+apiVersion: v1
+kind: Config
+clusters:
+- name: jaime
+  cluster:
+    insecure-skip-tls-verify: true
+    server: {client.url}
+users:
+- name: jaime
+  user:
+    token: {client.token}
+contexts:
+- name: jaime
+  context:
+    cluster: jaime
+    user: jaime
+    namespace: default
+current-context: jaime
+""")
 
     text = subprocess.getoutput(f"kubectl get nodes")
 
-    return 'Unable to connect' not in text and 'Error' not in text
+    return 'Unable to connect' not in text and 'Error' not in text and 'refused' not in text
 
 
 def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:
