@@ -1,9 +1,11 @@
 import os
-from pathlib import Path
-from typing import Dict, List
 from datetime import datetime
+from typing import Dict, List
+
 import requests
 
+from logic.apps.admin.configs.logger import get_logs_path
+from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.agents import service as agent_service
 from logic.apps.agents.error import AgentError
 from logic.apps.clusters import service
@@ -21,9 +23,6 @@ from logic.apps.servers import service as server_service
 from logic.apps.servers.model import Server
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
-
-_REQUIREMENTS_FILE_PATH = f'{Path.home()}/.jaime/requirements.txt'
-_LOGS_FILE_PATH = f'{Path.home()}/.jaime/logs/app.log'
 
 
 def update_requirements(content: str):
@@ -51,13 +50,11 @@ def get_requirements() -> str:
 
 
 def get_requirements_path() -> str:
-
-    global _REQUIREMENTS_FILE_PATH
-    return _REQUIREMENTS_FILE_PATH
+    return f'{get_var(Vars.JAIME_HOME_PATH)}/requirements.txt'
 
 
 def get_jaime_logs() -> str:
-    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
+    return filesystem_service.get_file_content(get_logs_path())
 
 
 def get_agent_logs(agent_id: str) -> str:
