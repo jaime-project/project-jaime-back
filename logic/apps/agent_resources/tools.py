@@ -23,7 +23,6 @@ _LOG_FILE_NAME = 'logs.log'
 class ClusterClient():
     url: str
     token: str
-    version: str
 
 
 @dataclass
@@ -47,8 +46,7 @@ def _get_cluster_client(cluster_name: str) -> "ClusterClient":
 
     return ClusterClient(
         url=cluster_dict['url'],
-        token=cluster_dict['token'],
-        version=cluster_dict['version']
+        token=cluster_dict['token']
     )
 
 
