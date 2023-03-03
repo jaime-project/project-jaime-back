@@ -41,7 +41,7 @@ def update_requirements(content: str):
 
         except Exception:
             logger.log.error(
-                f'Error al conectarse al agente para actualizar las dependencias de pip')
+                f'Error in connection with agent to update pip dependencies')
 
 
 def get_requirements() -> str:
@@ -65,7 +65,7 @@ def get_agent_logs(agent_id: str) -> str:
     agent = agent_service.get(agent_id)
     if not agent:
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
-                           f'El agente con id {agent_id} no existe')
+                           f'Agent with id {agent_id} not found')
 
     url = agent.get_url() + f'/api/v1/configs/logs'
     response = requests.get(url, verify=False)
