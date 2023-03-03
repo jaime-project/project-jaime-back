@@ -33,8 +33,8 @@ def list_all() -> List[str]:
     ]
 
 
-def get_all() -> List[Server]:
-    return repository.get_all()
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Server]:
+    return repository.get_all(size, page, filter, order)
 
 
 def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Dict[str, str]]:

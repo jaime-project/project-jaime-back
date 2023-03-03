@@ -133,7 +133,7 @@ def list_types() -> List[str]:
     return [e.value for e in RepoType]
 
 
-def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
+def export_repo(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
 
     objects = {}
 
@@ -164,7 +164,7 @@ def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
     objects['markdowns'] = []
     for markdown_name in markdown_service.list_all(repo_name):
 
-        objects['docs'].append({
+        objects['markdowns'].append({
             'repo': repo_name,
             'name': markdown_name,
             'content': markdown_service.get(markdown_name, repo_name)
@@ -173,7 +173,7 @@ def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
     return objects
 
 
-def export_modules_and_docs_zip(repo_name: str) -> bytes:
+def export_repo_zip(repo_name: str) -> bytes:
 
     tar_path = f'/tmp/{repo_name}.tar.gz'
 

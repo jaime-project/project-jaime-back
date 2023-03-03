@@ -2,13 +2,13 @@ from typing import Dict, List
 
 from logic.apps.crons import repository, runner
 from logic.apps.crons.error import CronError
-from logic.apps.crons.model import CronStatus, CronWork
+from logic.apps.crons.model import CronStatus, CronJob
 from logic.apps.jobs import service as job_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
 
 
-def exec(cron: CronWork) -> str:
+def exec(cron: CronJob) -> str:
 
     job = cron.to_workStatus()
     job_service.add(job)
@@ -18,7 +18,7 @@ def exec(cron: CronWork) -> str:
     return job.id
 
 
-def add(cron_work: CronWork) -> str:
+def add(cron_work: CronJob) -> str:
 
     if repository.get(cron_work.id):
         raise AppException(CronError.CRON_ALREDY_EXIST_ERROR,
@@ -28,8 +28,12 @@ def add(cron_work: CronWork) -> str:
     return cron_work.id
 
 
-def get(id: str) -> CronWork:
+def get(id: str) -> CronJob:
     return repository.get(id)
+
+
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[CronJob]:
+    return repository.get_all(size, page, filter, order)
 
 
 def delete(id: str):
@@ -55,7 +59,7 @@ def list_all() -> List[str]:
     ]
 
 
-def list_by_status(status: CronWork) -> List[str]:
+def list_by_status(status: CronJob) -> List[str]:
     return [
         cron.id
         for cron
@@ -76,7 +80,7 @@ def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str 
     ]
 
 
-def modify(cron: CronWork):
+def modify(cron: CronJob):
     repository.delete(cron.id)
     repository.add(cron)
 

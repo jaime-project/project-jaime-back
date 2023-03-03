@@ -3,7 +3,7 @@ import json
 
 from sqlalchemy import Column, DateTime, String, Text
 
-from logic.apps.crons.model import CronStatus, CronWork
+from logic.apps.crons.model import CronStatus, CronJob
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 Entity = sqliteAlchemy.get_entity_class()
@@ -22,8 +22,8 @@ class CronEntity(Entity):
     job_agent_type = Column(String(30))
     job_params = Column(Text)
 
-    def to_model(self) -> CronWork:
-        return CronWork(
+    def to_model(self) -> CronJob:
+        return CronJob(
             name=self.name,
             cron_expression=self.cron_expression,
             job_module_repo=self.job_module_repo,
@@ -36,7 +36,7 @@ class CronEntity(Entity):
         )
 
     @staticmethod
-    def from_model(c: CronWork) -> 'CronEntity':
+    def from_model(c: CronJob) -> 'CronEntity':
         return CronEntity(
             id=c.id,
             name=c.name,
