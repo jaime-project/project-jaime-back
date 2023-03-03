@@ -8,8 +8,6 @@ from logic.apps.modules.error import ModulesError
 from logic.apps.repos import service as repo_service
 from logic.libs.exception.exception import AppException
 
-_REPOS_PATH = f'{Path.home()}/.jaime/repos'
-
 
 def add(name: str, content: str, repo: str):
 

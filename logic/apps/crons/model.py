@@ -17,7 +17,7 @@ def _generate_id() -> str:
 
 
 @dataclass
-class CronWork():
+class CronJob():
     name: str
     cron_expression: str
     job_module_repo: str
@@ -37,3 +37,16 @@ class CronWork():
             agent_type=self.job_agent_type,
             params=self.job_params
         )
+
+    def __dict__(self) -> Dict[str, object]:
+        return {
+            'name': self.name,
+            'cron_expression': self.cron_expression,
+            'job_module_repo': self.job_module_repo,
+            'job_module_name': self.job_module_name,
+            'job_agent_type': self.job_agent_type,
+            'id': self.id,
+            'creation_date': self.creation_date.isoformat(),
+            'status': self.status.value,
+            'job_params': self.job_params,
+        }

@@ -95,9 +95,9 @@ def _request_body_to_repo(s: Dict[str, Any]) -> Repo:
 
 
 @blue_print.route('/<name>/yamls', methods=['GET'])
-def export_modules_and_docs(name: str):
+def export_repo(name: str):
 
-    dict_objects = service.export_modules_and_docs(name)
+    dict_objects = service.export_repo(name)
     dict_yaml = str(yaml.dump(dict_objects))
 
     name_yaml = datetime.now().isoformat() + '.yaml'
@@ -109,9 +109,9 @@ def export_modules_and_docs(name: str):
 
 
 @blue_print.route('/<name>/zips', methods=['GET'])
-def export_modules_and_docs_zip(name: str):
+def export_repo_zip(name: str):
 
-    repo_zip = service.export_modules_and_docs_zip(name)
+    repo_zip = service.export_repo_zip(name)
 
     tar_name = datetime.now().isoformat() + '.tar.gz'
 

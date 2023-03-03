@@ -18,7 +18,6 @@ def post():
         name=s['name'],
         url=s['url'],
         token=s['token'],
-        version=s['version'],
         type=s['type']
     ))
     return '', 201
@@ -69,7 +68,6 @@ def modify_cluster(name):
         name=s['name'],
         url=s['url'],
         token=s['token'],
-        version=s['version'],
         type=s['type']
     )
     service.modify(name, server)

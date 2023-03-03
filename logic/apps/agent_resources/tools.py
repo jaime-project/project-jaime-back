@@ -2,8 +2,8 @@ import logging
 import os
 import subprocess
 from dataclasses import dataclass
-from datetime import datetime
 from logging.handlers import WatchedFileHandler
+from pathlib import Path
 from typing import Dict, List
 from uuid import uuid4
 
@@ -23,7 +23,6 @@ _LOG_FILE_NAME = 'logs.log'
 class ClusterClient():
     url: str
     token: str
-    version: str
 
 
 @dataclass
@@ -36,31 +35,32 @@ class ServerClient():
 
 def _get_cluster_client(cluster_name: str) -> "ClusterClient":
     try:
-        JAIME_URL = os.getenv('JAIME_URL')
+        url = os.getenv('JAIME_URL')
         token = os.getenv('JAIME_TOKEN')
         headers = {'Authorization': f'Bearer {token}'}
         cluster_dict = requests.get(
-            f'{JAIME_URL}/api/v1/clusters/{cluster_name}', headers=headers).json()
+            f'{url}/api/v1/clusters/{cluster_name}', headers=headers).json()
 
-    except Exception:
+    except Exception as e:
+        log.error(e)
         raise Exception('Error on get clusters')
 
     return ClusterClient(
         url=cluster_dict['url'],
-        token=cluster_dict['token'],
-        version=cluster_dict['version']
+        token=cluster_dict['token']
     )
 
 
 def _get_server_client(server_name: str) -> "ServerClient":
     try:
-        JAIME_URL = os.getenv('JAIME_URL')
+        url = os.getenv('JAIME_URL')
         token = os.getenv('JAIME_TOKEN')
         headers = {'Authorization': f'Bearer {token}'}
         server_dict = requests.get(
-            f'{JAIME_URL}/api/v1/servers/{server_name}', headers=headers).json()
+            f'{url}/api/v1/servers/{server_name}', headers=headers).json()
 
-    except Exception:
+    except Exception as e:
+        log.error(e)
         raise Exception('Error on get clusters')
 
     return ServerClient(
@@ -161,33 +161,33 @@ def login_kubernetes(cluster_name) -> bool:
 
     client = _get_cluster_client(cluster_name)
 
-    sh('mkdir -p /root/.kube', echo=False)
+    subprocess.getoutput(f'mkdir -p {Path.home()}/.kube')
 
-    with open('/root/.kube/config', 'w') as file:
+    with open(f'{Path.home()}/.kube/config', 'w') as file:
         file.write(f""" 
 apiVersion: v1
 kind: Config
 clusters:
-- cluster:
+- name: jaime
+  cluster:
     insecure-skip-tls-verify: true
     server: {client.url}
-  name: jaime
 users:
 - name: jaime
   user:
     token: {client.token}
 contexts:
-- context:
+- name: jaime
+  context:
     cluster: jaime
     user: jaime
     namespace: default
-  name: jaime
 current-context: jaime
-        """)
+""")
 
-    result = sh(f"kubectl config view", echo=False)
+    text = subprocess.getoutput(f"kubectl get nodes")
 
-    return 'jaime' in result
+    return 'Unable to connect' not in text and 'Error' not in text and 'refused' not in text
 
 
 def new_jaime_job(repo_name: str, module_name: str, agent_type: str, params: Dict[str, object] = {}, name: str = str(uuid4())) -> str:

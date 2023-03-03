@@ -1,17 +1,22 @@
 import os
-from pathlib import Path
-from typing import Dict, List
 from datetime import datetime
+from typing import Dict, List
+
 import requests
 
+from logic.apps.admin.configs.logger import get_logs_path
+from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.agents import service as agent_service
 from logic.apps.agents.error import AgentError
-from logic.apps.clusters import service
+from logic.apps.clusters import service as cluster_service
 from logic.apps.clusters.model import Cluster
 from logic.apps.configs import repository
 from logic.apps.configs.error import ObjectError
+from logic.apps.crons import service as cron_service
+from logic.apps.crons.model import CronJob, CronStatus
 from logic.apps.docs import service as doc_service
 from logic.apps.filesystem import filesystem_service
+from logic.apps.markdown import service as markdown_service
 from logic.apps.messages import service as message_service
 from logic.apps.messages.model import Message, Status
 from logic.apps.modules import service as module_service
@@ -21,9 +26,6 @@ from logic.apps.servers import service as server_service
 from logic.apps.servers.model import Server
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
-
-_REQUIREMENTS_FILE_PATH = f'{Path.home()}/.jaime/requirements.txt'
-_LOGS_FILE_PATH = f'{Path.home()}/.jaime/logs/app.log'
 
 
 def update_requirements(content: str):
@@ -51,13 +53,11 @@ def get_requirements() -> str:
 
 
 def get_requirements_path() -> str:
-
-    global _REQUIREMENTS_FILE_PATH
-    return _REQUIREMENTS_FILE_PATH
+    return f'{get_var(Vars.JAIME_HOME_PATH)}/requirements.txt'
 
 
 def get_jaime_logs() -> str:
-    return filesystem_service.get_file_content(_LOGS_FILE_PATH)
+    return filesystem_service.get_file_content(get_logs_path())
 
 
 def get_agent_logs(agent_id: str) -> str:
@@ -101,12 +101,17 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
 
     objects['servers'] = [
         o.__dict__()
-        for o in server_service.get_all()
+        for o in server_service.get_all(size=None, page=None)
     ]
 
     objects['clusters'] = [
         o.__dict__()
-        for o in service.get_all()
+        for o in cluster_service.get_all(size=None, page=None)
+    ]
+
+    objects['crons'] = [
+        o.__dict__()
+        for o in cron_service.get_all(size=None, page=None)
     ]
 
     objects['repos'] = [
@@ -132,6 +137,16 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
                 'repo': repo['name'],
                 'name': doc_name,
                 'content': doc_service.get(doc_name, repo['name'])
+            })
+
+    objects['markdowns'] = []
+    for repo in objects['repos']:
+        for md_name in markdown_service.list_all(repo['name']):
+
+            objects['markdowns'].append({
+                'repo': repo['name'],
+                'name': md_name,
+                'content': markdown_service.get(md_name, repo['name'])
             })
 
     objects['requirements'] = get_requirements()
@@ -163,15 +178,14 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
                 url=o['url'],
                 token=o['token'],
                 type=o['type'],
-                version=o['version']
             )
 
-            if replace and service.get(cluster.name):
-                service.delete(cluster.name)
-                service.add(cluster)
+            if replace and cluster_service.get(cluster.name):
+                cluster_service.delete(cluster.name)
+                cluster_service.add(cluster)
 
-            if not service.get(cluster.name):
-                service.add(cluster)
+            if not cluster_service.get(cluster.name):
+                cluster_service.add(cluster)
 
     if 'servers' in objects:
 
@@ -191,6 +205,29 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
 
             if not server_service.get(server.name):
                 server_service.add(server)
+
+    if 'crons' in objects:
+
+        for o in objects['crons']:
+
+            cronJob = CronJob(
+                name=o['name'],
+                cron_expression=o['cron_expression'],
+                job_module_repo=o['job_module_repo'],
+                job_module_name=o['job_module_name'],
+                job_agent_type=o['job_agent_type'],
+                id=o['id'],
+                creation_date=datetime.fromisoformat(o['creation_date']),
+                status=CronStatus(o['status']),
+                job_params=o['job_params'],
+            )
+
+            if replace and cron_service.get(cronJob.id):
+                cron_service.delete(cronJob.id)
+                cron_service.add(cronJob)
+
+            if not cron_service.get(cronJob.name):
+                cron_service.add(cronJob)
 
     if 'repos' in objects:
 
@@ -245,6 +282,20 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
 
             if not doc_service.get(name, repo):
                 doc_service.add(name, content, repo)
+
+    if 'markdowns' in objects:
+        for o in objects['markdowns']:
+
+            name = o['name']
+            content = o['content']
+            repo = o['repo']
+
+            if replace and markdown_service.get(name, repo):
+                markdown_service.delete(name, repo)
+                markdown_service.add(name, content, repo)
+
+            if not markdown_service.get(name, repo):
+                markdown_service.add(name, content, repo)
 
     if 'requirements' in objects:
         update_requirements(objects['requirements'])

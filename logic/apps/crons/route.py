@@ -4,7 +4,7 @@ import yaml
 from flask import Blueprint, jsonify, request
 
 from logic.apps.crons import runner, service
-from logic.apps.crons.model import CronStatus, CronWork
+from logic.apps.crons.model import CronStatus, CronJob
 
 blue_print = Blueprint('crons', __name__, url_prefix='/api/v1/crons')
 
@@ -15,7 +15,7 @@ def add():
     params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
         request.data) else request.json
 
-    cron = CronWork(
+    cron = CronJob(
         name=params_dict['name'],
         cron_expression=params_dict['cron_expression'],
         job_module_repo=params_dict['job_module_repo'],
@@ -120,7 +120,7 @@ def modify():
     params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
         request.data) else request.json
 
-    cron = CronWork(
+    cron = CronJob(
         name=params_dict['name'],
         cron_expression=params_dict['cron_expression'],
         job_module_repo=params_dict['job_module_repo'],

@@ -67,7 +67,7 @@ def test_cluster(name: str) -> Dict[str, str]:
     agents = agent_service.get_by_type(cluster.type)
     if not agents:
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
-                           "No hay agentes para la tarea")
+                           f"Agent {cluster.type} type not found")
 
     url = agents[0].get_url()
     json = {

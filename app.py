@@ -6,7 +6,7 @@ from logic.apps.admin.configs.app import (setup_configs_vars, setup_repos,
 from logic.apps.admin.configs.logger import setup_loggers
 from logic.apps.admin.configs.rest import setup_rest, setup_token
 from logic.apps.admin.configs.sqlite import setup_sqlite
-from logic.apps.admin.configs.variables import Vars, setup_vars
+from logic.apps.admin.configs.variables import Vars, setup_vars, get_var
 from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
 

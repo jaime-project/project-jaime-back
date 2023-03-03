@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Text
 
 from logic.apps.repos.model import Repo, RepoGit, RepoType
 from logic.libs.sqliteAlchemy import sqliteAlchemy
@@ -9,12 +9,12 @@ Entity = sqliteAlchemy.get_entity_class()
 class RepoGitEntity(Entity):
     __tablename__ = 'REPOSITORIES_GIT'
 
-    name = Column(String(255), primary_key=True, nullable=False)
-    git_path = Column(String(255))
-    git_user = Column(String(255))
-    git_pass = Column(String(255))
-    git_branch = Column(String(255))
-    git_url = Column(String(255))
+    name = Column(String(60), primary_key=True, nullable=False)
+    git_path = Column(Text)
+    git_user = Column(Text)
+    git_pass = Column(Text)
+    git_branch = Column(String(60))
+    git_url = Column(Text)
 
     def to_model(self) -> RepoGit:
         return RepoGit(

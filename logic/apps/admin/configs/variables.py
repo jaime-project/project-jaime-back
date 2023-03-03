@@ -14,10 +14,11 @@ class Vars(Enum):
     DB_URL = 'DB_URL'
     JAIME_USER = 'JAIME_USER'
     JAIME_PASS = 'JAIME_PASS'
+    JAIME_HOME_PATH = 'JAIME_HOME_PATH'
 
 
 def setup_vars():
     setup(Config(
         file_path='logic/resources/variables.yaml',
-        hiden_vars=[]
+        hiden_vars=['JAIME_PASS']
     ))

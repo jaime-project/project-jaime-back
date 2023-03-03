@@ -2,7 +2,7 @@
 from typing import Dict
 
 from logic.libs.sqliteAlchemy import sqliteAlchemy
-from sqlalchemy import Column, String
+from sqlalchemy import Column, String, Text
 
 Entity = sqliteAlchemy.get_entity_class()
 
@@ -10,8 +10,8 @@ Entity = sqliteAlchemy.get_entity_class()
 class ConfigEntity(Entity):
     __tablename__ = 'CONFIGS'
 
-    key = Column(String(255), primary_key=True, nullable=False)
-    value = Column(String(255))
+    key = Column(String(60), primary_key=True, nullable=False)
+    value = Column(Text)
 
     def to_model(self) -> Dict[str, str]:
         return {

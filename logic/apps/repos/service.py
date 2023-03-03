@@ -3,15 +3,16 @@ import os
 from pathlib import Path
 from typing import Dict, List
 
+from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.docs import service as doc_service
 from logic.apps.filesystem import filesystem_service
+from logic.apps.markdown import service as markdown_service
+from logic.apps.modules import service as module_service
 from logic.apps.repos import repository
 from logic.apps.repos.error import RepoError
 from logic.apps.repos.model import Repo, RepoGit, RepoType
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
-
-_REPOS_PATH = f'{Path.home()}/.jaime/repos'
 
 
 def add(repo: Repo):
@@ -55,7 +56,7 @@ def get_all_short() -> List[Dict[str, str]]:
         {
             "name": s.name,
             "type": s.type.value,
-            "url": s.url
+            "url": s.git_url
         }
         for s in repository.get_all()
     ]
@@ -132,7 +133,7 @@ def list_types() -> List[str]:
     return [e.value for e in RepoType]
 
 
-def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
+def export_repo(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
 
     objects = {}
 
@@ -143,12 +144,12 @@ def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
     ]
 
     objects['modules'] = []
-    for module_name in list_all(repo_name):
+    for module_name in module_service.list_all(repo_name):
 
         objects['modules'].append({
             'repo': repo_name,
             'name': module_name,
-            'content': get(module_name, repo_name)
+            'content': module_service.get(module_name, repo_name)
         })
 
     objects['docs'] = []
@@ -160,10 +161,19 @@ def export_modules_and_docs(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
             'content': doc_service.get(doc_name, repo_name)
         })
 
+    objects['markdowns'] = []
+    for markdown_name in markdown_service.list_all(repo_name):
+
+        objects['markdowns'].append({
+            'repo': repo_name,
+            'name': markdown_name,
+            'content': markdown_service.get(markdown_name, repo_name)
+        })
+
     return objects
 
 
-def export_modules_and_docs_zip(repo_name: str) -> bytes:
+def export_repo_zip(repo_name: str) -> bytes:
 
     tar_path = f'/tmp/{repo_name}.tar.gz'
 
@@ -174,5 +184,4 @@ def export_modules_and_docs_zip(repo_name: str) -> bytes:
 
 
 def get_path() -> str:
-    global _REPOS_PATH
-    return _REPOS_PATH
+    return f'{get_var(Vars.JAIME_HOME_PATH)}/repos'

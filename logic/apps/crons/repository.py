@@ -3,11 +3,11 @@ from typing import List
 from sqlalchemy import or_
 
 from logic.apps.crons.entity import CronEntity
-from logic.apps.crons.model import CronStatus, CronWork
+from logic.apps.crons.model import CronStatus, CronJob
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 
-def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[CronWork]:
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[CronJob]:
 
     s = sqliteAlchemy.make_session()
     result = s.query(CronEntity)
@@ -36,7 +36,7 @@ def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None
     return [r.to_model() for r in result]
 
 
-def get_all_by_status(status: CronStatus) -> List[CronWork]:
+def get_all_by_status(status: CronStatus) -> List[CronJob]:
 
     s = sqliteAlchemy.make_session()
     result = s.query(CronEntity).filter_by(status=status.value).all()
@@ -45,7 +45,7 @@ def get_all_by_status(status: CronStatus) -> List[CronWork]:
     return [r.to_model() for r in result]
 
 
-def get(id: str) -> CronWork:
+def get(id: str) -> CronJob:
 
     s = sqliteAlchemy.make_session()
     result = s.query(CronEntity).get({'id': id})
@@ -57,7 +57,7 @@ def get(id: str) -> CronWork:
     return None
 
 
-def add(m: CronWork):
+def add(m: CronJob):
 
     s = sqliteAlchemy.make_session()
 
