@@ -67,14 +67,3 @@ def start_threads():
     job_runner.start_runner_thread()
     cron_runner.start_threads()
     running_error_catcher.start_running_error_catcher_thread()
-
-
-def setup_configs_vars():
-
-    configs_vars = {
-        'GARBAGE_COLLECTOR_RUN_MINUTES': '2880',
-    }
-
-    for k, v in configs_vars.items():
-        if not service.exist_config_var(k):
-            service.update_config_var(k, v)

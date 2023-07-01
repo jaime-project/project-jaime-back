@@ -1,14 +1,13 @@
+from logic.apps.admin.configs.variables import get_var, Vars
 import threading
 import time
 from datetime import datetime, timedelta
 
-from logic.apps.configs import service as config_service
 from logic.apps.jobs import service
 from logic.apps.jobs.model import Status
 from logic.libs.logger import logger
 
 _THREAD_GARBAGE_COLLECTOR_ACTIVE = True
-_MINUTES_VAR = 'GARBAGE_COLLECTOR_RUN_MINUTES'
 
 
 def garbage_collector():
@@ -22,7 +21,7 @@ def garbage_collector():
         for id in works_ids:
 
             job = service.get(id)
-            minutes = int(config_service.get_config_var(_MINUTES_VAR))
+            minutes = int(get_var(Vars.DELETE_OLD_JOBS_MINUTES))
 
             if job.start_date + timedelta(minutes=minutes) < datetime.now():
                 service.delete(id)
