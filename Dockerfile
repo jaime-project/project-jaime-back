@@ -44,8 +44,8 @@ ARG ARG_VERSION=local
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=5000
-ENV JAIME_HOME_PATH=.jaime/
-ENV WORKINGDIR_PATH=.shared/workingdir/
+ENV JAIME_HOME_PATH=/home/jaime/.jaime/
+ENV WORKINGDIR_PATH=/home/jaime/.shared/workingdir/
 ENV TZ=America/Argentina/Buenos_Aires
 
 CMD python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=6 app:app
