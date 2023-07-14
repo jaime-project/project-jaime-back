@@ -1,5 +1,5 @@
+import os
 import shutil
-from os import walk
 from pathlib import Path
 from typing import Any, List
 from uuid import UUID, uuid4
@@ -30,16 +30,16 @@ def delete(id: Any):
 
 
 def fullpath(id: Any) -> str:
-    return f'{get_var(Vars.WORKINGDIR_PATH)}/{id}'
+    return os.path.join(get_var(Vars.WORKINGDIR_PATH), id)
 
 
 def get(id: Any) -> List[str]:
     result = []
-    for (dirpath, _, _) in walk(fullpath(id)):
+    for (dirpath, _, _) in os.walk(fullpath(id)):
         result.extend(dirpath)
 
     return result
 
 
 def getLogsPath(id) -> str:
-    return f'{fullpath(id)}/{_NAME_FILE_LOGS}'
+    return os.path.join(fullpath(id), _NAME_FILE_LOGS)

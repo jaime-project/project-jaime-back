@@ -8,3 +8,4 @@ JAIME_HOME_PATH: /tmp/jaime
 WORKINGDIR_PATH: /tmp/workingdir
 JAIME_USER: admin
 JAIME_PASS: admin
+DELETE_OLD_JOBS_MINUTES: 2880

@@ -10,7 +10,6 @@ from logic.apps.agents import service as agent_service
 from logic.apps.agents.error import AgentError
 from logic.apps.clusters import service as cluster_service
 from logic.apps.clusters.model import Cluster
-from logic.apps.configs import repository
 from logic.apps.configs.error import ObjectError
 from logic.apps.crons import service as cron_service
 from logic.apps.crons.model import CronJob, CronStatus
@@ -41,7 +40,7 @@ def update_requirements(content: str):
 
         except Exception:
             logger.log.error(
-                f'Error al conectarse al agente para actualizar las dependencias de pip')
+                f'Error in connection with agent to update pip dependencies')
 
 
 def get_requirements() -> str:
@@ -65,34 +64,12 @@ def get_agent_logs(agent_id: str) -> str:
     agent = agent_service.get(agent_id)
     if not agent:
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
-                           f'El agente con id {agent_id} no existe')
+                           f'Agent with id {agent_id} not found')
 
     url = agent.get_url() + f'/api/v1/configs/logs'
     response = requests.get(url, verify=False)
 
     return response.text
-
-
-def get_configs_vars() -> Dict[str, str]:
-    return repository.get_all()
-
-
-def update_configs_vars(dict: Dict[str, str]):
-    for k, v in dict.items():
-        repository.delete(k)
-        repository.add(k, v)
-
-
-def get_config_var(var: str) -> str:
-    return get_configs_vars().get(var, None)
-
-
-def update_config_var(var: str, value: str):
-    update_configs_vars({var: value})
-
-
-def exist_config_var(var: str) -> bool:
-    return repository.exist(var)
 
 
 def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
@@ -150,8 +127,6 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
             })
 
     objects['requirements'] = get_requirements()
-
-    objects['configs'] = get_configs_vars()
 
     objects['messages'] = [m.__dict__() for m in message_service.get_all()]
 
@@ -299,9 +274,6 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
 
     if 'requirements' in objects:
         update_requirements(objects['requirements'])
-
-    if 'configs' in objects:
-        update_configs_vars(objects['configs'])
 
     if 'messages' in objects:
         for m in objects['messages']:

@@ -1,4 +1,3 @@
-import json
 import ntpath
 from datetime import datetime
 from io import BytesIO
@@ -55,17 +54,3 @@ def get_jaime_logs():
 @blue_print.route('/logs/agents/<agent_id>', methods=['GET'])
 def get_agent_logs(agent_id: str):
     return service.get_agent_logs(agent_id), 200
-
-
-@blue_print.route('/vars', methods=['GET'])
-def get_configs_vars():
-    return json.dumps(service.get_configs_vars()), 200
-
-
-@blue_print.route('/vars', methods=['PUT'])
-def update_configs_vars():
-
-    dict = request.json
-    service.update_configs_vars(dict)
-
-    return '', 200
