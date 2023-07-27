@@ -1,4 +1,3 @@
-import os
 import shutil
 from datetime import datetime
 from typing import Dict, List
@@ -18,8 +17,6 @@ from logic.apps.zip import service as zip_service
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
 
-_PATH_AGENT_RESOURCES = 'logic/apps/agent_resources'
-
 
 def add(job: Job) -> str:
 
@@ -33,14 +30,6 @@ def exec_into_agent(job: Job):
     workingdir_service.create_by_id(job.id)
 
     workingdir_path = workingdir_service.fullpath(job.id)
-
-    runner_script = 'runner.pyc' if os.path.exists(
-        f'{_PATH_AGENT_RESOURCES}/runner.pyc') else 'runner.py'
-    shutil.copy(f'{_PATH_AGENT_RESOURCES}/{runner_script}', workingdir_path)
-
-    tools_script = 'tools.pyc' if os.path.exists(
-        f'{_PATH_AGENT_RESOURCES}/tools.pyc') else 'tools.py'
-    shutil.copy(f'{_PATH_AGENT_RESOURCES}/{tools_script}', workingdir_path)
 
     shutil.copy(
         f'{repo_service.get_path()}/{job.module_repo}/{job.module_name}.py',
