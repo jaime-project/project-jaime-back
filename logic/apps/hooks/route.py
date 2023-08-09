@@ -1,4 +1,5 @@
 from datetime import datetime
+from functools import reduce
 
 import yaml
 from flask import Blueprint, jsonify, request
@@ -128,7 +129,7 @@ def exec(id: str):
 
     hook = service.get(id)
 
-    id = service.exec(hook)
+    id = service.exec(hook, _dot_to_json(request.args))
 
     return jsonify(id=id), 201
 
@@ -142,3 +143,14 @@ def change_status(id: str, status: str):
         service.desactivate_cron(id)
 
     return '', 200
+
+
+def _dot_to_json(params: dict[str, str]) -> dict[str, object]:
+    output = {}
+    for key, value in params.items():
+        path = key.split('.')
+        if path[0] == 'json':
+            path = path[1:]
+        target = reduce(lambda d, k: d.setdefault(k, {}), path[:-1], output)
+        target[path[-1]] = value
+    return output

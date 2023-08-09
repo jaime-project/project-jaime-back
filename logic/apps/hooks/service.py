@@ -8,13 +8,15 @@ from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
 
 
-def exec(hook: HookJob) -> str:
+def exec(hook: HookJob, params: dict[str, object] = {}) -> str:
 
     if hook.status == HookStatus.DESACTIVE:
         raise AppException(HookError.HOOK_NOT_ACTIVE_ERROR,
                            f'Hook with name {hook.name} is {HookStatus.DESACTIVE}')
 
     job = hook.to_job()
+    job.params.update(params)
+
     job_service.add(job)
 
     logger.log.info(f'hook {hook.name} -> Making new job with id {job.id}')
