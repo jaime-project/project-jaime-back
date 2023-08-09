@@ -73,20 +73,6 @@ def stop_threads():
     _THREAD_ACTIVE = False
 
 
-def desactivate_cron(id: str):
-    cron = service.get(id)
-    cron.status = CronStatus.DESACTIVE
-
-    service.modify(cron)
-
-
-def activate_cron(id: str):
-    cron = service.get(id)
-    cron.status = CronStatus.ACTIVE
-
-    service.modify(cron)
-
-
 def delete_cron_from_scheduler(id: str):
     global _SCHEDULER
 

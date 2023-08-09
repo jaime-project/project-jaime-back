@@ -10,7 +10,7 @@ from logic.libs.logger import logger
 
 def exec(cron: CronJob) -> str:
 
-    job = cron.to_workStatus()
+    job = cron.to_job()
     job_service.add(job)
 
     logger.log.info(f'Cron {cron.name} -> Making new job with id {job.id}')
@@ -89,3 +89,17 @@ def modify(cron: CronJob):
 
 def list_status() -> str:
     return [e.value for e in CronStatus]
+
+
+def desactivate_cron(id: str):
+    cron = get(id)
+    cron.status = CronStatus.DESACTIVE
+
+    modify(cron)
+
+
+def activate_cron(id: str):
+    cron = get(id)
+    cron.status = CronStatus.ACTIVE
+
+    modify(cron)
