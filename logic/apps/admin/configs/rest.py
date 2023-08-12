@@ -4,10 +4,13 @@ from logic.apps.login import service
 from logic.libs.rest.rest import setup
 
 NO_LOGIN_PATHS = [
-    '/api/v1/login/',
     '/',
-    '/api/v1/agents/',
     '/vars',
+    '/api/v1/login/',
+    '/api/v1/agents/',
+]
+
+NO_LOGIN_PATHS_CONTAIN = [
     '/api/v1/hooks/exec/'
 ]
 
@@ -20,18 +23,11 @@ def setup_rest(app: Flask) -> Flask:
 
 
 def setup_token(app: Flask):
+
     @app.before_request
     def before_request():
 
-        no_login_paths = [
-            '/api/v1/login/',
-            '/',
-            '/api/v1/agents/',
-            '/vars',
-            '/api/v1/hooks/exec/'
-        ]
-
-        if request.method != 'OPTIONS' and not _is_a_no_login_path(request.path):
+        if request.method != 'OPTIONS' and _need_login(request.path):
 
             if not 'Authorization' in request.headers or not 'Bearer ' in request.headers['Authorization']:
                 return '', 401
@@ -42,10 +38,13 @@ def setup_token(app: Flask):
                 return '', 403
 
 
-def _is_a_no_login_path(path: str) -> bool:
+def _need_login(path: str) -> bool:
 
-    for no_login_path in NO_LOGIN_PATHS:
-        if no_login_path in path:
-            return True
+    if path in NO_LOGIN_PATHS:
+        return False
 
-    return False
+    for p in NO_LOGIN_PATHS_CONTAIN:
+        if p in path:
+            return False
+
+    return True
