@@ -1,0 +1,6 @@
+from enum import Enum
+
+
+class CardError(Enum):
+    CARD_NOT_EXIST_ERROR = 'CARD_NOT_EXIST_ERROR'
+    CARD_ALREDY_EXIST_ERROR = 'CARD_ALREDY_EXIST_ERROR'
