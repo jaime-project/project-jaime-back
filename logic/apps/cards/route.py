@@ -100,3 +100,42 @@ def modify():
     service.modify(card)
 
     return '', 200
+
+
+@blue_print.route('/<id>/run', methods=['POST'])
+def run(id: str):
+
+    params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
+        request.data) else request.json
+
+    id = service.run(id, params_dict)
+
+    return jsonify(id=id), 200
+
+
+@blue_print.route('/<id>/docs', methods=['POST'])
+def postDocs(id: str):
+
+    docs = request.data
+
+    service.postDocs(id, docs)
+
+    return '', 201
+
+
+@blue_print.route('/<id>/docs', methods=['PUT'])
+def putDocs(id: str):
+
+    docs = request.data
+
+    service.postDocs(id, docs)
+
+    return '', 201
+
+
+@blue_print.route('/<id>/docs', methods=['GET'])
+def getDocs(id: str):
+
+    docs = service.getDocs(id)
+
+    return docs, 201

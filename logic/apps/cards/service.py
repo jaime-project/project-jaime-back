@@ -70,3 +70,34 @@ def get_all_short(filter: str = None) -> List[Dict[str, str]]:
 def modify(card: Card):
     repository.delete(card.id)
     repository.add(card)
+
+
+def run(id: str, params: Dict[str, object]) -> str:
+
+    card = get(id)
+    if not card:
+        raise AppException(CardError.CARD_NOT_EXIST_ERROR,
+                           f'There are no card with id {id}')
+
+    return job_service.add(card.to_job(params))
+
+
+def postDocs(id: str, docs: str):
+
+    card = get(id)
+    if not card:
+        raise AppException(CardError.CARD_NOT_EXIST_ERROR,
+                           f'There are no card with id {id}')
+
+    card.job_default_docs = docs
+    modify(card)
+
+
+def getDocs(id: str):
+
+    card = get(id)
+    if not card:
+        raise AppException(CardError.CARD_NOT_EXIST_ERROR,
+                           f'There are no card with id {id}')
+
+    return card.job_default_docs

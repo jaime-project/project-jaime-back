@@ -19,7 +19,7 @@ class Card():
     job_module_repo: str
     job_module_name: str
     job_agent_type: str
-    job_default_docs: str
+    job_default_docs: str = ''
     id: str = field(default_factory=_generate_id)
     creation_date: datetime = field(default_factory=datetime.now)
 
