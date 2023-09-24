@@ -92,8 +92,7 @@ def modify():
         job_module_repo=params_dict['job_module_repo'],
         job_module_name=params_dict['job_module_name'],
         job_agent_type=params_dict['job_agent_type'],
-        job_params=params_dict['job_params'],
-        creation_date=datetime.fromisoformat(params_dict['creation_date']),
+        creation_date=params_dict['creation_date'],
         id=params_dict['id']
     )
 
