@@ -1,5 +1,4 @@
 from logic.apps.agents import checker as agent_checker
-from logic.apps.configs import service
 from logic.apps.crons import runner as cron_runner
 from logic.apps.docs import service as doc_service
 from logic.apps.jobs import garbage_collector as job_garbage

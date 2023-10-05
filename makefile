@@ -25,3 +25,6 @@ package:
 	mv dist/jaime jaime
 	rm -fr build dist *.spec
 	
+
+sonar:
+	docker run -it --rm -v $(shell pwd):/usr/src sonarsource/sonar-scanner-cli sonar-scanner

@@ -82,7 +82,7 @@ def run(id: str, params: Dict[str, object]) -> str:
     return job_service.add(card.to_job(params))
 
 
-def postDocs(id: str, docs: str):
+def post_docs(id: str, docs: str):
 
     card = get(id)
     if not card:
@@ -93,7 +93,7 @@ def postDocs(id: str, docs: str):
     modify(card)
 
 
-def getDocs(id: str):
+def get_docs(id: str):
 
     card = get(id)
     if not card:

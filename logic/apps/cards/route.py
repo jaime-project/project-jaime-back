@@ -117,7 +117,7 @@ def postDocs(id: str):
 
     docs = request.data
 
-    service.postDocs(id, docs)
+    service.post_docs(id, docs)
 
     return '', 201
 
@@ -127,7 +127,7 @@ def putDocs(id: str):
 
     docs = request.data
 
-    service.postDocs(id, docs)
+    service.post_docs(id, docs)
 
     return '', 201
 
@@ -135,6 +135,6 @@ def putDocs(id: str):
 @blue_print.route('/<id>/docs', methods=['GET'])
 def getDocs(id: str):
 
-    docs = service.getDocs(id)
+    docs = service.get_docs(id)
 
     return docs, 201

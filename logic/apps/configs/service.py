@@ -8,6 +8,7 @@ from logic.apps.admin.configs.logger import get_logs_path
 from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.agents import service as agent_service
 from logic.apps.agents.error import AgentError
+from logic.apps.cards import service as card_service
 from logic.apps.clusters import service as cluster_service
 from logic.apps.clusters.model import Cluster
 from logic.apps.configs.error import ObjectError
@@ -15,6 +16,7 @@ from logic.apps.crons import service as cron_service
 from logic.apps.crons.model import CronJob, CronStatus
 from logic.apps.docs import service as doc_service
 from logic.apps.filesystem import filesystem_service
+from logic.apps.hooks import service as hook_service
 from logic.apps.markdown import service as markdown_service
 from logic.apps.messages import service as message_service
 from logic.apps.messages.model import Message, Status
@@ -25,6 +27,8 @@ from logic.apps.servers import service as server_service
 from logic.apps.servers.model import Server
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
+from logic.apps.hooks.model import HookJob, HookStatus
+from logic.apps.cards.model import Card
 
 
 def update_requirements(content: str):
@@ -89,6 +93,16 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
     objects['crons'] = [
         o.__dict__()
         for o in cron_service.get_all(size=None, page=None)
+    ]
+
+    objects['hooks'] = [
+        o.__dict__()
+        for o in hook_service.get_all(size=None, page=None)
+    ]
+
+    objects['cards'] = [
+        o.__dict__()
+        for o in card_service.get_all(size=None, page=None)
     ]
 
     objects['repos'] = [
@@ -201,8 +215,51 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
                 cron_service.delete(cronJob.id)
                 cron_service.add(cronJob)
 
-            if not cron_service.get(cronJob.name):
+            if not cron_service.get(cronJob.id):
                 cron_service.add(cronJob)
+
+    if 'hooks' in objects:
+
+        for o in objects['hooks']:
+
+            hookJob = HookJob(
+                name=o['name'],
+                job_module_repo=o['job_module_repo'],
+                job_module_name=o['job_module_name'],
+                job_agent_type=o['job_agent_type'],
+                id=o['id'],
+                creation_date=datetime.fromisoformat(o['creation_date']),
+                status=HookStatus(o['status']),
+            )
+
+            if replace and hook_service.get(hookJob.id):
+                hook_service.delete(hookJob.id)
+                hook_service.add(hookJob)
+
+            if not hook_service.get(hookJob.id):
+                cron_service.add(hookJob)
+
+    if 'cards' in objects:
+
+        for o in objects['cards']:
+
+            card = Card(
+                name=o['name'],
+                description=o['description'],
+                job_module_repo=o['job_module_repo'],
+                job_module_name=o['job_module_name'],
+                job_agent_type=o['job_agent_type'],
+                job_default_docs=o['job_default_docs'],
+                id=o['id'],
+                creation_date=datetime.fromisoformat(o['creation_date']),
+            )
+
+            if replace and card_service.get(card.id):
+                card_service.delete(card.id)
+                card_service.add(card)
+
+            if not card_service.get(card.id):
+                card_service.add(card)
 
     if 'repos' in objects:
 
