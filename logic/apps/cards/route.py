@@ -21,6 +21,7 @@ def add():
         job_module_repo=params_dict['job_module_repo'],
         job_module_name=params_dict['job_module_name'],
         job_agent_type=params_dict['job_agent_type'],
+        job_default_docs=params_dict['job_default_docs'],
     )
 
     id = service.add(card)
