@@ -32,8 +32,8 @@ def get(id: str) -> Card:
     return repository.get(id)
 
 
-def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Card]:
-    return repository.get_all(size, page, filter, order)
+def get_all(filter: str = None) -> List[Card]:
+    return repository.get_all(filter)
 
 
 def delete(id: str):

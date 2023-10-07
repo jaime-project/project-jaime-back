@@ -43,6 +43,7 @@ class Card():
             'job_module_repo': self.job_module_repo,
             'job_module_name': self.job_module_name,
             'job_agent_type': self.job_agent_type,
+            'job_default_docs': self.job_default_docs,
             'id': self.id,
             'creation_date': self.creation_date.isoformat(),
         }

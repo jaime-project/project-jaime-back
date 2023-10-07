@@ -41,5 +41,5 @@ class CardEntity(Entity):
             job_module_repo=c.job_module_repo,
             job_module_name=c.job_module_name,
             job_agent_type=c.job_agent_type,
-            job_default_docs=c.job_default_docs
+            job_default_docs=str(c.job_default_docs)
         )

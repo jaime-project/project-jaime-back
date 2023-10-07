@@ -102,7 +102,7 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
 
     objects['cards'] = [
         o.__dict__()
-        for o in card_service.get_all(size=None, page=None)
+        for o in card_service.get_all(filter=None)
     ]
 
     objects['repos'] = [
