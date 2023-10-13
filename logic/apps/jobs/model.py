@@ -1,4 +1,3 @@
-import os
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
@@ -9,20 +8,19 @@ from logic.apps.agents.model import Agent
 
 
 class Status(Enum):
-    RUNNING = 'RUNNING'
-    READY = 'READY'
-    ERROR = 'ERROR'
-    SUCCESS = 'SUCCESS'
-    CANCEL = 'CANCEL'
+    RUNNING = "RUNNING"
+    READY = "READY"
+    ERROR = "ERROR"
+    SUCCESS = "SUCCESS"
+    CANCEL = "CANCEL"
 
 
 def _generate_id() -> str:
-    return str(uuid4()).split('-')[4]
+    return str(uuid4()).split("-")[4]
 
 
 @dataclass
-class Job():
-
+class Job:
     name: str
     module_name: str
     module_repo: str
@@ -30,7 +28,7 @@ class Job():
     agent: Agent = None
     id: str = field(default_factory=_generate_id)
     status: Status = Status.READY
-    params: Dict[str, object] = field(default_factory={})
+    params: Dict[str, object] = field(default_factory=list)
     start_date: datetime = field(default_factory=datetime.now)
     running_date: datetime = None
     terminated_date: datetime = None

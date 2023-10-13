@@ -12,3 +12,4 @@ APScheduler==3.9.1
 pymysql==1.0.2
 pg8000==1.29.4
 pymssql==2.2.7
+Werkzeug==2.2.2
