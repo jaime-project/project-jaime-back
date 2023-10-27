@@ -93,7 +93,9 @@ def get_all_objects() -> Dict[str, List[Dict[str, str]]]:
         o.__dict__() for o in hook_service.get_all(size=None, page=None)
     ]
 
-    objects["cards"] = [o.__dict__() for o in card_service.get_all(filter=None)]
+    objects["cards"] = [
+        o.__dict__() for o in card_service.get_all(filter=None)
+    ]
 
     objects["repos"] = [o.__dict__() for o in repo_service.get_all()]
 
@@ -142,8 +144,7 @@ def update_objects(objects: Dict[str, str], replace: bool = False):
         _create_and_update_objects(objects, replace)
 
     except Exception as e:
-        raise e
-        # raise AppException(ObjectError.CREATION_OBJECTS_ERROR, e)
+        raise AppException(ObjectError.CREATION_OBJECTS_ERROR, str(e), e)
 
 
 def _create_and_update_objects(objects: Dict[str, str], replace: bool):
@@ -226,10 +227,12 @@ def _create_and_update_objects(objects: Dict[str, str], replace: bool):
             card = Card(
                 name=o["name"],
                 description=o["description"],
+                color=o["color"],
                 job_module_repo=o["job_module_repo"],
                 job_module_name=o["job_module_name"],
                 job_agent_type=o["job_agent_type"],
                 job_default_docs=o["job_default_docs"],
+                job_card_docs=o["job_card_docs"],
                 id=o["id"],
                 creation_date=datetime.fromisoformat(o["creation_date"]),
             )
