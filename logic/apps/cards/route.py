@@ -18,10 +18,12 @@ def add():
     card = Card(
         name=params_dict['name'],
         description=params_dict['description'],
+        color=params_dict['color'],
         job_module_repo=params_dict['job_module_repo'],
         job_module_name=params_dict['job_module_name'],
         job_agent_type=params_dict['job_agent_type'],
         job_default_docs=params_dict['job_default_docs'],
+        job_card_docs=params_dict['job_card_docs'],
     )
 
     id = service.add(card)
@@ -52,17 +54,7 @@ def get(id: str):
     if not card:
         return '', 204
 
-    result_dict = {
-        'name': card.name,
-        'description': card.description,
-        'job_module_repo': card.job_module_repo,
-        'job_module_name': card.job_module_name,
-        'job_agent_type': card.job_agent_type,
-        'id': card.id,
-        'creation_date': card.creation_date.isoformat(),
-    }
-
-    return jsonify(result_dict), 200
+    return jsonify(card), 200
 
 
 @blue_print.route('/', methods=['GET'])
@@ -88,13 +80,15 @@ def modify():
         request.data) else request.json
 
     card = Card(
+        id=params_dict['id'],
         name=params_dict['name'],
         description=params_dict['description'],
+        color=params_dict['color'],
         job_module_repo=params_dict['job_module_repo'],
         job_module_name=params_dict['job_module_name'],
         job_agent_type=params_dict['job_agent_type'],
-        creation_date=params_dict['creation_date'],
-        id=params_dict['id']
+        job_default_docs=params_dict['job_default_docs'],
+        job_card_docs=params_dict['job_card_docs'],
     )
 
     service.modify(card)
@@ -113,29 +107,11 @@ def run(id: str):
     return jsonify(id=id), 200
 
 
-@blue_print.route('/<id>/docs', methods=['POST'])
-def postDocs(id: str):
-
-    docs = request.data
-
-    service.post_docs(id, docs)
-
-    return '', 201
-
-
-@blue_print.route('/<id>/docs', methods=['PUT'])
-def putDocs(id: str):
-
-    docs = request.data
-
-    service.post_docs(id, docs)
-
-    return '', 201
-
-
 @blue_print.route('/<id>/docs', methods=['GET'])
-def getDocs(id: str):
+def getCardDocs(id: str):
 
-    docs = service.get_docs(id)
+    card = service.get(id)
+    if not card:
+        return '', 204
 
-    return docs, 201
+    return card.job_card_docs, 200

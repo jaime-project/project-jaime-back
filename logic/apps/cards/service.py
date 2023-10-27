@@ -57,6 +57,7 @@ def get_all_short(filter: str = None) -> List[Dict[str, str]]:
         {
             "name": c.name,
             "description": c.description,
+            "color": c.color,
             "job_agent_type": c.job_agent_type,
             "job_module_name": c.job_module_name,
             "job_module_repo": c.job_module_repo,
