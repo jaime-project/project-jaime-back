@@ -77,21 +77,10 @@ def modify(name: str, repo: RepoGit):
     add(repo)
 
 
-def reload_repo_git(repo_name: str):
-
-    repo = get(repo_name)
-
-    tmp_path = '/tmp'
-    repo_name = _get_git_repo_name(repo.git_url)
-    in_path = f'{tmp_path}/{repo_name}'
-    os.system(f'rm -fr {in_path}')
-
-    load_repo(repo)
-
-
 def load_repo(repo: Repo):
 
     out_path = f'{get_path()}/{repo.name}'
+    os.system(f'rm -rf {out_path}/*')
 
     if not os.path.exists(out_path):
         Path(out_path).mkdir(parents=True)
@@ -116,7 +105,6 @@ def load_repo(repo: Repo):
 
     in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'.replace('//', '/')
 
-    os.system(f'rm -rf {out_path}/*')
     os.system(f'mv {in_path}/* {out_path}')
 
 

@@ -5,6 +5,7 @@ from typing import Any, List
 from uuid import UUID, uuid4
 
 from logic.apps.admin.configs.variables import Vars, get_var
+from logic.apps.jobs.model import Job
 
 _NAME_FILE_LOGS = 'logs.log'
 
@@ -41,5 +42,5 @@ def get(id: Any) -> List[str]:
     return result
 
 
-def getLogsPath(id) -> str:
+def get_logs_path(id: str) -> str:
     return os.path.join(fullpath(id), _NAME_FILE_LOGS)

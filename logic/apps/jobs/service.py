@@ -39,6 +39,9 @@ def exec_into_agent(job: Job):
     with open(f'{workingdir_path}/params.yaml', 'w') as f:
         f.write(yaml.dump(job.params))
 
+    
+    
+
     url = job.agent.get_url() + f'/api/v1/jobs/{job.id}'
 
     requests.post(url, verify=False)
@@ -138,7 +141,7 @@ def get_logs(id: str) -> str:
 
     _valid_work_running(id)
 
-    with open(workingdir_service.getLogsPath(id), 'r') as f:
+    with open(workingdir_service.get_logs_path(id), 'r') as f:
         return f.read()
 
 

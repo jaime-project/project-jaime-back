@@ -1,5 +1,3 @@
-from pathlib import Path
-
 from logic.apps.admin.configs.variables import Vars, get_var
 from logic.libs.logger.logger import Config, setup
 
