@@ -13,6 +13,7 @@ from logic.apps.repos.error import RepoError
 from logic.apps.repos.model import Repo, RepoGit, RepoType
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
+from logic.apps.jobs.model import Job
 
 
 def add(repo: Repo):
@@ -173,3 +174,7 @@ def export_repo_zip(repo_name: str) -> bytes:
 
 def get_path() -> str:
     return f'{get_var(Vars.JAIME_HOME_PATH)}/repos'
+
+
+def get_module_path_of_job(job: Job) -> str:
+    return f'{get_path()}/{job.module_repo}/{job.module_name}.py'

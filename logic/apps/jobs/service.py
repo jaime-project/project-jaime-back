@@ -11,6 +11,7 @@ from logic.apps.filesystem import workingdir_service
 from logic.apps.jobs import repository as job_repository
 from logic.apps.jobs.error import JobError
 from logic.apps.jobs.model import Job, Status
+from logic.apps.libraries import service as library_service
 from logic.apps.modules.error import ModulesError
 from logic.apps.repos import service as repo_service
 from logic.apps.zip import service as zip_service
@@ -27,24 +28,23 @@ def add(job: Job) -> str:
 def exec_into_agent(job: Job):
 
     logger.log.info(f'Making workingdir -> {job.id}')
-    workingdir_service.create_by_id(job.id)
 
+    workingdir_service.create_by_id(job.id)
     workingdir_path = workingdir_service.fullpath(job.id)
 
     shutil.copy(
-        f'{repo_service.get_path()}/{job.module_repo}/{job.module_name}.py',
+        repo_service.get_module_path_of_job(job),
         f'{workingdir_path}/module.py'
     )
 
     with open(f'{workingdir_path}/params.yaml', 'w') as f:
         f.write(yaml.dump(job.params))
 
-    
-    
+    library_service.load_libraries_in_workingdir(workingdir_path)
 
     url = job.agent.get_url() + f'/api/v1/jobs/{job.id}'
-
     requests.post(url, verify=False)
+
     logger.log.info(f'Job sended to agent -> {job.id}')
 
 
@@ -72,6 +72,9 @@ def cancel(id: str):
         requests.delete(url, verify=False)
 
         agent_service.change_status(job.agent.id, AgentStatus.READY)
+
+    workingdir_path = workingdir_service.fullpath(id)
+    library_service.delete_libraries_in_workingdir(workingdir_path)
 
 
 def delete_by_status(status: Status):
@@ -176,6 +179,9 @@ def _valid_work_running(id: str):
 def finish_work(id: str, status: Status):
 
     change_status(id, status)
+
+    workingdir_path = workingdir_service.fullpath(id)
+    library_service.delete_libraries_in_workingdir(workingdir_path)
 
     agent = get(id).agent
     agent_service.change_status(agent.id, AgentStatus.READY)

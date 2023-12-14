@@ -95,3 +95,15 @@ def load_library(library: Library):
     in_path = f'{tmp_path}/{library.name}/{library.path}'.replace('//', '/')
 
     os.system(f'mv {in_path}/* {out_path}')
+
+
+def load_libraries_in_workingdir(workingdir_path: str):
+
+    for library_name in list_all():
+
+        library_path = f'{get_path()}/{library_name}'
+        os.system(f'cp -rf {library_path}/*.py {workingdir_path}')
+
+
+def delete_libraries_in_workingdir(workingdir_path: str):
+    os.system(f'rm -fr {workingdir_path}/*.py')

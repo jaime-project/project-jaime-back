@@ -9,7 +9,6 @@
 
 ![alt](img/logo.png)
 
-
 ## :gear: Requisitos
 
 - python 3
@@ -46,5 +45,3 @@ DB_URL: mssql+pymssql://user:pass@host:port/database
 ## :books: Referencias
 
 - [Iconos](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
-
-
