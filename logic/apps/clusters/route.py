@@ -18,7 +18,6 @@ def post():
         name=s['name'],
         url=s['url'],
         token=s['token'],
-        type=s['type']
     ))
     return '', 201
 
@@ -55,9 +54,9 @@ def get_all_short():
     return jsonify(service.get_all_short(size, page, filter, order)), 200
 
 
-@blue_print.route('/<name>/test', methods=['GET'])
-def test_cluster(name):
-    return jsonify(service.test_cluster(name)), 200
+@blue_print.route('/<name>/test/agent/<agent_type>', methods=['GET'])
+def test_cluster(name: str, agent_type: str):
+    return jsonify(service.test_cluster(name, agent_type)), 200
 
 
 @blue_print.route('/<name>', methods=['PUT'])
@@ -68,7 +67,6 @@ def modify_cluster(name):
         name=s['name'],
         url=s['url'],
         token=s['token'],
-        type=s['type']
     )
     service.modify(name, server)
 

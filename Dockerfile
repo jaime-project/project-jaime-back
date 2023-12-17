@@ -29,10 +29,10 @@ COPY requirements.txt ./
 RUN pip install -r requirements.txt
 RUN rm -fr requirements.txt
 
-RUN useradd -ms /bin/bash -d /home/jaime 1001
-RUN chown -R 1001:0 /home/jaime
+RUN useradd -ms /bin/bash -d /home/jaime jaime
+RUN chown -R jaime:0 /home/jaime
 RUN chmod -R 777 /home/jaime
-USER 1001
+USER jaime
 
 RUN mkdir -p .jaime/ .shared/workingdir/
 

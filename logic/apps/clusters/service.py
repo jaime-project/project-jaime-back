@@ -45,7 +45,6 @@ def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str 
     return [
         {
             "name": s.name,
-            "type": s.type,
             "url": s.url
         }
         for s in repository.get_all(size, page, filter, order)
@@ -61,19 +60,19 @@ def delete(name: str):
     repository.delete(name)
 
 
-def test_cluster(name: str) -> Dict[str, str]:
+def test_cluster(name: str, agent_type: str) -> Dict[str, str]:
 
     cluster = get(name)
-    agents = agent_service.get_by_type(cluster.type)
+    agents = agent_service.get_by_type(agent_type)
     if not agents:
         raise AppException(AgentError.AGENT_NOT_EXIST_ERROR,
-                           f"Agent {cluster.type} type not found")
+                           f"Agent {agent_type} type not found")
 
     url = agents[0].get_url()
     json = {
         'url': cluster.url,
         'token': cluster.token,
-        'type': cluster.type
+        'type': agent_type
     }
     return requests.post(url=f'{url}/api/v1/jaime/clusters/test', json=json).json()
 
