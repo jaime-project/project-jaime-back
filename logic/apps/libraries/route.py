@@ -17,7 +17,7 @@ def post():
     service.add(
         Library(
             name=s['name'],
-            description=s['host'],
+            description=s['description'],
             repo=s['repo'],
             path=s['path'],
             branch=s['branch'],
@@ -78,5 +78,6 @@ def put(name):
 
 @blue_print.route('/<name>/reload', methods=['POST'])
 def reload(name: str):
-    service.load_library(name)
+    library = service.get(name)
+    service.load_library(library)
     return '', 200

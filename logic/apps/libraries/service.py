@@ -11,13 +11,14 @@ from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
 
 
-def add(server: Library):
+def add(library: Library):
 
-    if repository.exist(server.name):
-        msj = f"Library with name {server.name} already exist"
+    if repository.exist(library.name):
+        msj = f"Library with name {library.name} already exist"
         raise AppException(LibraryError.LIBRARY_ALREADY_EXISTS_ERROR, msj)
 
-    repository.add(server)
+    repository.add(library)
+    load_library(library)
 
 
 def get(name: str) -> Library:

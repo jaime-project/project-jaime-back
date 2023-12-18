@@ -67,7 +67,8 @@ def modify(name):
 
 @blue_print.route('/<name>/reload', methods=['POST'])
 def reload(name):
-    service.load_repo(name)
+    repo = service.get(name)
+    service.load_repo(repo)
     return '', 200
 
 
