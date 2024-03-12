@@ -17,11 +17,11 @@ run r:
 
 compile c:
 	python -m compile -b -f -o dist/ .
-	cp -rf variables.yaml dist/
+	# cp -rf variables.yaml dist/
 
 package:
 	rm -fr build dist *.spec
-	pyinstaller --add-binary logic:logic -n jaime --onefile app.py 
+	pyinstaller --add-data logic:logic -n jaime --onefile app.py 
 	mv dist/jaime jaime
 	rm -fr build dist *.spec
 	

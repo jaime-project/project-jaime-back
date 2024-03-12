@@ -1,4 +1,7 @@
 #!env/bin/python
+import os
+import sys
+
 from flask.app import Flask
 
 from logic.apps.admin.configs.app import setup_repos, start_threads
@@ -8,6 +11,10 @@ from logic.apps.admin.configs.sqlite import setup_sqlite
 from logic.apps.admin.configs.variables import Vars, get_var, setup_vars
 from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
+
+# pyinstaller
+if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+    os.chdir(sys._MEIPASS)
 
 app = Flask(__name__)
 
