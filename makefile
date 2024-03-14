@@ -1,7 +1,7 @@
-VERSION := 1.13.0
+VERSION := 0.3.0
 
 install i:
-	virtualenv -p python3.9 env
+	virtualenv -p python3.11 env
 	. env/bin/activate
 	pip install -r requirements.txt
 	. env/bin/deactivate

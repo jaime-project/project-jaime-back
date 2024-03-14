@@ -5,9 +5,9 @@ import sys
 from flask.app import Flask
 
 from logic.apps.admin.configs.app import setup_repos, start_threads
+from logic.apps.admin.configs.db import setup_db
 from logic.apps.admin.configs.logger import setup_loggers
 from logic.apps.admin.configs.rest import setup_rest, setup_token
-from logic.apps.admin.configs.sqlite import setup_sqlite
 from logic.apps.admin.configs.variables import Vars, get_var, setup_vars
 from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
@@ -23,12 +23,13 @@ setup_loggers()
 setup_rest(app)
 setup_token(app)
 
-setup_sqlite()
+setup_db()
 setup_repos()
 start_threads()
 
 with open('logic/resources/banner.txt', 'r') as f:
-    logger.log.info(f.read())
+    # logger.log.info(f.read())
+    print(f.read())
 
 logger.log.info("> Jaimeeehhhh...!!!")
 logger.log.info("> ¿Si, señora?")

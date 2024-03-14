@@ -1,24 +1,24 @@
 # :card_index_dividers: project-jaime
 
-> Herramienta para migrar jenkins de un cluster de openshift a otro
+> Herramienta para ejecutar scripts de python en nodos
 
 - Jaimeeehhhh...!!!
 - ¿Si, señora?
-- El OCS necesita CI/CD y no hay Jenkins
+- El Kubernetes necesita CI/CD y no hay Jenkins
 - Por eso siempre traigo scripts
 
 ![alt](img/logo.png)
 
 ## :gear: Requisitos
 
-- python 3
+- python 3.11
 - virtualenv
 
 ## :tada: Uso
 
 ```bash
 # Levantar el ambiente
-virtualenv -p python3.10 env
+virtualenv -p python3.11 env
 . env/bin/activate
 pip install -r requirements.txt
 
@@ -28,7 +28,7 @@ python app.py
 
 ## :hammer: Configuraciones
 
-Se puede usar una **base de datos externa** agregando una variable de ambiente o agregandola en el **variables.yaml**
+Se puede usar una **base de datos externa** agregando una variable de ambiente o agregandola en el **logic/resources/variables.yaml**
 
 ```yaml
 # mysql

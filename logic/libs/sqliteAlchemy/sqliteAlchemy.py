@@ -10,6 +10,7 @@ import time
 from dataclasses import dataclass
 from typing import Any
 
+from sqlalchemy import text
 from sqlalchemy.engine import Engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session, sessionmaker
@@ -41,11 +42,11 @@ def setup(conf: Config):
     conected_db = False
     while not conected_db:
         try:
-            make_session().execute('select 1')
+            make_session().execute(text('select 1'))
             conected_db = True
 
-        except Exception as _:
-            logger.log.warn('DB conection error -> waiting to try again')
+        except Exception as e:
+            logger.log.error('DB conection error -> waiting to try again', e)
             time.sleep(3)
 
     for module_type in reflection.load_modules_by_regex_path(conf.entities_path):

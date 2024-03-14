@@ -85,7 +85,7 @@ def load_library(library: Library):
         repo_git_without_https = library.repo.replace("https://", "")
         url = f'https://{library.user}:{library.password}@{repo_git_without_https}'
 
-    logger.log.info(f'Creating directories for git clone')
+    logger.log.info('Creating directories for git clone')
     tmp_path = '/tmp'
     os.system(f'rm -fr {tmp_path}/{library.name}')
 

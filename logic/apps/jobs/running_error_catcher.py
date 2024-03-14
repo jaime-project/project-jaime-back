@@ -21,7 +21,7 @@ def running_error_catcher():
 
             jobs_service.change_status(id, Status.READY)
             logger.log.warn(
-                f'status job Changed to READY by agent down -> {job.name} - {id}')
+                f'Status job Changed to READY by agent down -> {job.name} - {id}')
 
     except Exception as e:
         logger.log.error(e)

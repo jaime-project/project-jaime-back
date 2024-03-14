@@ -42,7 +42,7 @@ def update_requirements(content: str):
 
         except Exception as e:
             logger.log.error(
-                f"Error in connection with agent to update pip dependencies", e
+                "Error in connection with agent to update pip dependencies", e
             )
 
 

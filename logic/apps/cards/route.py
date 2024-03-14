@@ -108,7 +108,7 @@ def run(id: str):
 
 
 @blue_print.route('/<id>/docs', methods=['GET'])
-def getCardDocs(id: str):
+def get_card_docs(id: str):
 
     card = service.get(id)
     if not card:
