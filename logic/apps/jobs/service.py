@@ -99,7 +99,7 @@ def list_by_status(status: Status) -> List[str]:
     ]
 
 
-def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Dict[str, str]]:
+def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str = None, status: Status = None) -> List[Dict[str, str]]:
     return [
         {
             "name": w.name,
@@ -110,7 +110,7 @@ def get_all_short(size: int = 10, page: int = 1, filter: str = None, order: str 
             "module_name": w.module_name,
             "start_date": w.start_date.isoformat() if w.start_date else ""
         }
-        for w in job_repository.get_all(size, page, filter, order)
+        for w in job_repository.get_all(size, page, filter, order, status)
     ]
 
 

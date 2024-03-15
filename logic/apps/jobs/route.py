@@ -131,8 +131,10 @@ def get_all_short():
     page = int(request.args.get('page', 1))
     filter = request.args.get('filter', None)
     order = request.args.get('order', None)
+    status = Status(request.args['status']
+                    ) if 'status' in request.args else None
 
-    return jsonify(service.get_all_short(size, page, filter, order)), 200
+    return jsonify(service.get_all_short(size, page, filter, order, status)), 200
 
 
 @blue_print.route('/<id>/workspace', methods=['GET'])

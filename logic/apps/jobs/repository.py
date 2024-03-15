@@ -1,16 +1,19 @@
 from typing import List
 
-from sqlalchemy import or_
+from sqlalchemy import or_, and_
 
 from logic.apps.jobs.entity import JobEntity
 from logic.apps.jobs.model import Job, Status
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 
-def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None) -> List[Job]:
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None, status: Status = None) -> List[Job]:
 
     s = sqliteAlchemy.make_session()
     result = s.query(JobEntity)
+
+    if status:
+        result = result.filter(JobEntity.status == status.value)
 
     if filter:
         filter = f'%{filter}%'
@@ -22,7 +25,6 @@ def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None
             JobEntity.params.like(filter),
             JobEntity.agent.like(filter),
             JobEntity.agent_type.like(filter),
-            JobEntity.status.like(filter),
         ))
 
     if order:
