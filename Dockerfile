@@ -1,5 +1,7 @@
+# ---------------------------------------------
 # COMPILER
 # ---------------------------------------------
+
 FROM docker.io/library/python:3.11-slim as compiler
 
 USER root
@@ -15,8 +17,10 @@ RUN python -m compile -b -f -o dist/ .
 RUN rm -fr dist/env/
 
 
+# ---------------------------------------------
 # EXECUTION
 # ---------------------------------------------
+
 FROM docker.io/library/python:3.11-slim
 
 WORKDIR /home/jaime
