@@ -1,51 +1,58 @@
 import os
+from datetime import datetime
 
 from logic.apps.admin.configs.variables import Vars, get_var
-from logic.apps.storage.error import StorageError
 from logic.apps.storage.model import FileDetail, FileList
-from logic.libs.exception.exception import AppException
-from datetime import datetime
 
 
 def upload_file(file_name: str, path: str, content: bytes):
 
-    full_path = os.path.join(get_var(Vars.STORAGE_PATH), path, file_name)
-    with open(full_path, 'wb') as f:
+    with open(_full_path(path, file_name), 'wb') as f:
         f.write(content)
 
 
 def make_dir(dir_name: str, path: str):
 
-    full_path = os.path.join(get_var(Vars.STORAGE_PATH), path, dir_name)
-    os.system(f"mkdir -p {full_path}")
+    os.system(f"mkdir -p {_full_path(path, dir_name)}")
 
 
 def download_file(file_name: str, path: str) -> bytes:
 
-    full_path = os.path.join(get_var(Vars.STORAGE_PATH), path, file_name)
-    with open(full_path, 'rb') as f:
+    with open(_full_path(path, file_name), 'rb') as f:
         return f.read()
 
 
-def list_all(path: str) -> FileList:
+def list_all(path: str = "/", filter: str = None) -> FileList:
 
     file_list = FileList()
 
-    full_path = os.path.join(get_var(Vars.STORAGE_PATH), path)
+    for relative_path in os.listdir(_full_path(path)):
 
-    for relative_path in os.listdir(full_path):
-
-        if os.path.isdir(os.path.join(get_var(Vars.STORAGE_PATH), path, relative_path)):
+        if os.path.isdir(os.path.join(_full_path(path), relative_path)):
             file_list.dirs.append(relative_path)
         else:
             file_list.files.append(relative_path)
+
+    if filter:
+
+        file_list.dirs = [
+            d
+            for d in file_list.dirs
+            if filter in d
+        ]
+
+        file_list.files = [
+            f
+            for f in file_list.dirs
+            if filter in f
+        ]
 
     return file_list
 
 
 def get_detail(path: str) -> FileDetail:
 
-    full_path = os.path.join(get_var(Vars.STORAGE_PATH), path)
+    full_path = _full_path(path)
 
     return FileDetail(
         name=os.path.basename(full_path),
@@ -57,18 +64,25 @@ def get_detail(path: str) -> FileDetail:
 
 def delete(dir_or_file_name: str, path: str):
 
-    full_path = os.path.join(
-        get_var(Vars.STORAGE_PATH), path, dir_or_file_name)
-
-    os.system(f"rm -fr {full_path}")
+    os.system(f"""rm -fr "{_full_path(path, dir_or_file_name)}" """)
 
 
 def put_dir_or_file(dir_or_file_name: str, path: str, new_name: str):
 
-    full_path_old = os.path.join(
-        get_var(Vars.STORAGE_PATH), path, dir_or_file_name)
-
-    full_path_new = os.path.join(
-        get_var(Vars.STORAGE_PATH), path, new_name)
+    full_path_old = _full_path(path, dir_or_file_name)
+    full_path_new = _full_path(path, new_name)
 
     os.system(f"mv -f {full_path_old} {full_path_new}")
+
+
+def _full_path(path: str = "/", sub_path: str = None) -> str:
+
+    full_path = get_var(Vars.STORAGE_PATH)
+
+    if path != "/":
+        full_path += f"/{path}"
+
+    if sub_path:
+        full_path += f"/{sub_path}"
+
+    return full_path

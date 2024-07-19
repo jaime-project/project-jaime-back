@@ -12,8 +12,8 @@ def upload_file():
 
     path_files = request.args.get('path', '/')
 
-    for f in request.files.getlist('files'):
-        service.upload_file(f.filename, path_files, f.stream)
+    for f in request.files.values():
+        service.upload_file(f.filename, path_files, f.stream.read())
 
     return '', 201
 
@@ -43,11 +43,12 @@ def download_file(name: str):
 def list_all():
 
     folder_path = request.args.get('path', '/')
+    filter = request.args.get('filter', None)
 
-    return jsonify(service.list_all(folder_path)), 200
+    return jsonify(service.list_all(folder_path, filter)), 200
 
 
-@blue_print.route('/', methods=['GET'])
+@blue_print.route('/detail', methods=['GET'])
 def get_detail():
 
     folder_path = request.args.get('path', '/')
