@@ -43,7 +43,7 @@ def list_all(path: str = "/", filter: str = None) -> FileList:
 
         file_list.files = [
             f
-            for f in file_list.dirs
+            for f in file_list.files
             if filter in f
         ]
 
