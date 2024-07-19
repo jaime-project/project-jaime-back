@@ -144,7 +144,7 @@ def download_workspace(id: str):
     return send_file(BytesIO(result),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=ntpath.basename(f'{id}.zip'))
+                     download_name=ntpath.basename(f'{id}.zip'))
 
 
 def _is_yaml(text: str) -> bool:

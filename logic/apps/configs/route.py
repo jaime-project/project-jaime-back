@@ -43,7 +43,7 @@ def get_yamls():
     return send_file(BytesIO(dict_yaml.encode()),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=ntpath.basename(name_yaml))
+                     download_name=ntpath.basename(name_yaml))
 
 
 @blue_print.route('/logs/jaime', methods=['GET'])

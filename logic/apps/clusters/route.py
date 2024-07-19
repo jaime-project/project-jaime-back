@@ -84,4 +84,4 @@ def export_cluster(name: str):
     return send_file(BytesIO(dict_yaml.encode()),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=ntpath.basename(name_yaml))
+                     download_name=ntpath.basename(name_yaml))

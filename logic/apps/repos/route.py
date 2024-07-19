@@ -106,7 +106,7 @@ def export_repo(name: str):
     return send_file(BytesIO(dict_yaml.encode()),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=ntpath.basename(name_yaml))
+                     download_name=ntpath.basename(name_yaml))
 
 
 @blue_print.route('/<name>/zips', methods=['GET'])
@@ -119,4 +119,4 @@ def export_repo_zip(name: str):
     return send_file(BytesIO(repo_zip),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=ntpath.basename(tar_name))
+                     download_name=ntpath.basename(tar_name))

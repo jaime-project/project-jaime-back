@@ -69,7 +69,7 @@ def get_file(id: str, path: str):
     return send_file(BytesIO(file),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=ntpath.basename(file_name))
+                     download_name=ntpath.basename(file_name))
 
 
 @ blue_print.route('/status/<status>', methods=['DELETE'])

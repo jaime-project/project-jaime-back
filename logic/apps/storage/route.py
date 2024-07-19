@@ -3,6 +3,7 @@ from io import BytesIO
 from flask import Blueprint, jsonify, request, send_file
 
 from logic.apps.storage import service
+import ntpath
 
 blue_print = Blueprint('storage', __name__, url_prefix='/api/v1/storage')
 
@@ -29,14 +30,14 @@ def make_dir(dir_name: str):
 
 
 @blue_print.route('/<file_name>', methods=['GET'])
-def download_file(name: str):
+def download_file(file_name: str):
 
     folder_path = request.args.get('path', '/')
 
-    return send_file(BytesIO(service.download_file(name, folder_path)),
+    return send_file(BytesIO(service.download_file(file_name, folder_path)),
                      mimetype='application/octet-stream',
                      as_attachment=True,
-                     attachment_filename=name), 200
+                     download_name=ntpath.basename(file_name)), 200
 
 
 @blue_print.route('/', methods=['GET'])
