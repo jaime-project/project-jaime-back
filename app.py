@@ -30,8 +30,8 @@ setup_repos()
 start_threads()
 
 with open('logic/resources/banner.txt', 'r') as f:
-    # logger.log.info(f.read())
-    print(f.read())
+    logger.log.info(f.read())
+    # print(f.read())
 
 logger.log.info("> Jaimeeehhhh...!!!")
 logger.log.info("> ¿Si, señora?")
