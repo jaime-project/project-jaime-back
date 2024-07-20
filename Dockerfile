@@ -49,8 +49,9 @@ ARG ARG_VERSION=local
 ENV VERSION=${ARG_VERSION}
 ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=5000
-ENV JAIME_HOME_PATH=/home/jaime/local/
-ENV WORKINGDIR_PATH=/home/jaime/shared/workingdir/
+ENV JAIME_HOME_PATH=/home/jaime/master/
+ENV WORKINGDIR_PATH=/home/jaime/workingdir/
+ENV STORAGE_PATH=/home/jaime/storage/
 ENV TZ=America/Argentina/Buenos_Aires
 
 EXPOSE 5000
