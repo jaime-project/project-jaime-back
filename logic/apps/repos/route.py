@@ -55,7 +55,7 @@ def list_types():
 
 
 @blue_print.route('/<name>', methods=['PUT'])
-def modify(name):
+def modify(name: str):
 
     s = request.json
     repo = _request_body_to_repo(s)
@@ -65,11 +65,27 @@ def modify(name):
     return '', 200
 
 
-@blue_print.route('/<name>/reload', methods=['POST'])
-def reload(name):
+@blue_print.route('/<name>/pull', methods=['POST'])
+def pull_repo_git(name):
+
     repo = service.get(name)
-    service.load_repo(repo)
+
+    if repo.type == RepoType.GIT:
+        service.pull_repo_git(repo)
+
     return '', 200
+
+
+@blue_print.route('/<name>/commit', methods=['POST'])
+def commit_push_repo_git(name: str):
+
+    commit_message = request.args.get('message', None)
+    repo = service.get(name)
+
+    if repo.type == RepoType.GIT:
+        service.commit_push_repo_git(repo, commit_message)
+
+    return '', 201
 
 
 def _request_body_to_repo(s: Dict[str, Any]) -> Repo:

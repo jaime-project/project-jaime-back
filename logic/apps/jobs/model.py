@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
-from typing import Dict
 from uuid import uuid4
 
 from logic.apps.agents.model import Agent
@@ -28,7 +27,7 @@ class Job:
     agent: Agent = None
     id: str = field(default_factory=_generate_id)
     status: Status = Status.READY
-    params: Dict[str, object] = field(default_factory=list)
+    params: dict[str, object] = field(default_factory=dict)
     start_date: datetime = field(default_factory=datetime.now)
     running_date: datetime = None
     terminated_date: datetime = None

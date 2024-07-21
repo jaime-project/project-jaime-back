@@ -9,6 +9,7 @@ def get_file_content(path: str) -> str:
 
 
 def create_file(path: str, content: str):
+    os.system(f"mkdir -p {os.path.dirname(path)}")
     with open(path, 'w+') as file:
         file.write(content)
 

@@ -1,11 +1,10 @@
 
 import os
-from pathlib import Path
-from typing import Dict, List
 
 from logic.apps.admin.configs.variables import Vars, get_var
 from logic.apps.docs import service as doc_service
 from logic.apps.filesystem import filesystem_service
+from logic.apps.jobs.model import Job
 from logic.apps.markdown import service as markdown_service
 from logic.apps.modules import service as module_service
 from logic.apps.repos import repository
@@ -13,24 +12,25 @@ from logic.apps.repos.error import RepoError
 from logic.apps.repos.model import Repo, RepoGit, RepoType
 from logic.libs.exception.exception import AppException
 from logic.libs.logger import logger
-from logic.apps.jobs.model import Job
 
 
 def add(repo: Repo):
 
     if repository.exist(repo.name):
-        msj = f"El repo con nombre {repo.name} ya existe"
+        msj = f"Repository with name {repo.name} already exists"
         raise AppException(RepoError.REPO_ALREADY_EXISTS_ERROR, msj)
 
+    if repo.type == RepoType.GIT:
+        clone_repo_git(repo)
+
     repository.add(repo)
-    load_repo(repo)
 
 
 def get(name: str) -> Repo:
     return repository.get(name)
 
 
-def list_all() -> List[str]:
+def list_all() -> list[str]:
 
     return [
         s.name
@@ -38,7 +38,7 @@ def list_all() -> List[str]:
     ]
 
 
-def list_all_by_type(type: RepoType) -> List[str]:
+def list_all_by_type(type: RepoType) -> list[str]:
 
     return [
         s.name
@@ -47,11 +47,11 @@ def list_all_by_type(type: RepoType) -> List[str]:
     ]
 
 
-def get_all() -> List[Repo]:
+def get_all() -> list[Repo]:
     return repository.get_all()
 
 
-def get_all_short() -> List[Dict[str, str]]:
+def get_all_short() -> list[dict[str, str]]:
 
     return [
         {
@@ -66,11 +66,11 @@ def get_all_short() -> List[Dict[str, str]]:
 def delete(name: str):
 
     if not repository.exist(name):
-        msj = f"El repo con nombre {name} no existe"
+        msj = f"Repository with name {name} not exists"
         raise AppException(RepoError.REPO_NOT_EXISTS_ERROR, msj)
 
     repository.delete(name)
-    filesystem_service.delete_folder(f'{get_path()}/{name}')
+    filesystem_service.delete_folder(f'{_get_base_path()}/{name}')
 
 
 def modify(name: str, repo: RepoGit):
@@ -78,51 +78,52 @@ def modify(name: str, repo: RepoGit):
     add(repo)
 
 
-def load_repo(repo: Repo):
+def clone_repo_git(repo_git: RepoGit) -> str:
 
-    out_path = f'{get_path()}/{repo.name}'
-    os.system(f'rm -rf {out_path}/*')
+    repo_full_path = f'{_get_base_path()}/{repo_git.name}'
 
-    if not os.path.exists(out_path):
-        Path(out_path).mkdir(parents=True)
+    logger.log.info(f'Making directories for git clone -> {repo_full_path}')
+    os.system(f'rm -rf {repo_full_path}')
+    os.system(f'mkdir -p {repo_full_path}')
 
-    if repo.type != RepoType.GIT:
-        return
+    url = repo_git.git_url
 
-    repo_name = _get_git_repo_name(repo.git_url)
-    url = repo.git_url
-
-    if repo.git_user and repo.git_pass:
-        repo_git_without_https = repo.git_url.replace("https://", "")
-        url = f'https://{repo.git_user}:{repo.git_pass}@{repo_git_without_https}'
-
-    logger.log.info(f'Creating directories for git clone')
-    tmp_path = '/tmp'
-    os.system(f'rm -fr {tmp_path}/{repo_name}')
+    if repo_git.git_user and repo_git.git_pass:
+        repo_git_without_https = repo_git.git_url.replace("https://", "")
+        url = f'https://{repo_git.git_user}:{repo_git.git_pass}@{repo_git_without_https}'
 
     logger.log.info(
-        f'Cloning repository -> {repo.git_url} -b {repo.git_branch} -u {repo.git_user}')
-    os.system(f'git clone {url} {tmp_path}/{repo_name} -b {repo.git_branch}')
+        f'Making url for git clone -> {repo_git.git_url}')
+    os.system(f'git clone -b {repo_git.git_branch} {url} {repo_full_path}')
 
-    in_path = f'{tmp_path}/{repo_name}/{repo.git_path}'.replace('//', '/')
-
-    os.system(f'mv {in_path}/* {out_path}')
+    return repo_full_path
 
 
-def is_loaded(name: str) -> bool:
-    module_path = f'{get_path()}/{name}'
-    return os.path.exists(module_path)
+def commit_push_repo_git(repo_git: RepoGit, commit_message: str = "Updated by Jaime"):
+
+    repo_full_path = f'{_get_base_path()}/{repo_git.name}'
+
+    logger.log.info(f"Starting git push process to repo -> {repo_git.name}")
+    os.system(f"""cd {repo_full_path}/{repo_git.git_path} && \ 
+              git pull && \
+              git add . && \
+              git commit -m "{commit_message}" && \
+              git push -u origin {repo_git.git_branch}""")
 
 
-def _get_git_repo_name(repo_url: str) -> str:
-    return repo_url.split('/')[-1].replace('.git', '')
+def pull_repo_git(repo_git: RepoGit):
+
+    repo_full_path = f'{_get_base_path()}/{repo_git.name}'
+
+    logger.log.info(f"Git pull to repo -> {repo_git.name}")
+    os.system(f"cd {repo_full_path} && git pull")
 
 
-def list_types() -> List[str]:
+def list_types() -> list[str]:
     return [e.value for e in RepoType]
 
 
-def export_repo(repo_name: str) -> Dict[str, List[Dict[str, str]]]:
+def export_repo(repo_name: str) -> dict[str, list[dict[str, str]]]:
 
     objects = {}
 
@@ -167,14 +168,24 @@ def export_repo_zip(repo_name: str) -> bytes:
     tar_path = f'/tmp/{repo_name}.tar.gz'
 
     os.system(
-        f"cd {get_path()} && tar -zcvf {tar_path} {repo_name}")
+        f"cd {_get_base_path()} && tar -zcvf {tar_path} {repo_name}")
 
     return open(tar_path, 'rb').read()
 
 
-def get_path() -> str:
+def _get_base_path() -> str:
     return f'{get_var(Vars.JAIME_HOME_PATH)}/repos'
 
 
+def get_repo_path(repo_name: str) -> str:
+
+    repo = get(repo_name)
+
+    if repo.type == RepoType.GIT:
+        return f'{_get_base_path()}/{repo.name}/{repo.git_path}'
+
+    return f'{_get_base_path()}/{repo.name}'
+
+
 def get_module_path_of_job(job: Job) -> str:
-    return f'{get_path()}/{job.module_repo}/{job.module_name}.py'
+    return f"{get_repo_path(job.module_repo)}/{job.module_name}.py"

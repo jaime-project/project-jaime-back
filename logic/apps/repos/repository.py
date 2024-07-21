@@ -1,6 +1,6 @@
 from typing import List
 
-from logic.apps.repos.entity import Entity, RepoGitEntity, RepoLocalEntity
+from logic.apps.repos.entity import RepoGitEntity, RepoLocalEntity
 from logic.apps.repos.error import RepoError
 from logic.apps.repos.model import Repo, RepoType
 from logic.libs.exception.exception import AppException
@@ -77,7 +77,7 @@ def exist(name: str) -> bool:
     return True
 
 
-def _get_entity_class_by_type(type: RepoType) -> Entity:
+def _get_entity_class_by_type(type: RepoType) -> object:
 
     if type == type.GIT:
         return RepoGitEntity

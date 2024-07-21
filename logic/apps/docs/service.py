@@ -9,13 +9,13 @@ from logic.libs.exception.exception import AppException
 
 def add(name: str, content: str, repo: str):
 
-    path = f'{repo_service.get_path()}/{repo}/{name}.yaml'
+    path = f'{repo_service.get_repo_path(repo)}/{name}.yaml'
     filesystem_service.create_file(path, content)
 
 
 def get(name: str, repo: str) -> str:
 
-    path = f'{repo_service.get_path()}/{repo}/{name}.yaml'
+    path = f'{repo_service.get_repo_path(repo)}/{name}.yaml'
 
     try:
         return filesystem_service.get_file_content(path)
@@ -35,7 +35,7 @@ def delete(name: str, repo: str):
             msj=f'La documentacion {name} no existe'
         )
 
-    path = f'{repo_service.get_path()}/{repo}/{name}.yaml'
+    path = f'{repo_service.get_repo_path(repo)}/{name}.yaml'
     filesystem_service.delete_file(path)
 
 
@@ -43,7 +43,7 @@ def list_all(repo: str) -> List[str]:
 
     return [
         nf.replace('.yaml', '')
-        for nf in filesystem_service.name_files_from_path(f'{repo_service.get_path()}/{repo}')
+        for nf in filesystem_service.name_files_from_path(f'{repo_service.get_repo_path(repo)}')
         if nf.endswith('.yaml')
     ]
 
