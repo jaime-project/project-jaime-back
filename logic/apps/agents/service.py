@@ -36,18 +36,17 @@ def delete(id: str):
         logger.log.error(e)
 
     agent_type = get(id).type
+    delete_agent_type(agent_type)
 
     global _AGENTS_ONLINE
     _AGENTS_ONLINE.pop(id)
-
-    delete_agent_type(agent_type)
 
 
 def disconnec_agent(id):
 
     agent = get(id)
     url = agent.get_url() + '/api/v1/jaime/'
-    requests.delete(url)
+    requests.delete(url, timeout=1)
 
 
 def get(id: str) -> Agent:
@@ -60,7 +59,8 @@ def is_alive(id: str) -> bool:
     agent = get(id)
 
     try:
-        request = requests.get(f'{agent.get_url()}/alive', verify=False)
+        request = requests.get(
+            f'{agent.get_url()}/alive', verify=False, timeout=2)
 
         status_code_ok = request.status_code == 200
         id_ok = request.json().get('id') == id
@@ -68,6 +68,7 @@ def is_alive(id: str) -> bool:
         return status_code_ok and id_ok
 
     except Exception as e:
+        logger.log.warning(e)
         return False
 
 
