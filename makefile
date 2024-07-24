@@ -7,13 +7,13 @@ install i:
 	. env/bin/deactivate
 
 build b:
-	podman build . -t ghcr.io/jaime-project/jaime-back:$(VERSION)
+	docker build . -t ghcr.io/jaime-project/jaime-back:$(VERSION)
 
 push p:
-	podman push ghcr.io/jaime-project/jaime-back:$(VERSION)
+	docker push ghcr.io/jaime-project/jaime-back:$(VERSION)
 
 run r:
-	podman run -it --rm -p 5000:5000 ghcr.io/jaime-project/jaime-back:$(VERSION)
+	docker run -it --rm -p 5000:5000 ghcr.io/jaime-project/jaime-back:$(VERSION)
 
 compile c:
 	python -m compile -b -f -o dist/ .
