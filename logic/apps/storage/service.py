@@ -7,6 +7,11 @@ from logic.apps.storage.model import FileDetail, FileList
 
 def upload_file(file_name: str, path: str, content: bytes):
 
+    full_dir_path = _full_path(path)
+
+    if not os.path.exists(full_dir_path):
+        os.system(f"mkdir -p {full_dir_path}")
+
     with open(_full_path(path, file_name), 'wb') as f:
         f.write(content)
 

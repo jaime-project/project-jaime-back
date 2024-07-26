@@ -14,7 +14,7 @@ def upload_file():
     path_files = request.args.get('path', '/')
 
     for f in request.files.values():
-        service.upload_file(f.filename, path_files, f.stream.read())
+        service.upload_file(f.name, path_files, f.stream.read())
 
     return '', 201
 
