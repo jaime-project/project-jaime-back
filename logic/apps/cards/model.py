@@ -12,6 +12,18 @@ def _generate_id() -> str:
     return str(uuid4()).split('-')[4]
 
 
+def _merge_dicts(source: Dict[str, object], destination: Dict[str, object]) -> Dict[str, object]:
+
+    for key, value in source.items():
+        if isinstance(value, dict):
+            node = destination.setdefault(key, {})
+            _merge_dicts(value, node)
+        else:
+            destination[key] = value
+
+    return destination
+
+
 @dataclass
 class Card():
     name: str
@@ -27,14 +39,12 @@ class Card():
 
     def to_job(self, params: Dict[str, object] = {}) -> Job:
 
-        self.job_default_docs.update(params)
-
         return Job(
             name=f'{self.name}_{_generate_id()}',
             module_name=self.job_module_name,
             module_repo=self.job_module_repo,
             agent_type=self.job_agent_type,
-            params=self.job_default_docs
+            params=_merge_dicts(params, self.job_default_docs)
         )
 
     def __dict__(self) -> Dict[str, object]:

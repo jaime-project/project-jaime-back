@@ -104,6 +104,10 @@ def commit_push_repo_git(repo_git: RepoGit, commit_message: str = "Updated by Ja
     repo_full_path = f'{_get_base_path()}/{repo_git.name}'
 
     logger.log.info(f"Starting git push process to repo -> {repo_git.name}")
+    
+    os.system(f"""git config --global user.name "Jaime" """)
+    os.system(f"""git config --global user.email "jaime@gmail.com" """)
+    
     os.system(f"""cd {repo_full_path}/{repo_git.git_path} && \ 
               git pull && \
               git add . && \
