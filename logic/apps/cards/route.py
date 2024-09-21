@@ -102,6 +102,9 @@ def run(id: str):
     params_dict = yaml.load(request.data, Loader=yaml.FullLoader) if _is_yaml(
         request.data) else request.json
 
+    if not params_dict:
+        params_dict = {}
+
     id = service.run(id, params_dict)
 
     return jsonify(id=id), 200

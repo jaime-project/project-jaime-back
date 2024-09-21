@@ -38,6 +38,9 @@ class Card():
     creation_date: datetime = field(default_factory=datetime.now)
 
     def to_job(self, params: Dict[str, object] = {}) -> Job:
+        
+        if not self.job_default_docs:
+            self.job_default_docs = {}
 
         return Job(
             name=f'{self.name}_{_generate_id()}',
