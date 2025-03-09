@@ -14,7 +14,7 @@ class CronEntity(Entity):
 
     id = Column(String(30), primary_key=True, nullable=False)
     name = Column(String(60))
-    cron_expression = Column(String(10))
+    cron_expression = Column(Text)
     status = Column(String(30))
     creation_date = Column(DateTime)
     job_module_repo = Column(String(255))
