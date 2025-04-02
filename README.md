@@ -11,14 +11,14 @@
 
 ## :gear: Requisitos
 
-- python 3.11
+- python 3.12
 - virtualenv
 
 ## :tada: Uso
 
 ```bash
 # Levantar el ambiente
-virtualenv -p python3.11 env
+virtualenv -p python3.12 env
 . env/bin/activate
 pip install -r requirements.txt
 

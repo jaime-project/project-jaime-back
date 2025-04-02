@@ -3,6 +3,7 @@ import os
 import sys
 
 from flask.app import Flask
+from gunicorn.app.base import BaseApplication
 
 from logic.apps.admin.configs.app import (setup_directories, setup_repos,
                                           start_threads)
@@ -31,13 +32,23 @@ start_threads()
 
 with open('logic/resources/banner.txt', 'r') as f:
     logger.log.info(f.read())
-    # print(f.read())
 
 logger.log.info("> Jaimeeehhhh...!!!")
 logger.log.info("> ¿Si, señora?")
 
 if __name__ == "__main__":
-    flask_host = get_var(Vars.PYTHON_HOST)
-    flask_port = int(get_var(Vars.PYTHON_PORT))
 
-    app.run(host=flask_host, port=flask_port, debug=False)
+    class AppGunicorn(BaseApplication):
+
+        def load_config(self):
+            s = self.cfg.set
+            s('bind', f"{get_var(Vars.PYTHON_HOST)}:{get_var(Vars.PYTHON_PORT)}")
+            s('workers', get_var(Vars.GUNICORN_WORKERS))
+            s('threads', get_var(Vars.GUNICORN_THREADS))
+            s('timeout', get_var(Vars.GUNICORN_TIMEOUT))
+            # s('logger-class', 'logger')
+
+        def load(self):
+            return app
+
+    AppGunicorn().run()

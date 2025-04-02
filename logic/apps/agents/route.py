@@ -1,4 +1,3 @@
-import yaml
 from flask import Blueprint, jsonify, request
 
 from logic.apps.agents import service
