@@ -14,7 +14,7 @@ compile c:
 
 binary bin:
 	rm -fr build dist *.spec
-	pyinstaller --add-data logic:logic -n jaime --onefile app.py
+	pyinstaller --add-data logic:logic --onefile app.py -n jaime
 	mv dist/jaime jaime
 	rm -fr build dist *.spec
 	

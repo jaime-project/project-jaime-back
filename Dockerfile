@@ -46,5 +46,4 @@ ENV STORAGE_PATH /home/jaime/storage/
 
 EXPOSE 5000
 
-# CMD python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=6 app:app
 CMD jaime

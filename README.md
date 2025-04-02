@@ -45,3 +45,4 @@ DB_URL: mssql+pymssql://user:pass@host:port/database
 ## :books: Referencias
 
 - [Iconos](https://github.com/ikatyang/emoji-cheat-sheet/blob/master/README.md)
+- [Image to ascii](https://www.asciiart.eu/image-to-ascii)
