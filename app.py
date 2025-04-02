@@ -1,9 +1,12 @@
 #!env/bin/python
+import multiprocessing
 import os
 import sys
 
 from flask.app import Flask
+from gunicorn import glogging
 from gunicorn.app.base import BaseApplication
+from gunicorn.workers import gthread
 
 from logic.apps.admin.configs.app import (setup_directories, setup_repos,
                                           start_threads)
@@ -43,7 +46,7 @@ if __name__ == "__main__":
         def load_config(self):
             s = self.cfg.set
             s('bind', f"{get_var(Vars.PYTHON_HOST)}:{get_var(Vars.PYTHON_PORT)}")
-            s('workers', get_var(Vars.GUNICORN_WORKERS))
+            s('workers', multiprocessing.cpu_count() * 2 + 1)
             s('threads', get_var(Vars.GUNICORN_THREADS))
             s('timeout', get_var(Vars.GUNICORN_TIMEOUT))
             # s('logger-class', 'logger')
