@@ -1,7 +1,7 @@
 VERSION := 0.5.0
 
 build b:
-	docker build . -t ghcr.io/jaime-project/jaime-back:$(VERSION)
+	docker build . -t ghcr.io/jaime-project/jaime-back:$(VERSION) --build-arg ARG_VERSION=$(VERSION)
 
 push p:
 	docker push ghcr.io/jaime-project/jaime-back:$(VERSION)
