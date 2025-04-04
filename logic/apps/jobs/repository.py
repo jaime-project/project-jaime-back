@@ -7,7 +7,7 @@ from logic.apps.jobs.model import Job, Status
 from logic.libs.sqliteAlchemy import sqliteAlchemy
 
 
-def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = None, status: Status = None) -> List[Job]:
+def get_all(size: int = 10, page: int = 1, filter: str = None, order: str = 'start_date', status: Status = None) -> List[Job]:
 
     s = sqliteAlchemy.make_session()
     result = s.query(JobEntity)
