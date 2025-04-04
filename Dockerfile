@@ -25,7 +25,7 @@ FROM docker.io/library/python:3.12-slim
 
 ARG ARG_VERSION=local
 
-WORKDIR /home/jaime
+WORKDIR /home/src
 
 USER root
 
@@ -41,7 +41,7 @@ RUN rm -fr requirements.txt
 COPY --from=compiler /home/src/dist/ .
 COPY logic/resources/ logic/resources/
 
-RUN chmod 770 . -R
+RUN chmod 770 /home/src -R && chmod 770 /home/jaime -R
 
 USER 1001
 
@@ -50,7 +50,7 @@ ENV PYTHON_HOST=0.0.0.0
 ENV PYTHON_PORT=5000
 ENV JAIME_HOME_PATH=/home/jaime/master/
 ENV WORKINGDIR_PATH=/home/jaime/workingdir/
-ENV STORAGE_PATH=/home/jaime/storage/
+ENV STORAGE_PATH=/home/jaime/shared/
 ENV TZ=America/Argentina/Buenos_Aires
 
 EXPOSE 5000

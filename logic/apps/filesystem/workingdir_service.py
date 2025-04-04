@@ -22,8 +22,7 @@ def create_by_id(id: Any):
         delete(id)
 
     Path(fullpath(id)).mkdir(parents=True, exist_ok=True)
-    with open(f'{fullpath(id)}/{_NAME_FILE_LOGS}', 'w'):
-        pass
+    open(f'{fullpath(id)}/{_NAME_FILE_LOGS}', 'w')
 
 
 def delete(id: Any):

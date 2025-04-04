@@ -13,7 +13,7 @@ from logic.apps.admin.configs.variables import Vars, get_var, setup_vars
 from logic.libs.logger import logger
 from logic.libs.variables.variables import get_var
 
-setup_pyinstaller_binary()
+# setup_pyinstaller_binary()
 
 app = Flask(__name__)
 
