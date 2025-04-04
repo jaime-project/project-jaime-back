@@ -26,6 +26,7 @@ def add(agent: Agent):
 
     service.update_requirements(service.get_requirements())
     logger.log.info(f'New agent connected -> id: {str(agent.id)}')
+    print(_AGENTS_ONLINE)
 
 
 def delete(id: str):
@@ -74,7 +75,8 @@ def is_alive(id: str) -> bool:
 
 def get_by_type(type: str) -> List[Agent]:
     global _AGENTS_ONLINE
-
+    print(_AGENTS_ONLINE)
+    
     return [
         n
         for _, n in _AGENTS_ONLINE.items()

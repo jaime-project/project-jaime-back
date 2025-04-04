@@ -33,18 +33,24 @@ with open('logic/resources/banner.txt', 'r') as f:
 logger.log.info("> Jaimeeehhhh...!!!")
 logger.log.info("> ¿Si, señora?")
 
+# if __name__ == "__main__":
+
+#     class AppGunicorn(BaseApplication):
+
+#         def load_config(self):
+#             s = self.cfg.set
+#             s('bind', f"{get_var(Vars.PYTHON_HOST)}:{get_var(Vars.PYTHON_PORT)}")
+#             s('workers', multiprocessing.cpu_count() * 2 + 1)
+#             s('threads', get_var(Vars.GUNICORN_THREADS))
+#             s('timeout', get_var(Vars.GUNICORN_TIMEOUT))
+
+#         def load(self):
+#             return app
+
+#     AppGunicorn().run()
+
 if __name__ == "__main__":
-
-    class AppGunicorn(BaseApplication):
-
-        def load_config(self):
-            s = self.cfg.set
-            s('bind', f"{get_var(Vars.PYTHON_HOST)}:{get_var(Vars.PYTHON_PORT)}")
-            s('workers', multiprocessing.cpu_count() * 2 + 1)
-            s('threads', get_var(Vars.GUNICORN_THREADS))
-            s('timeout', get_var(Vars.GUNICORN_TIMEOUT))
-
-        def load(self):
-            return app
-
-    AppGunicorn().run()
+    app.run(
+        host=get_var(Vars.PYTHON_HOST),
+        port=get_var(Vars.PYTHON_PORT),
+    )
