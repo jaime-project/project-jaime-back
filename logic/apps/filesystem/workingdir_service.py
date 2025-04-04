@@ -5,7 +5,6 @@ from typing import Any, List
 from uuid import UUID, uuid4
 
 from logic.apps.admin.configs.variables import Vars, get_var
-from logic.apps.jobs.model import Job
 
 _NAME_FILE_LOGS = 'logs.log'
 
@@ -22,7 +21,7 @@ def create_by_id(id: Any):
         delete(id)
 
     Path(fullpath(id)).mkdir(parents=True, exist_ok=True)
-    open(f'{fullpath(id)}/{_NAME_FILE_LOGS}', 'w')
+    open(f'{fullpath(id)}/{_NAME_FILE_LOGS}', 'x')
 
 
 def delete(id: Any):
