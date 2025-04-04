@@ -52,7 +52,9 @@ ENV JAIME_HOME_PATH=/home/jaime/master/
 ENV WORKINGDIR_PATH=/home/jaime/workingdir/
 ENV STORAGE_PATH=/home/jaime/shared/
 ENV TZ=America/Argentina/Buenos_Aires
+ENV GUNICORN_WORKERS=1
+ENV GUNICORN_THREADS=6
 
 EXPOSE 5000
 
-CMD ["/bin/bash", "-c", "python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=1 --threads=6 app:app"]
+CMD ["/bin/bash", "-c", "python3 -m gunicorn -b ${PYTHON_HOST}:${PYTHON_PORT} --workers=${GUNICORN_WORKERS} --threads=${GUNICORN_THREADS} app:app"]
