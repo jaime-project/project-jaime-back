@@ -87,7 +87,7 @@ def list_all() -> List[Agent]:
     if not _AGENTS_ONLINE:
         return []
 
-    return list(_AGENTS_ONLINE.values()).sort(key=lambda a: a.type)
+    return list(_AGENTS_ONLINE.values())
 
 
 def get_available_agent_by_type(type: str) -> Agent:
