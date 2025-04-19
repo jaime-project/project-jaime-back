@@ -17,10 +17,6 @@ def get_all(filter: str = None) -> List[Card]:
         result = result.filter(or_(
             CardEntity.name.like(filter),
             CardEntity.description.like(filter),
-            CardEntity.creation_date.like(filter),
-            CardEntity.job_module_repo.like(filter),
-            CardEntity.job_module_name.like(filter),
-            CardEntity.job_agent_type.like(filter),
         ))
 
     result = result.all()
