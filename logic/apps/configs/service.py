@@ -1,5 +1,6 @@
 import os
 from datetime import datetime
+import threading
 from typing import Dict, List
 
 import requests
@@ -38,6 +39,10 @@ def update_requirements(content: str):
     for agent in agent_service.list_all():
         try:
             url = f"{agent.get_url()}/api/v1/configs/requirements"
+
+            threading.Thread(
+                target=lambda: requests.post(url, data=content, verify=False)).start()
+
             requests.post(url, data=content, verify=False)
 
         except Exception as e:

@@ -67,9 +67,11 @@ def cancel(id: str):
 
     job = get(id)
 
-    if job.agent in agent_service.list_all():
+    agents_id = [a.id for a in agent_service.list_all()]
+
+    if job.agent.id in agents_id:
         url = job.agent.get_url() + f'/api/v1/jobs/{id}'
-        requests.delete(url, verify=False)
+        requests.delete(url, verify=False, timeout=2)
 
         agent_service.change_status(job.agent.id, AgentStatus.READY)
 
