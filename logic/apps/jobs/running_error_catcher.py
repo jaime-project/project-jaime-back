@@ -15,13 +15,11 @@ def running_error_catcher():
         for id in jobs_service.list_by_status(Status.RUNNING):
 
             job = jobs_service.get(id)
-            agent = agent_service.get(job.agent.id)
-            if agent:
-                continue
 
-            jobs_service.change_status(id, Status.READY)
-            logger.log.warn(
-                f'Status job Changed to READY by agent down -> {job.name} - {id}')
+            if not agent_service.get(job.agent.id):
+                jobs_service.change_status(id, Status.UNFINISHED)
+                logger.log.warning(
+                    f'Status job Changed to UNFINISHED by its agent is down -> {job.name} - {id}')
 
     except Exception as e:
         logger.log.error(e)

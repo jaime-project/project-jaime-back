@@ -12,6 +12,7 @@ class Status(Enum):
     ERROR = "ERROR"
     SUCCESS = "SUCCESS"
     CANCEL = "CANCEL"
+    UNFINISHED = "UNFINISHED"
 
 
 def _generate_id() -> str:
